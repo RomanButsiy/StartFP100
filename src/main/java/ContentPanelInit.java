@@ -71,7 +71,6 @@ public class ContentPanelInit extends JPanel {
 
     protected void onEnableWindow(boolean enable) {
         textArea.setEnabled(enable);
-        searchButton.setEnabled(enable);
         scrollPane.setEnabled(enable);
         textField.setEnabled(enable);
         renameButton.setEnabled(enable);

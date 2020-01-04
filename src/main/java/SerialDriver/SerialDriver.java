@@ -20,9 +20,9 @@ public class SerialDriver {
         return isInit;
     }
 
-    public boolean initPort(PortAndSpeed portAndSpeed) {
+    public void initPort(PortAndSpeed portAndSpeed) {
         String port = portAndSpeed.getPort();
-        if (port == null) return false;
+        if (port == null ) return;
         serialPort = new SerialPort(port);
         try {
             serialPort.openPort();
@@ -32,10 +32,9 @@ public class SerialDriver {
                     SerialPort.PARITY_NONE);
         } catch (SerialPortException e) {
             e.printStackTrace();
-            return false;
+            return;
         }
         isInit = true;
-        return true;
     }
 
     public void write(String text) {
