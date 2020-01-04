@@ -9,5 +9,9 @@ public class ContentPanel extends ContentPanelInit {
     private SerialDriver serialDriver;
     private SerialPort serialPort;
     public ContentPanel(IGetPortAndSpeed getPortAndSpeed, ResourceBundle bundle) {
+        super(bundle);
+        this.portAndSpeed = portAndSpeed;
+        serialDriver = new SerialDriver();
+        onEnableWindow(false);
     }
 }

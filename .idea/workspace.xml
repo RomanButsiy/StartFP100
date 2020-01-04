@@ -3,8 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="93b63df6-3c6c-411f-8753-d9cd68fc9762" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/MenuBar/MenuBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/MenuBar/MenuBar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/StartFP100.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/StartFP100.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ContentPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ContentPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ContentPanelInit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ContentPanelInit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/SerialDriver/PortReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SerialDriver/PortReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/MenuBar/MenuBar$ChangeUserAction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/MenuBar/MenuBar$ExitAction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/MenuBar/MenuBar.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/StartFP100.class" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,6 +47,7 @@
       <recent name="" />
     </key>
     <key name="CreateClassDialog.RecentsKey">
+      <recent name="SerialDriver" />
       <recent name="" />
     </key>
   </component>
