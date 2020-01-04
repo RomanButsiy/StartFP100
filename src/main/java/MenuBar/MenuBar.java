@@ -25,7 +25,7 @@ public class MenuBar extends JMenuBar {
         return file;
     }
 
-    PortAndSpeed getPortAndSpeed() {
+    public PortAndSpeed getPortAndSpeed() {
         return toolsMenu.getPortAndSpeed();
     }
 

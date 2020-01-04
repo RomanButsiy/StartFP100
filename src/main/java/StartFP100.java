@@ -11,12 +11,12 @@ public class StartFP100 {
 
     private StartFP100(String title, ResourceBundle bundle) {
         MenuBar menuBar = new MenuBar(bundle);
-      //  SerialTerminalPanel panel = new SerialTerminalPanel(menuBar::getPortAndSpeed, bundle);
+        ContentPanel panel = new ContentPanel(menuBar::getPortAndSpeed, bundle);
         JFrame frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setJMenuBar(menuBar);
         frame.setResizable(true);
-      //  frame.getContentPane().add(panel);
+        frame.getContentPane().add(panel);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
