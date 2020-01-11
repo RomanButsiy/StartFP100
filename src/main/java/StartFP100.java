@@ -6,6 +6,8 @@ import java.util.ResourceBundle;
 
 public class StartFP100 {
 
+    // sudo usermod -aG dialout roman
+
     private static final String[][] resourceBundle = {{"English", "Українська"}, {"en", "uk"}};
     private static final int selectedLanguage = 1;
 
