@@ -4,14 +4,14 @@ import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 public class ContentPanelInit extends JPanel {
-    JButton initButton, searchButton, renameButton, changeIdButton;
-    ResourceBundle bundle;
-    JTextField textField;
-    JTextArea textArea;
-    JScrollPane scrollPane;
-    JCheckBox checksum;
-    JLabel percentLabel;
-    JComboBox<String> devicesComboBox;
+    private JButton initButton, searchButton, renameButton, changeIdButton;
+    private ResourceBundle bundle;
+    private JTextField textField;
+    private JTextArea textArea;
+    private JScrollPane scrollPane;
+    private JCheckBox checksum;
+    private JLabel percentLabel;
+    private JComboBox<String> devicesComboBox;
 
     public ContentPanelInit(ResourceBundle bundle) {
         this.bundle = bundle;
@@ -67,6 +67,26 @@ public class ContentPanelInit extends JPanel {
                 GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, insets, 0, 0));
         add(percentLabel, new GridBagConstraints(2, 3, 1, 1, 1, 1,
                 GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, insets, 0, 0));
+    }
+
+    public void setEnabledSearchButton(boolean set) {
+        searchButton.setEnabled(set);
+    }
+
+    public void setTextPercentLabel(String str) {
+        percentLabel.setText(str);
+    }
+
+    public void clearTextArea() {
+        textArea.setText("");
+    }
+
+    public void appendStringTextArea(String str) {
+        textArea.append(str);
+    }
+
+    public boolean checksumIsSelected() {
+        return checksum.isSelected();
     }
 
     protected void onEnableWindow(boolean enable) {

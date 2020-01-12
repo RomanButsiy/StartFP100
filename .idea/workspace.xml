@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="93b63df6-3c6c-411f-8753-d9cd68fc9762" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ContentPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ContentPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ContentPanelInit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ContentPanelInit.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,6 +102,10 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
+    <state x="801" y="256" width="374" height="592" key="#com.intellij.ide.util.MemberChooser" timestamp="1578839174508">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="801" y="256" width="374" height="592" key="#com.intellij.ide.util.MemberChooser/67.27.1853.1053@67.27.1853.1053" timestamp="1578839174508" />
     <state width="1807" height="278" key="GridCell.Tab.0.bottom" timestamp="1578752546032">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>

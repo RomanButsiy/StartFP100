@@ -18,7 +18,7 @@ public class ContentPanel extends ContentPanelInit {
         serialBuffer = new StringBuffer();
         searchThread = new Thread();
         onEnableWindow(false);
-        searchButton.setEnabled(false);
+        setEnabledSearchButton(false);
         onInitCommand((ActionEvent event) -> {
             if (!serialDriver.isInit()) {
                 serialDriver.initPort(portAndSpeed.getPortAndSpeed());
@@ -27,7 +27,7 @@ public class ContentPanel extends ContentPanelInit {
                     serialPort.addEventListener(new PortReader(serialPort, this::dataReadAction), SerialPort.MASK_RXCHAR);
                     JOptionPane.showMessageDialog(null, "Порт успішно ініціалізовано",
                             serialPort.getPortName(), JOptionPane.INFORMATION_MESSAGE);
-                    searchButton.setEnabled(true);
+                    setEnabledSearchButton(true);
                 } catch (SerialPortException ignored) {
                 }
             }
@@ -35,7 +35,7 @@ public class ContentPanel extends ContentPanelInit {
         onSearchCommand((ActionEvent event) -> {
             if (searchThread.isAlive()) {
                 searchThread.stop();
-                percentLabel.setText("Search stopped!!!");
+                setTextPercentLabel("Search stopped!!!");
             } else {
                 searchThread = new Thread(this::SearchDevices);
                 onEnableWindow(false);
@@ -52,38 +52,38 @@ public class ContentPanel extends ContentPanelInit {
         for (short i = 0; i < numberOfDevices; i++) {
             str.append(String.format("%02X", i));
             str.append("M");
-            if (checksum.isSelected()) {
+            if (checksumIsSelected()) {
                 str.append(getCRC(str.toString().toCharArray()));
             }
             str.append("\r");
             serialDriver.write(str.toString());
             str.setLength(1);
-            percentLabel.setText(100 * i / numberOfDevices + "%");
+            setTextPercentLabel(100 * i / numberOfDevices + "%");
             try {
                 Thread.sleep(SearchPause);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        percentLabel.setText("100%");
+        setTextPercentLabel("100%");
         updateTextArea();
         searchThread.interrupt();
     }
 
     private void updateTextArea() {
-        textArea.setText("");
+        clearTextArea();
         if (serialBuffer.length() == 0) return;
         StringTokenizer tokenizer = new StringTokenizer(serialBuffer.toString(), "\r");
         while (tokenizer.hasMoreTokens()) {
             String token = tokenizer.nextToken();
             if (token.length() < 3) {
-                textArea.append("Отримано: " + token + " <-- FAILED!!!\n");
+                appendStringTextArea("Отримано: " + token + " <-- FAILED!!!\n");
                 continue;
             }
-            textArea.append("Ідентифікатор модуля: " +
+            appendStringTextArea("Ідентифікатор модуля: " +
                     token.substring(1, 3) +
                     " Ім'я модуля: " +
-                    token.substring(3, token.length() - (checksum.isSelected() ? 2 : 0)) +
+                    token.substring(3, token.length() - (checksumIsSelected() ? 2 : 0)) +
                     "\n");
         }
         onEnableWindow(true);
