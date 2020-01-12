@@ -42,6 +42,14 @@ public class ContentPanelInit extends JPanel implements ItemListener {
         }
     }
 
+    public int getDevicesComboBox() {
+        return devicesComboBox.getSelectedIndex();
+    }
+
+    public void onChecksumCommand(ActionListener listener) {
+        checksum.addActionListener(listener);
+    }
+
     public void onInitCommand(ActionListener listener) {
         initButton.addActionListener(listener);
     }

@@ -18,4 +18,9 @@ public class I7000 {
     public void enabledCRC(boolean enabledCRC) {
         this.useCRC = enabledCRC;
     }
+
+    public String setModuleName(String[] newData) {
+        String str = "~" + newData[0] + "O" + newData[1];
+        return  str + (useCRC ? getCRC(str.toCharArray()) + "\r" : "\r");
+    }
 }

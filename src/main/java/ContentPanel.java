@@ -5,6 +5,7 @@ import jssc.SerialPortException;
 import libraries.I7000;
 
 import javax.swing.*;
+import javax.swing.plaf.TableHeaderUI;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -48,12 +49,61 @@ public class ContentPanel extends ContentPanelInit {
                 searchThread.start();
             }
         });
-        onRenameCommand((ActionEvent event) -> {});
-        onChangeIdCommand((ActionEvent event) -> {});
+        onRenameCommand((ActionEvent event) -> {
+            int index = getDevicesComboBox();
+            String resultString1 = JOptionPane.showInputDialog(null,
+                    "Поточна назва пристрою " + devicesArrayList.get(index)[1] + ".\nВведіть нову назву пристрою",
+                    "Перейменувати модуль", JOptionPane.QUESTION_MESSAGE);
+            if (resultString1 == null || resultString1.equals("")) return;
+            String [] newData = new String[]{ devicesArrayList.get(index)[0], resultString1 };
+            serialDriver.write(i7000.setModuleName(newData));
+            new Thread(this::waitResponse).start();
+            devicesArrayList.set(index, newData);
+        });
+        onChangeIdCommand((ActionEvent event) -> {
+            for (int i = 0; i < 10000; i++) {
+                String [] newData = new String[]{ "00", "O"};
+                serialDriver.write(i7000.setModuleName(newData));
+                waitResponse();
+                try {
+                    Thread.sleep(100);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        onChecksumCommand((ActionEvent event) -> {
+            i7000.enabledCRC(checksumIsSelected());
+        });
+    }
+
+    private void waitResponse() {
+        final int timeOut = 10;
+        serialBuffer.setLength(0);
+        long startTime = System.currentTimeMillis();
+        while ((System.currentTimeMillis() - startTime < timeOut)) {
+            if (serialBuffer.indexOf("\r") != -1) {
+                break;
+            }
+            try {
+                Thread.sleep(1);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if ((System.currentTimeMillis() - startTime) >= timeOut) {
+            JOptionPane.showMessageDialog(null, "Час вийшов",
+                    "Помилка", JOptionPane.WARNING_MESSAGE);
+            System.out.println(serialBuffer.toString());
+            return;
+        }
+        //updateData(devicesArrayList);
     }
 
     private void SearchDevices() {
-        final int SearchPause = 10;
+        final int SearchPause = 500;
         serialBuffer.setLength(0);
         StringBuilder str = new StringBuilder("$");
         for (int i = getStart(), j = getStart(), s = getEnd() - getStart(); i < getEnd(); i++) {
@@ -94,8 +144,6 @@ public class ContentPanel extends ContentPanelInit {
         updateData(devicesArrayList);
         onEnableWindow(true);
     }
-
-
 
     private void dataReadAction(String s) {
         serialBuffer.append(s);
