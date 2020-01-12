@@ -2,21 +2,27 @@ import MenuBar.IGetPortAndSpeed;
 import SerialDriver.*;
 import jssc.SerialPort;
 import jssc.SerialPortException;
+import libraries.I7000;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 public class ContentPanel extends ContentPanelInit {
+    private ArrayList<String []> devicesArrayList;
     private StringBuffer serialBuffer;
     private SerialDriver serialDriver;
     private Thread searchThread;
+    private I7000 i7000;
     public ContentPanel(IGetPortAndSpeed portAndSpeed, ResourceBundle bundle) {
         super(bundle);
+        devicesArrayList = new ArrayList<>();
         serialDriver = new SerialDriver();
         serialBuffer = new StringBuffer();
         searchThread = new Thread();
+        i7000 = new I7000(false);
         onEnableWindow(false);
         setEnabledSearchButton(false);
         onInitCommand((ActionEvent event) -> {
@@ -42,23 +48,24 @@ public class ContentPanel extends ContentPanelInit {
                 searchThread.start();
             }
         });
+        onRenameCommand((ActionEvent event) -> {});
+        onChangeIdCommand((ActionEvent event) -> {});
     }
 
     private void SearchDevices() {
-        final int SearchPause = 500;
-        final short numberOfDevices = 12;
+        final int SearchPause = 10;
         serialBuffer.setLength(0);
         StringBuilder str = new StringBuilder("$");
-        for (short i = 0; i < numberOfDevices; i++) {
+        for (int i = getStart(), j = getStart(), s = getEnd() - getStart(); i < getEnd(); i++) {
             str.append(String.format("%02X", i));
             str.append("M");
             if (checksumIsSelected()) {
-                str.append(getCRC(str.toString().toCharArray()));
+                str.append(i7000.getCRC(str.toString().toCharArray()));
             }
             str.append("\r");
             serialDriver.write(str.toString());
             str.setLength(1);
-            setTextPercentLabel(100 * i / numberOfDevices + "%");
+            setTextPercentLabel(100 * (i - j) / s + "%");
             try {
                 Thread.sleep(SearchPause);
             } catch (InterruptedException e) {
@@ -71,30 +78,24 @@ public class ContentPanel extends ContentPanelInit {
     }
 
     private void updateTextArea() {
-        clearTextArea();
+        devicesArrayList.clear();
         if (serialBuffer.length() == 0) return;
         StringTokenizer tokenizer = new StringTokenizer(serialBuffer.toString(), "\r");
         while (tokenizer.hasMoreTokens()) {
             String token = tokenizer.nextToken();
             if (token.length() < 3) {
-                appendStringTextArea("Отримано: " + token + " <-- FAILED!!!\n");
                 continue;
             }
-            appendStringTextArea("Ідентифікатор модуля: " +
-                    token.substring(1, 3) +
-                    " Ім'я модуля: " +
-                    token.substring(3, token.length() - (checksumIsSelected() ? 2 : 0)) +
-                    "\n");
+            String [] str = new String[2];
+            str[0] = token.substring(1, 3);
+            str[1] = token.substring(3, token.length() - (checksumIsSelected() ? 2 : 0));
+            devicesArrayList.add(str);
         }
+        updateData(devicesArrayList);
         onEnableWindow(true);
     }
 
-    private String getCRC(char[] str) {
-        int crc = 0;
-        for (char ch : str) crc += ch;
-        String reStr = String.format("%02X", crc);
-        return reStr.substring(reStr.length() - 2);
-    }
+
 
     private void dataReadAction(String s) {
         serialBuffer.append(s);
