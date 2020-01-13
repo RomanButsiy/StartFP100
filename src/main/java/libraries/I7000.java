@@ -15,7 +15,7 @@ public class I7000 {
         return reStr.substring(reStr.length() - 2);
     }
 
-    private String filter(String str) {
+    public String filter(String str) {
         return  str + (useCRC ? getCRC(str.toCharArray()) + "\r" : "\r");
     }
 

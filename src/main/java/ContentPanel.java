@@ -2,16 +2,20 @@ import MenuBar.IGetPortAndSpeed;
 import SerialDriver.*;
 import jssc.SerialPort;
 import jssc.SerialPortException;
+import libraries.CommandHistory;
 import libraries.I7000;
 
 import javax.swing.*;
 import javax.swing.plaf.TableHeaderUI;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 public class ContentPanel extends ContentPanelInit {
+    private final CommandHistory commandHistory = new CommandHistory(100);
     private ArrayList<String []> devicesArrayList;
     private StringBuffer serialBuffer;
     private SerialDriver serialDriver;
@@ -62,18 +66,44 @@ public class ContentPanel extends ContentPanelInit {
             updateData(devicesArrayList);
         });
         onChangeIdCommand((ActionEvent event) -> {});
+        onSendCommand((ActionEvent event) -> {
+            String command = getTextField();
+            serialDriver.write(i7000.filter(command));
+            commandHistory.addCommand(command);
+            setTextField("");
+            if (!waitResponse()) return;
+            serialBuffer.append("\n");
+            updateTextArea(serialBuffer.toString());
+        });
         onChecksumCommand((ActionEvent event) -> {
             i7000.enabledCRC(checksumIsSelected());
         });
+        onTextFieldKey(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_UP:
+                        if (commandHistory.hasPreviousCommand()) {
+                            setTextField(commandHistory.getPreviousCommand(getTextField()));
+                        }
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        if (commandHistory.hasNextCommand()) {
+                            setTextField(commandHistory.getNextCommand());
+                        }
+                        break;
+                }
+            }
+        });
     }
 
-    private void waitResponse() {
-        final int timeOut = 10;
+    private boolean waitResponse() {
+        final int timeOut = 100;
         serialBuffer.setLength(0);
         long startTime = System.currentTimeMillis();
         while ((System.currentTimeMillis() - startTime < timeOut)) {
             if (serialBuffer.indexOf("\r") != -1) {
-                return;
+                return true;
             }
             try {
                 Thread.sleep(1);
@@ -84,6 +114,7 @@ public class ContentPanel extends ContentPanelInit {
         JOptionPane.showMessageDialog(null, "Час вийшов",
                 "Помилка", JOptionPane.WARNING_MESSAGE);
         System.out.println(serialBuffer.toString());
+        return false;
     }
 
     private void SearchDevices() {

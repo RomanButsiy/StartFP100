@@ -1,25 +1,29 @@
 import javax.swing.*;
+import javax.swing.text.DefaultCaret;
+import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ContentPanelInit extends JPanel implements ItemListener {
-    private JButton initButton, searchButton, renameButton, changeIdButton;
+    private JButton initButton, searchButton, renameButton, changeIdButton, sendButton;
     private ResourceBundle bundle;
     private JTextField textField;
     private JTextArea textArea;
     private JScrollPane scrollPane;
     private JCheckBox checksum;
-    private JLabel percentLabel, startLabel, endLabel;
+    private JLabel percentLabel, startLabel;
     private JComboBox<String> devicesComboBox, startComboBox, endComboBox;
 
     public ContentPanelInit(ResourceBundle bundle) {
         this.bundle = bundle;
         setLayout(new GridBagLayout());
-        textField = new JTextField(40);
+        textField = new JTextField(10);
+        sendButton = new JButton(bundle.getString("sendButton"));
         initButton = new JButton("Ініціалізувати Порт");
         searchButton = new JButton("Знайти модулі");
         renameButton = new JButton("Перейменувати");
@@ -66,9 +70,36 @@ public class ContentPanelInit extends JPanel implements ItemListener {
         changeIdButton.addActionListener(listener);
     }
 
+    public void onSendCommand(ActionListener listener) {
+        textField.addActionListener(listener);
+        sendButton.addActionListener(listener);
+    }
+
+    public void onTextFieldKey(KeyListener listener) {
+        textField.addKeyListener(listener);
+    }
+
+    public String getTextField() {
+        return textField.getText();
+    }
+
+    public void setTextField(String text) {
+        textField.setText(text);
+    }
 
     private void init() {
         Insets insets = new Insets(2, 2, 2, 2);
+        JPopupMenu menu = new JPopupMenu();
+        Action cut = new DefaultEditorKit.CutAction();
+        cut.putValue(Action.NAME, bundle.getString("popupCut"));
+        menu.add(cut);
+        Action copy = new DefaultEditorKit.CopyAction();
+        copy.putValue(Action.NAME, bundle.getString("popupCopy"));
+        menu.add(copy);
+        Action paste = new DefaultEditorKit.PasteAction();
+        paste.putValue(Action.NAME, bundle.getString("popupPaste"));
+        menu.add(paste);
+        textField.setComponentPopupMenu(menu);
         add(startLabel, new GridBagConstraints(0, 0, 1, 1, 1, 1,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets, 0, 0));
         add(startComboBox, new GridBagConstraints(1, 0, 1, 1, 1, 1,
@@ -81,9 +112,13 @@ public class ContentPanelInit extends JPanel implements ItemListener {
                 GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, insets, 0, 0));
         add(renameButton, new GridBagConstraints(2, 1, 1, 1, 1, 1,
                 GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, insets, 0, 0));
-        add(devicesComboBox, new GridBagConstraints(0, 2, 4, 1, 1, 1,
+        add(devicesComboBox, new GridBagConstraints(0, 2, 1, 1, 1, 1,
                 GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, insets, 0, 0));
-        add(scrollPane, new GridBagConstraints(0, 3, 4, 1, 1, 1,
+        add(textField, new GridBagConstraints(1, 2, 1, 1, 1, 1,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets, 0, 0));
+        add(sendButton, new GridBagConstraints(2, 2, 1, 1, 1, 1,
+                GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, insets, 0, 0));
+        add(scrollPane, new GridBagConstraints(0, 3, 3, 1, 1, 1,
                 GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, insets, 0, 0));
         add(initButton, new GridBagConstraints(0, 4, 1, 1, 1, 1,
                 GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, insets, 0, 0));
@@ -110,6 +145,10 @@ public class ContentPanelInit extends JPanel implements ItemListener {
         }
     }
 
+    public void updateTextArea(String str) {
+        textArea.append(str);
+    }
+
     public boolean checksumIsSelected() {
         return checksum.isSelected();
     }
@@ -118,6 +157,7 @@ public class ContentPanelInit extends JPanel implements ItemListener {
         textArea.setEnabled(enable);
         scrollPane.setEnabled(enable);
         textField.setEnabled(enable);
+        sendButton.setEnabled(enable);
         renameButton.setEnabled(enable);
         changeIdButton.setEnabled(enable);
         devicesComboBox.setEnabled(enable);
