@@ -59,20 +59,9 @@ public class ContentPanel extends ContentPanelInit {
             serialDriver.write(i7000.setModuleName(newData));
             new Thread(this::waitResponse).start();
             devicesArrayList.set(index, newData);
+            updateData(devicesArrayList);
         });
-        onChangeIdCommand((ActionEvent event) -> {
-            for (int i = 0; i < 10000; i++) {
-                String [] newData = new String[]{ "00", "O"};
-                serialDriver.write(i7000.setModuleName(newData));
-                waitResponse();
-                try {
-                    Thread.sleep(100);
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        onChangeIdCommand((ActionEvent event) -> {});
         onChecksumCommand((ActionEvent event) -> {
             i7000.enabledCRC(checksumIsSelected());
         });
@@ -84,22 +73,17 @@ public class ContentPanel extends ContentPanelInit {
         long startTime = System.currentTimeMillis();
         while ((System.currentTimeMillis() - startTime < timeOut)) {
             if (serialBuffer.indexOf("\r") != -1) {
-                break;
+                return;
             }
             try {
                 Thread.sleep(1);
-
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        if ((System.currentTimeMillis() - startTime) >= timeOut) {
-            JOptionPane.showMessageDialog(null, "Час вийшов",
-                    "Помилка", JOptionPane.WARNING_MESSAGE);
-            System.out.println(serialBuffer.toString());
-            return;
-        }
-        //updateData(devicesArrayList);
+        JOptionPane.showMessageDialog(null, "Час вийшов",
+                "Помилка", JOptionPane.WARNING_MESSAGE);
+        System.out.println(serialBuffer.toString());
     }
 
     private void SearchDevices() {

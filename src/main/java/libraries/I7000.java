@@ -15,12 +15,16 @@ public class I7000 {
         return reStr.substring(reStr.length() - 2);
     }
 
+    private String filter(String str) {
+        return  str + (useCRC ? getCRC(str.toCharArray()) + "\r" : "\r");
+    }
+
     public void enabledCRC(boolean enabledCRC) {
         this.useCRC = enabledCRC;
     }
 
     public String setModuleName(String[] newData) {
         String str = "~" + newData[0] + "O" + newData[1];
-        return  str + (useCRC ? getCRC(str.toCharArray()) + "\r" : "\r");
+        return  filter(str);
     }
 }
