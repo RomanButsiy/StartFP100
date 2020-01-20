@@ -1,12 +1,14 @@
 import MenuBar.IGetPortAndSpeed;
+import MenuBar.PortAndSpeed;
 import SerialDriver.*;
+import SettingsPanel.SettingsPanel;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 import libraries.CommandHistory;
 import libraries.I7000;
 
 import javax.swing.*;
-import javax.swing.plaf.TableHeaderUI;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -17,12 +19,18 @@ import java.util.StringTokenizer;
 public class ContentPanel extends ContentPanelInit {
     private final CommandHistory commandHistory = new CommandHistory(100);
     private ArrayList<String []> devicesArrayList;
+    private ResourceBundle bundle;
+    private SerialPort serialPort = null;
+    private IGetPortAndSpeed getPortAndSpeed;
     private StringBuffer serialBuffer;
     private SerialDriver serialDriver;
     private Thread searchThread;
     private I7000 i7000;
+    private Frame frame;
     public ContentPanel(IGetPortAndSpeed portAndSpeed, ResourceBundle bundle) {
         super(bundle);
+        this.bundle = bundle;
+        this.getPortAndSpeed = portAndSpeed;
         devicesArrayList = new ArrayList<>();
         serialDriver = new SerialDriver();
         serialBuffer = new StringBuffer();
@@ -33,7 +41,7 @@ public class ContentPanel extends ContentPanelInit {
         onInitCommand((ActionEvent event) -> {
             if (!serialDriver.isInit()) {
                 serialDriver.initPort(portAndSpeed.getPortAndSpeed());
-                SerialPort serialPort = SerialDriver.getSerialPort();
+                serialPort = SerialDriver.getSerialPort();
                 try {
                     serialPort.addEventListener(new PortReader(serialPort, this::dataReadAction), SerialPort.MASK_RXCHAR);
                     JOptionPane.showMessageDialog(null, "Порт успішно ініціалізовано",
@@ -53,19 +61,6 @@ public class ContentPanel extends ContentPanelInit {
                 searchThread.start();
             }
         });
-        onRenameCommand((ActionEvent event) -> {
-            int index = getDevicesComboBox();
-            String resultString1 = JOptionPane.showInputDialog(null,
-                    "Поточна назва пристрою " + devicesArrayList.get(index)[1] + ".\nВведіть нову назву пристрою",
-                    "Перейменувати модуль", JOptionPane.QUESTION_MESSAGE);
-            if (resultString1 == null || resultString1.equals("")) return;
-            String [] newData = new String[]{ devicesArrayList.get(index)[0], resultString1 };
-            serialDriver.write(i7000.setModuleName(newData));
-            new Thread(this::waitResponse).start();
-            devicesArrayList.set(index, newData);
-            updateData(devicesArrayList);
-        });
-        onChangeIdCommand((ActionEvent event) -> {});
         onSendCommand((ActionEvent event) -> {
             String command = getTextField();
             serialDriver.write(i7000.filter(command));
@@ -103,6 +98,7 @@ public class ContentPanel extends ContentPanelInit {
         long startTime = System.currentTimeMillis();
         while ((System.currentTimeMillis() - startTime < timeOut)) {
             if (serialBuffer.indexOf("\r") != -1) {
+                setTextPercentLabel(String.valueOf(System.currentTimeMillis() - startTime));
                 return true;
             }
             try {
@@ -113,15 +109,31 @@ public class ContentPanel extends ContentPanelInit {
         }
         JOptionPane.showMessageDialog(null, "Час вийшов",
                 "Помилка", JOptionPane.WARNING_MESSAGE);
-        System.out.println(serialBuffer.toString());
         return false;
+    }
+
+    public void settingsAction() {
+        PortAndSpeed portAndSpeed = getPortAndSpeed.getPortAndSpeed();
+        if (portAndSpeed.getPort() == null) {
+            JOptionPane.showMessageDialog(null, "Порт не вибрано",
+                    "Помилка", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (serialPort != null) {
+            if (serialPort.isOpened()) {
+                JOptionPane.showMessageDialog(null, "Порт зайнятий",
+                        "Помилка", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        SettingsPanel settingsPanel = new SettingsPanel(frame, portAndSpeed, bundle);
     }
 
     private void SearchDevices() {
         final int SearchPause = 500;
         serialBuffer.setLength(0);
         StringBuilder str = new StringBuilder("$");
-        for (int i = getStart(), j = getStart(), s = getEnd() - getStart(); i < getEnd(); i++) {
+        for (int i = 0; i < 10; i++) {
             str.append(String.format("%02X", i));
             str.append("M");
             if (checksumIsSelected()) {
@@ -130,7 +142,7 @@ public class ContentPanel extends ContentPanelInit {
             str.append("\r");
             serialDriver.write(str.toString());
             str.setLength(1);
-            setTextPercentLabel(100 * (i - j) / s + "%");
+            setTextPercentLabel(100 * i / 10 + "%");
             try {
                 Thread.sleep(SearchPause);
             } catch (InterruptedException e) {
@@ -158,6 +170,10 @@ public class ContentPanel extends ContentPanelInit {
         }
         updateData(devicesArrayList);
         onEnableWindow(true);
+    }
+
+    public void setFrame(Frame frame) {
+        this.frame = frame;
     }
 
     private void dataReadAction(String s) {

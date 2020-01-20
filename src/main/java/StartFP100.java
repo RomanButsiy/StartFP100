@@ -1,4 +1,5 @@
 import MenuBar.MenuBar;
+import MenuBar.ISettingsAction;
 
 import javax.swing.*;
 import java.util.Locale;
@@ -14,12 +15,14 @@ public class StartFP100 {
     private StartFP100(String title, ResourceBundle bundle) {
         MenuBar menuBar = new MenuBar(bundle);
         ContentPanel panel = new ContentPanel(menuBar::getPortAndSpeed, bundle);
+        menuBar.setSettingsAction(panel::settingsAction);
         JFrame frame = new JFrame(title);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setJMenuBar(menuBar);
         frame.setResizable(true);
         frame.getContentPane().add(panel);
-        frame.pack();
+        panel.setFrame(frame);
+        frame.setSize(600, 400);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

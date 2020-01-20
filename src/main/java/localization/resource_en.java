@@ -18,7 +18,8 @@ public class resource_en extends ListResourceBundle {
                 {"clearButton", "Clear output"},
                 {"popupCut", "Cut"},
                 {"popupCopy", "Copy"},
-                {"popupPaste", "Paste"}
+                {"popupPaste", "Paste"},
+                {"menuSettings", "Settings"}
         };
     }
 }

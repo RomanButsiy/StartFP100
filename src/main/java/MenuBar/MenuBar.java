@@ -8,6 +8,7 @@ public class MenuBar extends JMenuBar {
 
     private ToolsMenu toolsMenu;
     private ResourceBundle bundle;
+    private ISettingsAction settingsAction;
 
     public MenuBar(ResourceBundle bundle) {
         this.bundle = bundle;
@@ -23,6 +24,10 @@ public class MenuBar extends JMenuBar {
         file.addSeparator();
         file.add(Exit);
         return file;
+    }
+
+    public void setSettingsAction(ISettingsAction settingsAction) {
+        toolsMenu.setSettingsAction(settingsAction);
     }
 
     public PortAndSpeed getPortAndSpeed() {

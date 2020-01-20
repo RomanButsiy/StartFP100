@@ -9,15 +9,15 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class ContentPanelInit extends JPanel implements ItemListener {
+public class ContentPanelInit extends JPanel{
     private JButton initButton, searchButton, renameButton, changeIdButton, sendButton;
     private ResourceBundle bundle;
     private JTextField textField;
     private JTextArea textArea;
     private JScrollPane scrollPane;
     private JCheckBox checksum;
-    private JLabel percentLabel, startLabel;
-    private JComboBox<String> devicesComboBox, startComboBox, endComboBox;
+    private JLabel percentLabel;
+    private JComboBox<String> devicesComboBox;
 
     public ContentPanelInit(ResourceBundle bundle) {
         this.bundle = bundle;
@@ -26,8 +26,8 @@ public class ContentPanelInit extends JPanel implements ItemListener {
         sendButton = new JButton(bundle.getString("sendButton"));
         initButton = new JButton("Ініціалізувати Порт");
         searchButton = new JButton("Знайти модулі");
-        renameButton = new JButton("Перейменувати");
-        changeIdButton = new JButton("Змінити ID модуля");
+        renameButton = new JButton("NULL");
+        changeIdButton = new JButton("NULL");
         textArea = new JTextArea();
         textArea.setRows(16);
         textArea.setColumns(40);
@@ -35,19 +35,8 @@ public class ContentPanelInit extends JPanel implements ItemListener {
         scrollPane = new JScrollPane(textArea);
         checksum = new JCheckBox("Контрольна сума", false);
         devicesComboBox = new JComboBox<>();
-        startComboBox = new JComboBox<>();
-        endComboBox = new JComboBox<>();
         percentLabel = new JLabel();
-        startLabel = new JLabel("Задати діапазон пошуку");
-        startComboBox.addItemListener(this);
         init();
-        for (short i = 0; i < 255; i++) {
-            startComboBox.addItem(String.format("%02X", i));
-        }
-    }
-
-    public int getDevicesComboBox() {
-        return devicesComboBox.getSelectedIndex();
     }
 
     public void onChecksumCommand(ActionListener listener) {
@@ -60,14 +49,6 @@ public class ContentPanelInit extends JPanel implements ItemListener {
 
     public void onSearchCommand(ActionListener listener) {
         searchButton.addActionListener(listener);
-    }
-
-    public void onRenameCommand(ActionListener listener) {
-        renameButton.addActionListener(listener);
-    }
-
-    public void onChangeIdCommand(ActionListener listener) {
-        changeIdButton.addActionListener(listener);
     }
 
     public void onSendCommand(ActionListener listener) {
@@ -100,12 +81,6 @@ public class ContentPanelInit extends JPanel implements ItemListener {
         paste.putValue(Action.NAME, bundle.getString("popupPaste"));
         menu.add(paste);
         textField.setComponentPopupMenu(menu);
-        add(startLabel, new GridBagConstraints(0, 0, 1, 1, 1, 1,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, insets, 0, 0));
-        add(startComboBox, new GridBagConstraints(1, 0, 1, 1, 1, 1,
-                GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, insets, 0, 0));
-        add(endComboBox, new GridBagConstraints(2, 0, 1, 1, 1, 1,
-                GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, insets, 0, 0));
         add(searchButton, new GridBagConstraints(0, 1, 1, 1, 1, 1,
                 GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, insets, 0, 0));
         add(changeIdButton, new GridBagConstraints(1, 1, 1, 1, 1, 1,
@@ -141,12 +116,14 @@ public class ContentPanelInit extends JPanel implements ItemListener {
         devicesComboBox.removeAllItems();
         for (String [] str : strList) {
             textArea.append("Ідентифікатор модуля: " + str[0] + " Ім'я модуля: " + str[1] + "\n");
+            textArea.setCaretPosition(textArea.getDocument().getLength());
             devicesComboBox.addItem("ID:" + str[0]);
         }
     }
 
     public void updateTextArea(String str) {
         textArea.append(str);
+        textArea.setCaretPosition(textArea.getDocument().getLength());
     }
 
     public boolean checksumIsSelected() {
@@ -163,22 +140,4 @@ public class ContentPanelInit extends JPanel implements ItemListener {
         devicesComboBox.setEnabled(enable);
     }
 
-    public int getStart() {
-        return startComboBox.getSelectedIndex();
-    }
-
-    public int getEnd() {
-        return startComboBox.getSelectedIndex() + endComboBox.getSelectedIndex() + 1;
-    }
-
-    @Override
-    public void itemStateChanged(ItemEvent event) {
-        if (event.getStateChange() == ItemEvent.DESELECTED) return;
-        if(event.getSource() == startComboBox){
-            endComboBox.removeAllItems();
-            for (int i = startComboBox.getSelectedIndex(); i < 256; i++) {
-                endComboBox.addItem(String.format("%02X", i));
-            }
-        }
-    }
 }

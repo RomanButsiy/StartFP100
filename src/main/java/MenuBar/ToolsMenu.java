@@ -3,6 +3,7 @@ package MenuBar;
 import jssc.SerialPort;
 import jssc.SerialPortList;
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.ResourceBundle;
 class ToolsMenu {
     private final int defaultSpeed = 2;
     private ResourceBundle bundle;
+    private ISettingsAction settingsAction;
     private PortAndSpeed portAndSpeed;
     private String [] speeds = { String.valueOf(SerialPort.BAUDRATE_300),
             String.valueOf(SerialPort.BAUDRATE_9600),
@@ -29,7 +31,7 @@ class ToolsMenu {
         String[] portNamesNew;
         while (true) {
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2000);
                 portNamesNew = SerialPortList.getPortNames();
                 if (!Arrays.equals(portNamesNew, portNames)) {
                     if (portNamesNew.length == 0) {
@@ -63,6 +65,9 @@ class ToolsMenu {
         JRadioButton [] speed = new JRadioButton[speeds.length];
         speedToolsItem = new JMenu();
         portToolsItem = new JMenu();
+        portToolsItem.setEnabled(false);
+        portToolsItem.setText(bundle.getString("menuPort"));
+        JMenuItem settingsToolsItem = new JMenuItem(new SettingsAction());
         for (int i = 0; i < speeds.length; i++) {
             speed[i] = new JRadioButton(speeds[i]);
             speedsButtonGroup.add(speed[i]);
@@ -74,11 +79,26 @@ class ToolsMenu {
         }
         toolsMenu.add(speedToolsItem);
         toolsMenu.add(portToolsItem);
+        toolsMenu.addSeparator();
+        toolsMenu.add(settingsToolsItem);
         return toolsMenu;
     }
 
     public PortAndSpeed getPortAndSpeed() {
         return portAndSpeed;
+    }
+
+    private class SettingsAction extends AbstractAction {
+        SettingsAction() {
+            putValue(NAME, bundle.getString("menuSettings"));
+        }
+        public void actionPerformed(ActionEvent e) {
+            settingsAction.getSettingsAction();
+        }
+    }
+
+    public void setSettingsAction(ISettingsAction settingsAction) {
+        this.settingsAction = settingsAction;
     }
 
     private class speedItemListener implements ItemListener {

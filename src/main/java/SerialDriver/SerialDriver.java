@@ -8,8 +8,13 @@ public class SerialDriver {
 
     private static SerialPort serialPort;
     private boolean isInit = false;
+    private String initException = null;
 
     public SerialDriver() {
+    }
+
+    public String getInitException() {
+        return initException;
     }
 
     public static SerialPort getSerialPort() {
@@ -32,6 +37,7 @@ public class SerialDriver {
                     SerialPort.PARITY_NONE);
         } catch (SerialPortException e) {
             e.printStackTrace();
+            initException = e.toString();
             return;
         }
         isInit = true;
@@ -42,6 +48,7 @@ public class SerialDriver {
             serialPort.writeString(text);
         } catch (SerialPortException e) {
             e.printStackTrace();
+            initException = e.toString();
         }
     }
 }

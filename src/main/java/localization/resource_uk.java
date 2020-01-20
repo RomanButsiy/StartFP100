@@ -18,7 +18,8 @@ public class resource_uk extends ListResourceBundle {
                 {"clearButton", "Очистити вивід"},
                 {"popupCut", "Вирізати"},
                 {"popupCopy", "Копіювати"},
-                {"popupPaste", "Вставити"}
+                {"popupPaste", "Вставити"},
+                {"menuSettings", "Налаштування"}
         };
     }
 }
