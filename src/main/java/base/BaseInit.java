@@ -37,7 +37,7 @@ public class BaseInit {
             }
             platform = (Platform) platformClass.newInstance();
         } catch (Exception e) {
-            showError("Проблема з налаштуванням платформи",
+            showError("Проблема з налаштуванням платформи ",
                     "Під час завантаження сталася невідома помилка", e);
         }
     }
