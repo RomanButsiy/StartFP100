@@ -7,47 +7,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="93b63df6-3c6c-411f-8753-d9cd68fc9762" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/StartFP100_jar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/artifacts/StartFP100_jar/StartFP100.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/MenuBar/ISettingsAction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/SettingsPanel/SettingsPanel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/META-INF/StartFP100.kotlin_module" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/MenuBar/ISettingsAction.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/MenuBar/ToolsMenu$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/MenuBar/ToolsMenu$SettingsAction.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/SettingsPanel/SettingsPanel$1.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/SettingsPanel/SettingsPanel.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/StartFP100_jar/StartFP100.jar" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ContentPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ContentPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ContentPanelInit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ContentPanelInit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/MenuBar/MenuBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/MenuBar/MenuBar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/MenuBar/ToolsMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/MenuBar/ToolsMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SerialDriver/SerialDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SerialDriver/SerialDriver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/StartFP100.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/StartFP100.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/localization/resource_en.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/localization/resource_en.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/localization/resource_uk.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/localization/resource_uk.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ContentPanel$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ContentPanel$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ContentPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ContentPanel.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ContentPanelInit.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ContentPanelInit.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MenuBar/IGetPortAndSpeed.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MenuBar/IGetPortAndSpeed.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MenuBar/MenuBar$ChangeUserAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MenuBar/MenuBar$ChangeUserAction.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MenuBar/MenuBar$ExitAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MenuBar/MenuBar$ExitAction.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MenuBar/MenuBar.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MenuBar/MenuBar.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MenuBar/PortAndSpeed.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MenuBar/PortAndSpeed.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MenuBar/ToolsMenu$portItemListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MenuBar/ToolsMenu$portItemListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MenuBar/ToolsMenu$speedItemListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MenuBar/ToolsMenu$speedItemListener.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/MenuBar/ToolsMenu.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/MenuBar/ToolsMenu.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SerialDriver/IDataReadAction.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SerialDriver/IDataReadAction.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SerialDriver/PortReader.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SerialDriver/PortReader.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/SerialDriver/SerialDriver.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/SerialDriver/SerialDriver.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/StartFP100.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/StartFP100.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/libraries/CommandHistory.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/libraries/CommandHistory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/libraries/I7000.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/libraries/I7000.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/localization/resource_en.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/localization/resource_en.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/localization/resource_uk.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/localization/resource_uk.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,6 +62,7 @@
       <recent name="" />
     </key>
     <key name="CreateClassDialog.RecentsKey">
+      <recent name="base.platform" />
       <recent name="SerialDriver" />
       <recent name="" />
     </key>
@@ -172,38 +137,42 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="776" y="310" width="424" height="484" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1579018374128" />
-    <state width="1807" height="278" key="GridCell.Tab.0.bottom" timestamp="1579540967701">
+    <state width="1807" height="278" key="GridCell.Tab.0.bottom" timestamp="1579804813140">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="278" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1579540967701" />
-    <state width="1807" height="278" key="GridCell.Tab.0.center" timestamp="1579540967700">
+    <state width="1807" height="278" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1579804813140" />
+    <state width="1807" height="278" key="GridCell.Tab.0.center" timestamp="1579804813139">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="278" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1579540967700" />
-    <state width="1807" height="278" key="GridCell.Tab.0.left" timestamp="1579540967699">
+    <state width="1807" height="278" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1579804813139" />
+    <state width="1807" height="278" key="GridCell.Tab.0.left" timestamp="1579804813139">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="278" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1579540967699" />
-    <state width="1807" height="278" key="GridCell.Tab.0.right" timestamp="1579540967701">
+    <state width="1807" height="278" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1579804813139" />
+    <state width="1807" height="278" key="GridCell.Tab.0.right" timestamp="1579804813139">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="278" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1579540967701" />
-    <state width="1807" height="344" key="GridCell.Tab.1.bottom" timestamp="1579531899594">
+    <state width="1807" height="278" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1579804813139" />
+    <state width="1807" height="344" key="GridCell.Tab.1.bottom" timestamp="1579541413948">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="344" key="GridCell.Tab.1.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1579531899594" />
-    <state width="1807" height="344" key="GridCell.Tab.1.center" timestamp="1579531899593">
+    <state width="1807" height="344" key="GridCell.Tab.1.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1579541413948" />
+    <state width="1807" height="344" key="GridCell.Tab.1.center" timestamp="1579541413948">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="344" key="GridCell.Tab.1.center/67.27.1853.1053@67.27.1853.1053" timestamp="1579531899593" />
-    <state width="1807" height="344" key="GridCell.Tab.1.left" timestamp="1579531899593">
+    <state width="1807" height="344" key="GridCell.Tab.1.center/67.27.1853.1053@67.27.1853.1053" timestamp="1579541413948" />
+    <state width="1807" height="344" key="GridCell.Tab.1.left" timestamp="1579541413946">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="344" key="GridCell.Tab.1.left/67.27.1853.1053@67.27.1853.1053" timestamp="1579531899593" />
-    <state width="1807" height="344" key="GridCell.Tab.1.right" timestamp="1579531899593">
+    <state width="1807" height="344" key="GridCell.Tab.1.left/67.27.1853.1053@67.27.1853.1053" timestamp="1579541413946" />
+    <state width="1807" height="344" key="GridCell.Tab.1.right" timestamp="1579541413948">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="344" key="GridCell.Tab.1.right/67.27.1853.1053@67.27.1853.1053" timestamp="1579531899593" />
+    <state width="1807" height="344" key="GridCell.Tab.1.right/67.27.1853.1053@67.27.1853.1053" timestamp="1579541413948" />
+    <state x="526" y="210" width="924" height="684" key="Maven.ArtifactSearchDialog" timestamp="1579797183252">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="526" y="210" width="924" height="684" key="Maven.ArtifactSearchDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1579797183252" />
     <state x="476" y="130" width="1024" height="845" key="SettingsEditor" timestamp="1579018756906">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
