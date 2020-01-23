@@ -27,6 +27,10 @@ public class BaseInit {
         return settingsFolder;
     }
 
+    static public Platform getPlatform() {
+        return platform;
+    }
+
     public static void initPlatform() {
         try {
             Class<?> platformClass = Class.forName("base.platforms.Platform");
