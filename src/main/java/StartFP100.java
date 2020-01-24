@@ -36,7 +36,12 @@ public class StartFP100 {
             System.setProperty("swing.aatext", "true");
         }
         System.setProperty("java.net.useSystemProxies", "true");
-        new Base(args);
+        try {
+            new Base(args);
+        } catch (Throwable e) {
+            e.printStackTrace(System.err);
+            System.exit(255);
+        }
         new StartFP100(bundle.getString("titleFrame"), bundle);
     }
 }

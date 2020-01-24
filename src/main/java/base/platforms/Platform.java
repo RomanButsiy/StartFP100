@@ -2,7 +2,7 @@ package base.platforms;
 
 public class Platform {
 
-    public void init() {
+    public void init() throws Exception {
     }
 
 }

@@ -9,7 +9,7 @@ public class Platform extends base.platforms.Platform {
 
     private File settingsFolder;
 
-    public void init() {
+    public void init() throws Exception {
         super.init();
         checkPath();
         recoverSettingsFolderPath();
@@ -41,14 +41,17 @@ public class Platform extends base.platforms.Platform {
         }
         legit = PApplet.subset(legit, 0, legitCount);
         String newPath = PApplet.join(legit, File.pathSeparator);
+        System.out.println("2 OldPath " + path);
+        System.out.println("3 newPath " + newPath);
         if (!newPath.equals(path)) {
             System.setProperty("java.library.path", newPath);
         }
     }
 
-    private void recoverSettingsFolderPath() {
+    private void recoverSettingsFolderPath() throws Exception {
         Path path = Win32KnownFolders.getLocalAppDataFolder().toPath();
         settingsFolder = path.resolve("StartFP100").toFile();
+        System.out.println("1 settingsFolder " + settingsFolder);
     }
 
     }
