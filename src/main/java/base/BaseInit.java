@@ -32,6 +32,17 @@ public class BaseInit {
         return file;
     }
 
+    static public void initParameters(String[] args) throws Exception {
+        String preferencesFile = null;
+        for (int i = 0; i < args.length - 1; i++) {
+            if (args[i].equals("--preferences-file")) {
+                preferencesFile = args[i + 1];
+                break;
+            }
+        }
+        PreferencesData.init(absoluteFile(preferencesFile));
+    }
+
     static public File getSettingsFolder() {
         File settingsFolder = null;
         String preferencesPath = PreferencesData.get("settings.path");
@@ -91,6 +102,10 @@ public class BaseInit {
     }
 
     static public void showWarning(String title, String message, Exception e) {
+        notifier.showWarning(title, message, e);
+    }
+
+    static public void showWarning(String title, String message, Throwable e) {
         notifier.showWarning(title, message, e);
     }
 

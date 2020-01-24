@@ -1,9 +1,13 @@
 package base.platforms.windows;
 
+import base.PreferencesData;
 import base.legacy.PApplet;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Platform extends base.platforms.Platform {
 
@@ -16,8 +20,27 @@ public class Platform extends base.platforms.Platform {
     }
 
     @Override
+    public void fixSettingsLocation() throws Exception {
+        Path oldSettingsFolder = recoverOldSettingsFolderPath();
+        if (!Files.exists(oldSettingsFolder)) return;
+        if (!Files.exists(oldSettingsFolder.resolve(Paths.get("preferences.txt")))) return;
+        if (settingsFolder.exists()) return;
+        Files.move(oldSettingsFolder, settingsFolder.toPath());
+    }
+
+    @Override
     public File getSettingsFolder() {
         return settingsFolder;
+    }
+
+    @Override
+    public void fixPrefsFilePermissions(File prefsFile) throws IOException {
+        //noop
+    }
+
+    private Path recoverOldSettingsFolderPath() throws Exception {
+        Path path = Win32KnownFolders.getRoamingAppDataFolder().toPath();
+        return path.resolve("StartFP100");
     }
 
     private void checkPath() {

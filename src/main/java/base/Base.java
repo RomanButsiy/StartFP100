@@ -11,7 +11,7 @@ public class Base {
         BaseInit.initPlatform();
         BaseInit.getPlatform().init();
         System.out.println("Set store directory " + Objects.requireNonNull(BaseInit.getSettingsFolder()).getAbsolutePath());
-
+        BaseInit.initParameters(args);
 
 
         File portableFolder = getContentFile("portable");

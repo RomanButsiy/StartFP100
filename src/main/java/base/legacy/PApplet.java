@@ -1,6 +1,12 @@
 package base.legacy;
 
+import base.BaseInit;
 import base.helpers.OSUtils;
+import org.apache.commons.compress.utils.IOUtils;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.zip.GZIPOutputStream;
 
 public class PApplet {
 
@@ -14,6 +20,75 @@ public class PApplet {
         } else {
             platform = PConstants.OTHER;
         }
+    }
+
+    static public PrintWriter createWriter(OutputStream output) {
+        OutputStreamWriter osw = new OutputStreamWriter(output, StandardCharsets.UTF_8);
+        return new PrintWriter(osw);
+    }
+
+    static public PrintWriter createWriter(File file) throws IOException {
+        createPath(file);
+        OutputStream output = new FileOutputStream(file);
+        try {
+            if (file.getName().toLowerCase().endsWith(".gz")) {
+                output = new GZIPOutputStream(output);
+            }
+        } catch (IOException e) {
+            output.close();
+            throw e;
+        }
+        return createWriter(output);
+    }
+
+    static public void createPath(String path) {
+        createPath(new File(path));
+    }
+
+    static public void createPath(File file) {
+        try {
+            String parent = file.getParent();
+            if (parent != null) {
+                File unit = new File(parent);
+                if (!file.exists()) unit.mkdirs();
+            }
+        } catch (SecurityException se) {
+            BaseInit.showWarning(null, "У вас немає дозволів на створення " + file.getAbsolutePath(), se);
+        }
+    }
+
+    static public String[] loadStrings(InputStream input) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
+
+            String[] lines = new String[100];
+            int lineCount = 0;
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (lineCount == lines.length) {
+                    String[] temp = new String[lineCount << 1];
+                    System.arraycopy(lines, 0, temp, 0, lineCount);
+                    lines = temp;
+                }
+                lines[lineCount++] = line;
+            }
+
+            if (lineCount == lines.length) {
+                return lines;
+            }
+
+            // resize array to appropriate amount for these lines
+            String[] output = new String[lineCount];
+            System.arraycopy(lines, 0, output, 0, lineCount);
+            return output;
+
+        } catch (IOException e) {
+            BaseInit.showWarning(null, "Помилка всередині loadStrings ()", e);
+        } finally {
+            IOUtils.closeQuietly(reader);
+        }
+        return null;
     }
 
     static public String[] subset(String[] list, int start, int count) {

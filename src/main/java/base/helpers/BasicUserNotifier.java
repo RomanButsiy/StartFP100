@@ -20,4 +20,11 @@ public class BasicUserNotifier extends UserNotifier {
         if (e != null) e.printStackTrace();
     }
 
+    public void showWarning(String title, String message, Throwable e) {
+        if (title == null) title = "Помилка";
+        System.out.println(title + ": " + message);
+        if (e != null) e.printStackTrace();
+    }
+
+
 }

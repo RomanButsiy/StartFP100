@@ -16,4 +16,6 @@ public abstract class UserNotifier {
 
     public abstract void showWarning(String title, String message, Exception e);
 
+    public abstract void showWarning(String title, String message, Throwable e);
+
 }
