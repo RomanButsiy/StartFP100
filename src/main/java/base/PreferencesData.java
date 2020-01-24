@@ -15,4 +15,7 @@ public class PreferencesData {
         }
     }
 
+    public static String get(String s) {
+        return null;
+    }
 }

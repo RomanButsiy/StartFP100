@@ -15,6 +15,11 @@ public class Platform extends base.platforms.Platform {
         recoverSettingsFolderPath();
     }
 
+    @Override
+    public File getSettingsFolder() {
+        return settingsFolder;
+    }
+
     private void checkPath() {
         String path = System.getProperty("java.library.path");
         String[] pieces = PApplet.split(path, File.pathSeparatorChar);
@@ -41,8 +46,6 @@ public class Platform extends base.platforms.Platform {
         }
         legit = PApplet.subset(legit, 0, legitCount);
         String newPath = PApplet.join(legit, File.pathSeparator);
-        System.out.println("2 OldPath " + path);
-        System.out.println("3 newPath " + newPath);
         if (!newPath.equals(path)) {
             System.setProperty("java.library.path", newPath);
         }
@@ -51,7 +54,6 @@ public class Platform extends base.platforms.Platform {
     private void recoverSettingsFolderPath() throws Exception {
         Path path = Win32KnownFolders.getLocalAppDataFolder().toPath();
         settingsFolder = path.resolve("StartFP100").toFile();
-        System.out.println("1 settingsFolder " + settingsFolder);
     }
 
     }

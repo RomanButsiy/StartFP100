@@ -6,24 +6,52 @@ import base.platforms.Platform;
 
 public class BaseInit {
 
-    static File portableFolder = null;
     static Platform platform;
     static UserNotifier notifier = new BasicUserNotifier();
+    static String currentDirectory = System.getProperty("user.dir");
 
     public static File getSettingsFile(String filename) {
         return new File(getSettingsFolder(), filename);
     }
 
-    static public File getPortableFolder() {
-        return portableFolder;
+    static public File getContentFile(String name) {
+        String appDir = System.getProperty("APP_DIR");
+        if (appDir == null || appDir.length() == 0) {
+            appDir = currentDirectory;
+        }
+        return new File(new File(appDir), name);
+    }
+
+    static public File absoluteFile(String path) {
+        if (path == null) return null;
+
+        File file = new File(path);
+        if (!file.isAbsolute()) {
+            file = new File(currentDirectory, path);
+        }
+        return file;
     }
 
     static public File getSettingsFolder() {
-        if (getPortableFolder() != null)
-            return getPortableFolder();
-
         File settingsFolder = null;
-
+        String preferencesPath = PreferencesData.get("settings.path");
+        if (preferencesPath != null) {
+            settingsFolder = absoluteFile(preferencesPath);
+        } else {
+            try {
+                settingsFolder = getPlatform().getSettingsFolder();
+            } catch (Exception e) {
+                showError("Проблема отримання папки налаштувань",
+                          "Помилка отримання папки налаштувань StartFP100.", e);
+            }
+        }
+        if (!settingsFolder.exists()) {
+            if (!settingsFolder.mkdirs()) {
+                showError("Проблеми з налаштуваннями",
+                          "StartFP100 не може запускатися, оскільки не може\n" +
+                                    "створити папку для зберігання ваших налаштувань." , null);
+            }
+        }
         return settingsFolder;
     }
 
