@@ -37,6 +37,14 @@ export.application.platform.linux = true
 # Disable saving of preferences.txt file (settings will not survive StartFP100 IDE reboot)
 preferences.readonly = false
 
+# If you don't want users to have their experiments default to 
+# "My Documents/StartFP100" on Windows and "~/home/StartFP100" on Linux, 
+# set this to another path that will be used by default. 
+# Note that this path must exist already otherwise it won't see
+# the experiments folder, and will instead assume the experiments
+# has gone missing, and that it should instead use the default.
+#experiments.path =
+
 
 
 

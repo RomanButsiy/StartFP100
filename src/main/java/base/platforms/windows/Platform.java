@@ -29,6 +29,12 @@ public class Platform extends base.platforms.Platform {
     }
 
     @Override
+    public File getDefaultExperimentsFolder() throws Exception {
+        Path path = Win32KnownFolders.getDocumentsFolder().toPath();
+        return path.resolve("StartFP100").toFile();
+    }
+
+    @Override
     public File getSettingsFolder() {
         return settingsFolder;
     }

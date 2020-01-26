@@ -22,4 +22,8 @@ public class Platform {
         //noop
     }
 
+    public File getDefaultExperimentsFolder() throws Exception {
+        return null;
+    }
+
 }

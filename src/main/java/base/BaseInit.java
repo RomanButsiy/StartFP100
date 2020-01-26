@@ -10,6 +10,27 @@ public class BaseInit {
     static UserNotifier notifier = new BasicUserNotifier();
     static String currentDirectory = System.getProperty("user.dir");
 
+    static public File getDefaultExperimentsFolder() {
+        File experimentsFolder = null;
+        try {
+            experimentsFolder = getPlatform().getDefaultExperimentsFolder();
+        } catch (Exception ignored) { }
+        return experimentsFolder;
+    }
+
+    static public String getExperimentsPath() {
+        String experimentsPath = PreferencesData.get("experiments.path");
+        if (experimentsPath != null) {
+            File experimentsFolder = absoluteFile(experimentsPath);
+            if (!experimentsFolder.exists()) {
+                showWarning("Папка ескпериментів зникла",
+                         "Папки з ескспериментами більше не існує.", null);
+                experimentsPath = null;
+            }
+        }
+        return experimentsPath;
+    }
+
     public static File getSettingsFile(String filename) {
         return new File(getSettingsFolder(), filename);
     }
@@ -24,7 +45,6 @@ public class BaseInit {
 
     static public File absoluteFile(String path) {
         if (path == null) return null;
-
         File file = new File(path);
         if (!file.isAbsolute()) {
             file = new File(currentDirectory, path);
@@ -56,6 +76,7 @@ public class BaseInit {
                           "Помилка отримання папки налаштувань StartFP100.", e);
             }
         }
+        assert settingsFolder != null;
         if (!settingsFolder.exists()) {
             if (!settingsFolder.mkdirs()) {
                 showError("Проблеми з налаштуваннями",
