@@ -1,11 +1,20 @@
 package base.platforms;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 
 public class Platform {
 
     public void init() throws Exception {
+    }
+
+    public void setLookAndFeel() throws Exception {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    }
+
+    public int getSystemDPI() {
+        return 96;
     }
 
     public void fixPrefsFilePermissions(File prefsFile) throws IOException, InterruptedException {

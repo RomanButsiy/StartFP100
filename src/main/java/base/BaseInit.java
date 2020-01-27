@@ -31,6 +31,10 @@ public class BaseInit {
         return experimentsPath;
     }
 
+    static public File getExperimentsFolder() {
+        return absoluteFile(PreferencesData.get("experiments.path"));
+    }
+
     public static File getSettingsFile(String filename) {
         return new File(getSettingsFolder(), filename);
     }

@@ -6,6 +6,7 @@ import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.text.NumberFormat;
 import java.util.zip.GZIPOutputStream;
 
 public class PApplet {
@@ -20,6 +21,58 @@ public class PApplet {
         } else {
             platform = PConstants.OTHER;
         }
+    }
+
+    /**
+     * Integer number formatter.
+     */
+    static private NumberFormat int_nf;
+    static private int int_nf_digits;
+    static private boolean int_nf_commas;
+
+    static public String[] nf(int[] num, int digits) {
+        String[] formatted = new String[num.length];
+        for (int i = 0; i < formatted.length; i++) {
+            formatted[i] = nf(num[i], digits);
+        }
+        return formatted;
+    }
+
+    static public String nf(int num, int digits) {
+        if ((int_nf != null) &&
+                (int_nf_digits == digits) &&
+                !int_nf_commas) {
+            return int_nf.format(num);
+        }
+
+        int_nf = NumberFormat.getInstance();
+        int_nf.setGroupingUsed(false); // no commas
+        int_nf_commas = false;
+        int_nf.setMinimumIntegerDigits(digits);
+        int_nf_digits = digits;
+        return int_nf.format(num);
+    }
+
+    static public String[] str(int x[]) {
+        String[] s = new String[x.length];
+        for (int i = 0; i < x.length; i++) s[i] = String.valueOf(x[i]);
+        return s;
+    }
+
+    static public int[] parseInt(String[] what) {
+        return parseInt(what, 0);
+    }
+
+    static public int[] parseInt(String[] what, int missing) {
+        int[] output = new int[what.length];
+        for (int i = 0; i < what.length; i++) {
+            try {
+                output[i] = Integer.parseInt(what[i]);
+            } catch (NumberFormatException e) {
+                output[i] = missing;
+            }
+        }
+        return output;
     }
 
     static public PrintWriter createWriter(OutputStream output) {

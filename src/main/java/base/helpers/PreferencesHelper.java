@@ -4,6 +4,20 @@ import java.awt.*;
 
 public abstract class PreferencesHelper {
 
+    public static Color parseColor(String v) {
+        try {
+            if (v.indexOf("#") == 0)
+                v = v.substring(1);
+            return new Color(Integer.parseInt(v, 16));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static void putColor(PreferencesMap prefs, String attr, Color color) {
+        prefs.put(attr, "#" + String.format("%06x", color.getRGB() & 0xffffff));
+    }
+
     public static Font getFont(PreferencesMap prefs, String key) {
         String value = prefs.get(key);
         if (value == null)

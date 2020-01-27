@@ -20,6 +20,14 @@ public class Platform extends base.platforms.Platform {
     }
 
     @Override
+    public int getSystemDPI() {
+        int detected = detectSystemDPI();
+        if (detected == -1)
+            return super.getSystemDPI();
+        return detected;
+    }
+
+    @Override
     public void fixSettingsLocation() throws Exception {
         Path oldSettingsFolder = recoverOldSettingsFolderPath();
         if (!Files.exists(oldSettingsFolder)) return;
@@ -83,6 +91,20 @@ public class Platform extends base.platforms.Platform {
     private void recoverSettingsFolderPath() throws Exception {
         Path path = Win32KnownFolders.getLocalAppDataFolder().toPath();
         settingsFolder = path.resolve("StartFP100").toFile();
+    }
+
+    public static int detectSystemDPI() {
+        try {
+            ExtUser32.INSTANCE.SetProcessDpiAwareness(ExtUser32.DPI_AWARENESS_SYSTEM_AWARE);
+        } catch (Throwable ignored) { }
+        try {
+            ExtUser32.INSTANCE.SetThreadDpiAwarenessContext(ExtUser32.DPI_AWARENESS_CONTEXT_SYSTEM_AWARE);
+        } catch (Throwable ignored) { }
+        try {
+            return ExtUser32.INSTANCE.GetDpiForSystem();
+        } catch (Throwable e) {
+            return -1;
+        }
     }
 
     }

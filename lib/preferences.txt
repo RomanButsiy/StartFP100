@@ -45,6 +45,10 @@ preferences.readonly = false
 # has gone missing, and that it should instead use the default.
 #experiments.path =
 
+# default size for the main window
+window.size.width.default = 600
+window.size.height.default = 500
+
 
 
 

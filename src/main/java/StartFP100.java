@@ -24,7 +24,7 @@ public class StartFP100 {
         frame.setResizable(true);
         frame.getContentPane().add(panel);
         panel.setFrame(frame);
-        frame.setSize(600, 400);
+        frame.setSize(600, 480);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
