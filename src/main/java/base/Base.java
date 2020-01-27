@@ -30,12 +30,17 @@ public class Base {
         } catch (Exception ignored) { }
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
         restoreExperiment(); // fix me!
-        //if (editor == null) handleNew();
+        if (editor == null) handleNew();
 
 
 
 
         //save();
+    }
+
+    public void handleClose(Editor editor) {
+        editor.setVisible(false);
+        System.exit(1);
     }
 
     public void handleNew() throws Exception {
@@ -66,7 +71,6 @@ public class Base {
     }
 
     private void handleOpen(File file, int[] location, boolean untitled) throws Exception {
-        if (!file.exists()) return;
         editor = new Editor(this, file, location, BaseInit.getPlatform());
         editor.untitled = untitled;
         // add some code...
@@ -74,4 +78,7 @@ public class Base {
     }
 
 
+    public void handleOpenPrompt() {
+        System.out.println("Open...");
+    }
 }

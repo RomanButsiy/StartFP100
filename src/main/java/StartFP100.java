@@ -42,6 +42,6 @@ public class StartFP100 {
             e.printStackTrace(System.err);
             System.exit(255);
         }
-        new StartFP100(bundle.getString("titleFrame"), bundle);
+        //new StartFP100(bundle.getString("titleFrame"), bundle);
     }
 }
