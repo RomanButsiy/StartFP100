@@ -17,16 +17,17 @@ import static base.BaseInit.*;
 
 public class BaseHelper {
 
+
+    public static final int RECENT_EXPERIMENTS_MAX_SIZE = 3;
     static public String[] months = {
             "jan", "feb", "mar", "apr", "may", "jun",
             "jul", "aug", "sep", "oct", "nov", "dec"
     };
 
-    static public File newExperimentFolder = null;
-    static public File newExperimentFile = null;
 
-    public static File getNewUntitled() throws IOException {
+    public static File createNewUntitled() throws IOException {
         File experimentsFolder = BaseInit.getExperimentsFolder();
+        File newExperimentFolder;
         String newExperimentName;
         int index = 0;
         Calendar cal = Calendar.getInstance();
@@ -50,13 +51,12 @@ public class BaseHelper {
             newExperimentFolder = new File(experimentsFolder, newExperimentName);
             index++;
         } while (newExperimentFolder.exists() || new File(experimentsFolder, newExperimentName).exists());
-        newExperimentFile = new File(newExperimentFolder, newExperimentName + ".fim");
+        newExperimentFolder.mkdirs();
+         File newExperimentFile = new File(newExperimentFolder, newExperimentName + ".fim");
+        if (!newExperimentFile.createNewFile()) {
+            throw new IOException();
+        }
         return newExperimentFile;
-    }
-
-    public static boolean createNewUntitled() throws IOException {
-        if (!newExperimentFolder.mkdirs()) return false;
-        return newExperimentFile.createNewFile();
     }
 
     public static int[] retrieveExperimentLocation() {

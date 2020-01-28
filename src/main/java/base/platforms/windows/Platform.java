@@ -1,6 +1,5 @@
 package base.platforms.windows;
 
-import base.PreferencesData;
 import base.legacy.PApplet;
 
 import java.io.File;
