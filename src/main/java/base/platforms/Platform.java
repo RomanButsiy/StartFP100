@@ -1,5 +1,8 @@
 package base.platforms;
 
+import base.BaseInit;
+import base.PreferencesData;
+
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +14,31 @@ public class Platform {
 
     public void setLookAndFeel() throws Exception {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    }
+
+    public void openFolder(File file) throws Exception {
+        String launcher = PreferencesData.get("launcher");
+        if (launcher != null) {
+            try {
+                String folder = file.getAbsolutePath();
+                Runtime.getRuntime().exec(new String[]{launcher, folder});
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            showLauncherWarning();
+        }
+    }
+
+    public boolean openFolderAvailable() {
+        return PreferencesData.get("launcher") != null;
+    }
+
+    protected void showLauncherWarning() {
+        BaseInit.showWarning("Немає завантажувача",
+                "Не вказано платформу, завантажувач недоступний.\n" +
+                         "Щоб дозволити відкривання посилань або тек, додайте \n" +
+                         "\"launcher=/path/to/app\" у файл preferences.txt", null);
     }
 
     public int getSystemDPI() {

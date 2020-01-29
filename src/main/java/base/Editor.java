@@ -138,12 +138,39 @@ public class Editor extends JFrame implements RunnerListener  {
                 validate();
             }
         });
-
         menuBar.add(fileMenu);
-
+        final JMenu experimentMenu = new JMenu("Експеримент");
+        experimentMenu.setMnemonic(KeyEvent.VK_S);
+        buildExperimentMenu(experimentMenu);
+        menuBar.add(experimentMenu);
 
         setJMenuBar(menuBar);
 
+    }
+
+    private void buildExperimentMenu(JMenu experimentMenu) {
+        experimentMenu.removeAll();
+        JMenuItem item = newJMenuItem("Розпочати експеримент", 'R');
+        item.addActionListener(event -> handleRun());
+        experimentMenu.add(item);
+        item = newJMenuItem("Зупинити експеримент", 'U');
+        item.addActionListener(event -> handleStop());
+        experimentMenu.add(item);
+        experimentMenu.addSeparator();
+        item = newJMenuItem("Відкрити папку з експериментом", 'K');
+        item.addActionListener(event -> Base.openFolder(experiment.getFolder()));
+        experimentMenu.add(item);
+        item.setEnabled(Base.openFolderAvailable());
+    }
+
+    private void handleStop() {
+        System.out.println("Experiment stopped");
+        experiment.setExperimentRunning(false);
+    }
+
+    private void handleRun() {
+        System.out.println("Experiment started");
+        experiment.setExperimentRunning(true);
     }
 
     private JMenu buildFileMenu() {
@@ -193,7 +220,6 @@ public class Editor extends JFrame implements RunnerListener  {
         item.addActionListener(event -> base.handleQuit());
         fileMenu.add(item);
         return fileMenu;
-
     }
 
     private void handleSaveAs() {

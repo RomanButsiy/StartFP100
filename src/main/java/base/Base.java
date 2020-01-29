@@ -49,6 +49,19 @@ public class Base {
         //save();
     }
 
+    static protected boolean openFolderAvailable() {
+        return BaseInit.getPlatform().openFolderAvailable();
+    }
+
+
+    static public void openFolder(File file) {
+        try {
+            BaseInit.getPlatform().openFolder(file);
+        } catch (Exception e) {
+            showWarning("Проблема відкриття папки", "Не вдалося відкрити папку " + file.getAbsolutePath(), e);
+        }
+    }
+
     public void handleClose(Editor editor) {
         editor.getExperimentController().exit();
         if (editors.size() == 1) {

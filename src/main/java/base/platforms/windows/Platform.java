@@ -19,6 +19,25 @@ public class Platform extends base.platforms.Platform {
     }
 
     @Override
+    public boolean openFolderAvailable() {
+        return true;
+    }
+
+    @Override
+    public void openFolder(File file) throws Exception {
+        String folder = file.getAbsolutePath();
+
+        // doesn't work
+        //Runtime.getRuntime().exec("cmd /c \"" + folder + "\"");
+
+        // works fine on winxp, prolly win2k as well
+        Runtime.getRuntime().exec("explorer \"" + folder + "\"");
+
+        // not tested
+        //Runtime.getRuntime().exec("start explorer \"" + folder + "\"");
+    }
+
+    @Override
     public int getSystemDPI() {
         int detected = detectSystemDPI();
         if (detected == -1)
