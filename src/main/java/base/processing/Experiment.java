@@ -9,6 +9,7 @@ public class Experiment {
 
     private File folder;
     private File file;
+    private boolean isUntitledAndNotSaved = false;
 
     public Experiment(File file) throws IOException {
         this.folder = file.getParentFile();
@@ -18,6 +19,11 @@ public class Experiment {
     public File getFile() {
         return file;
     }
+
+    public File getFolder() {
+        return folder;
+    }
+
 
     static public File checkExperimentFile(File file) {
         String fileName = file.getName();
@@ -35,4 +41,11 @@ public class Experiment {
         return null;
     }
 
+    public boolean isUntitledAndNotSaved() {
+        return isUntitledAndNotSaved;
+    }
+
+    public void setUntitledAndNotSaved(boolean untitledAndNotSaved) {
+        isUntitledAndNotSaved = untitledAndNotSaved;
+    }
 }

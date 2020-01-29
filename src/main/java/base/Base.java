@@ -4,13 +4,15 @@ import base.helpers.BaseHelper;
 import libraries.Theme;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 public class Base {
 
-    List<Editor> editors = Collections.synchronizedList(new ArrayList<Editor>());
+    final List<Editor> editors = Collections.synchronizedList(new ArrayList<Editor>());
     Editor activeEditor;
     private final List<JMenuItem> recentExperimentsMenuItems = new LinkedList<>();
 
@@ -39,6 +41,7 @@ public class Base {
     }
 
     public void handleClose(Editor editor) {
+        editor.getExperimentController().exit();
         if (editors.size() == 1) {
             editor.setVisible(false);
             editors.remove(editor);
@@ -78,25 +81,26 @@ public class Base {
     }
 
     public void handleOpen(File file, boolean untitled) throws Exception {
-        handleOpen(file, base.helpers.BaseHelper.defaultLocation(), untitled);
+        handleOpen(file, nextEditorLocation(), untitled);
     }
 
-    private void handleOpen(File file, int[] location, boolean untitled) throws Exception {
+    public void handleOpen(File file, int[] location, boolean untitled) throws Exception {
+        handleOpen(file,location, location, untitled);
+    }
+
+    private void handleOpen(File file, int[] storedLocation, int[] defaultLocation, boolean untitled) throws Exception {
         for (Editor editor : editors) {
             if (editor.getExperiment().getFile().equals(file)) {
                 editor.toFront();
                 return;
             }
         }
-        Editor editor = new Editor(this, file, location, BaseInit.getPlatform());
+        Editor editor = new Editor(this, file, storedLocation, defaultLocation, BaseInit.getPlatform(), untitled);
         if (editor.getExperimentController() == null) {
             return;
         }
-        editor.untitled = untitled;
         editors.add(editor);
         SwingUtilities.invokeLater(() -> editor.setVisible(true));
-        // add some code...
-
     }
 
     public void handleOpenPrompt() {
@@ -137,4 +141,30 @@ public class Base {
         return recentExperimentsMenuItems;
     }
 
+    protected int[] nextEditorLocation() {
+        if (activeEditor == null) {
+            return base.helpers.BaseHelper.defaultLocation();
+        }
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        synchronized (editors) {
+            int[] location = activeEditor.getPlacement();
+            final int OVER = 50;
+            location[0] += OVER;
+            location[1] += OVER;
+
+            if (location[0] == OVER || location[2] == OVER
+                    || location[0] + location[2] > screen.width
+                    || location[1] + location[3] > screen.height) {
+                int[] l = base.helpers.BaseHelper.defaultLocation();
+                l[0] *= Math.random() * 2;
+                l[1] *= Math.random() * 2;
+                return l;
+            }
+            return location;
+        }
+    }
+
+    public void handleActivated(Editor editor) {
+        activeEditor = editor;
+    }
 }

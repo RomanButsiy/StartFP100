@@ -12,4 +12,10 @@ public class ExperimentController {
         this.experiment = experiment;
     }
 
+    public void exit() {
+        if (experiment.isUntitledAndNotSaved()) {
+            base.helpers.FileUtils.recursiveDelete(experiment.getFolder());
+        }
+    }
+
 }

@@ -11,25 +11,29 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class Editor extends JFrame implements RunnerListener  {
 
-    Experiment experiment;
-    ExperimentController experimentController;
+    private Experiment experiment;
+    private ExperimentController experimentController;
+    private JSplitPane splitPane;
+
 
     boolean untitled;
     final Base base;
     final Platform platform;
     private JMenu fileMenu;
     private JMenu toolsMenu;
-    private JMenu recentSketchesMenu;
+    private JMenu recentExperimentsMenu;
 
     private static final int SHORTCUT_KEY_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
-    public Editor(Base iBase, File file, int[] location, Platform platform) {
+    public Editor(Base iBase, File file, int[] storedLocation, int[] defaultLocation,  Platform platform, boolean untitled) {
         super("StartFP100");
         this.base = iBase;
         this.platform = platform;
+        this.untitled = untitled;
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -37,12 +41,22 @@ public class Editor extends JFrame implements RunnerListener  {
                 base.handleClose(Editor.this);
             }
         });
+
+        addWindowListener(new WindowAdapter() {
+            public void windowActivated(WindowEvent e) {
+                base.handleActivated(Editor.this);
+            }
+        });
+
         buildMenuBar();
+
+        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+
+        setSize(600, 480);
+        setPlacement(storedLocation, defaultLocation);
 
         boolean loaded = handleOpenInternal(file);
         if (!loaded) experimentController = null;
-        setSize(600, 480);
-        setLocationRelativeTo(null);
     }
 
     private boolean handleOpenInternal(File experimentFile) {
@@ -55,10 +69,11 @@ public class Editor extends JFrame implements RunnerListener  {
         try {
             experiment = new Experiment(file);
         } catch (IOException e) {
-            BaseInit.showWarning("Помилка", "Could not create the sketch.", e);
+            BaseInit.showWarning("Помилка", "Не вдалося створити експкримент.", e);
             return false;
         }
         experimentController = new ExperimentController(this, experiment);
+        experiment.setUntitledAndNotSaved(untitled);
         untitled = false;
         return true;
     }
@@ -97,9 +112,9 @@ public class Editor extends JFrame implements RunnerListener  {
         });
         fileMenu.add(item);
         base.rebuildRecentExperimentsMenuItems();
-        recentSketchesMenu = new JMenu("Відкрити нещодавні");
-        SwingUtilities.invokeLater(this::rebuildRecentSketchesMenu);
-        fileMenu.add(recentSketchesMenu);
+        recentExperimentsMenu = new JMenu("Відкрити нещодавні");
+        SwingUtilities.invokeLater(this::rebuildRecentExperimentsMenu);
+        fileMenu.add(recentExperimentsMenu);
 
 
 
@@ -109,11 +124,39 @@ public class Editor extends JFrame implements RunnerListener  {
 
     }
 
-    public void rebuildRecentSketchesMenu() {
-        recentSketchesMenu.removeAll();
-        for (JMenuItem recentSketchMenuItem  : base.getRecentExperimentsMenuItems()) {
-            recentSketchesMenu.add(recentSketchMenuItem);
+    public void rebuildRecentExperimentsMenu() {
+        recentExperimentsMenu.removeAll();
+        for (JMenuItem recentExperimentMenuItem  : base.getRecentExperimentsMenuItems()) {
+            recentExperimentsMenu.add(recentExperimentMenuItem);
         }
+    }
+
+    private void setPlacement(int[] storedLocation, int[] defaultLocation) {
+        if (storedLocation.length > 5 && storedLocation[5] != 0) {
+            setExtendedState(storedLocation[5]);
+            setPlacement(defaultLocation);
+        } else {
+            setPlacement(storedLocation);
+        }
+    }
+
+    private void setPlacement(int[] location) {
+        setBounds(location[0], location[1], location[2], location[3]);
+        if (location[4] != 0) {
+            splitPane.setDividerLocation(location[4]);
+        }
+    }
+
+    protected int[] getPlacement() {
+        int[] location = new int[6];
+        Rectangle bounds = getBounds();
+        location[0] = bounds.x;
+        location[1] = bounds.y;
+        location[2] = bounds.width;
+        location[3] = bounds.height;
+        location[4] = splitPane.getDividerLocation();
+        location[5] = getExtendedState() & MAXIMIZED_BOTH;
+        return location;
     }
 
     public Experiment getExperiment() {
