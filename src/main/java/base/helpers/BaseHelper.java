@@ -5,12 +5,12 @@ import base.Editor;
 import base.PreferencesData;
 import base.legacy.PApplet;
 import com.sun.jna.platform.FileUtils;
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Calendar;
 
 import static base.BaseInit.*;
@@ -23,6 +23,25 @@ public class BaseHelper {
             "jan", "feb", "mar", "apr", "may", "jun",
             "jul", "aug", "sep", "oct", "nov", "dec"
     };
+
+    static public void copyFile(File sourceFile, File targetFile) throws IOException {
+        InputStream from = null;
+        OutputStream to = null;
+        try {
+            from = new BufferedInputStream(new FileInputStream(sourceFile));
+            to = new BufferedOutputStream(new FileOutputStream(targetFile));
+            byte[] buffer = new byte[16 * 1024];
+            int bytesRead;
+            while ((bytesRead = from.read(buffer)) != -1) {
+                to.write(buffer, 0, bytesRead);
+            }
+            to.flush();
+        } finally {
+            IOUtils.closeQuietly(from);
+            IOUtils.closeQuietly(to);
+        }
+        targetFile.setLastModified(sourceFile.lastModified());
+    }
 
 
     public static File createNewUntitled() throws IOException {

@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static base.helpers.BaseHelper.copyFile;
+
 public class Editor extends JFrame implements RunnerListener  {
 
     private File file;
@@ -75,8 +77,40 @@ public class Editor extends JFrame implements RunnerListener  {
         String fileName = experimentFile.getName();
         File file = Experiment.checkExperimentFile(experimentFile);
         if (file == null) {
-            // add some code
-            return false;
+            if (!fileName.endsWith(".fim")) {
+                BaseInit.showWarning("Вибрано неправильний файл", "StartFP100 може відкривати лише власні експерименти\n" +
+                                           "та інші файли, що закінчуються на .ino", null);
+                return false;
+            } else {
+                String properParent = fileName.substring(0, fileName.length() - 4);
+                Object[] options = { "OK", "Скасувати" };
+                String prompt = "Файл " + fileName + " повинен бути всередині\n" +
+                                "папки експерименту " +  properParent + ".\n" +
+                                "Створити цю папку, перемістити файл та продовжити?";
+
+                int result = JOptionPane.showOptionDialog(this, prompt, "Перемістити?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                if (result != JOptionPane.YES_OPTION) {
+                    return false;
+                }
+                File properFolder = new File(experimentFile.getParent(), properParent);
+                if (properFolder.exists()) {
+                    BaseInit.showWarning("Помилка", "Папка з назвою " + properParent + " вже існує. Не вдається відкрити експеримент.", null);
+                    return false;
+                }
+                if (!properFolder.mkdirs()) {
+                    BaseInit.showWarning("Помилка", "Не вдалося створити папку експерименту.", null);
+                    return false;
+                }
+                File properFimFile = new File(properFolder, experimentFile.getName());
+                try {
+                    copyFile(experimentFile, properFimFile);
+                } catch (IOException e) {
+                    BaseInit.showWarning("Помилка", "Не вдалося скопіювати у потрібне місце.", e);
+                    return false;
+                }
+                experimentFile.delete();
+                file = properFimFile;
+            }
         }
         try {
             experiment = new Experiment(file);

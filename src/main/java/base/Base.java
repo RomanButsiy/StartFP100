@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -111,8 +112,21 @@ public class Base {
         SwingUtilities.invokeLater(() -> editor.setVisible(true));
     }
 
-    public void handleOpenPrompt() {
-        System.out.println("Open...");
+    public void handleOpenPrompt() throws Exception  {
+        FileDialog fd = new FileDialog(activeEditor, "Відкрити експеримент...", FileDialog.LOAD);
+        File lastFolder = new File(PreferencesData.get("last.folder", BaseInit.getExperimentsFolder().getAbsolutePath()));
+        if (lastFolder.exists() && lastFolder.isFile()) {
+            lastFolder = lastFolder.getParentFile();
+        }
+        fd.setDirectory(lastFolder.getAbsolutePath());
+        fd.setFilenameFilter((dir, name) -> name.toLowerCase().endsWith(".fim"));
+        fd.setVisible(true);
+        String directory = fd.getDirectory();
+        String filename = fd.getFile();
+        if (filename == null) return;
+        File inputFile = new File(directory, filename);
+        PreferencesData.set("last.folder", inputFile.getAbsolutePath());
+        handleOpen(inputFile);
     }
 
     protected boolean addExperiments(JMenu menu, File folder) {
