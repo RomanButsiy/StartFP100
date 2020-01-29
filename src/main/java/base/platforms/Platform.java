@@ -30,6 +30,16 @@ public class Platform {
         }
     }
 
+    public void openURL(String url) throws Exception {
+        String launcher = PreferencesData.get("launcher");
+        if (launcher != null) {
+            Runtime.getRuntime().exec(new String[]{launcher, url});
+        } else {
+            showLauncherWarning();
+        }
+    }
+
+
     public boolean openFolderAvailable() {
         return PreferencesData.get("launcher") != null;
     }

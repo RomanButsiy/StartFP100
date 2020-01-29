@@ -276,4 +276,20 @@ public class Base {
             System.exit(1);
         }
     }
+
+    public void handleAbout() {
+        System.out.println("handleAbout");
+    }
+
+    public void showHelp() {
+        System.out.println("showHelp");
+    }
+
+    public void openURL(String url) {
+        try {
+            BaseInit.getPlatform().openURL(url);
+        } catch (Exception e) {
+            showWarning("Проблема відкриття URL", "Не вдалося відкрити URL-адресу\n" + url, e);
+        }
+    }
 }

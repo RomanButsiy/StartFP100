@@ -1,6 +1,7 @@
 package base.platforms.windows;
 
 import base.legacy.PApplet;
+import com.sun.jna.platform.win32.Shell32;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +36,47 @@ public class Platform extends base.platforms.Platform {
 
         // not tested
         //Runtime.getRuntime().exec("start explorer \"" + folder + "\"");
+    }
+
+    @Override
+    public void openURL(String url) throws Exception {
+        if (!url.startsWith("http") && !url.startsWith("file:")) {
+            // Check if we are trying to open a local file
+            File file = new File(url);
+            if (file.exists()) {
+                // in this case convert the path to a "file:" url
+                url = file.toURI().toString();
+            }
+        }
+        if (url.startsWith("http") || url.startsWith("file:")) {
+            // this allows to open the file on Windows 10 that
+            // has a more strict permission policy for cmd.exe
+            final int SW_SHOW = 5;
+            Shell32.INSTANCE.ShellExecute(null, null, url, null, null, SW_SHOW);
+            return;
+        }
+
+        // this is not guaranteed to work, because who knows if the
+        // path will always be c:\progra~1 et al. also if the user has
+        // a different browser set as their default (which would
+        // include me) it'd be annoying to be dropped into ie.
+        //Runtime.getRuntime().exec("c:\\progra~1\\intern~1\\iexplore "
+        // + currentDir
+
+        // the following uses a shell execute to launch the .html file
+        // note that under cygwin, the .html files have to be chmodded +x
+        // after they're unpacked from the zip file. i don't know why,
+        // and don't understand what this does in terms of windows
+        // permissions. without the chmod, the command prompt says
+        // "Access is denied" in both cygwin and the "dos" prompt.
+        //Runtime.getRuntime().exec("cmd /c " + currentDir + "\\reference\\" +
+        //                    referenceFile + ".html");
+
+        // just launching the .html file via the shell works
+        // but make sure to chmod +x the .html files first
+        // also place quotes around it in case there's a space
+        // in the user.dir part of the url
+        Runtime.getRuntime().exec("cmd /c \"" + url + "\"");
     }
 
     @Override

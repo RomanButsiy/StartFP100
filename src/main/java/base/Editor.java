@@ -9,6 +9,7 @@ import libraries.MenuScroller;
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -143,9 +144,38 @@ public class Editor extends JFrame implements RunnerListener  {
         experimentMenu.setMnemonic(KeyEvent.VK_S);
         buildExperimentMenu(experimentMenu);
         menuBar.add(experimentMenu);
+        final JMenu toolsMenu = buildToolsMenu();
 
+        menuBar.add(toolsMenu);
+        menuBar.add(buildHelpMenu());
         setJMenuBar(menuBar);
 
+    }
+
+    private JMenu buildHelpMenu() {
+        JMenu menu = new JMenu("Допомога");
+        menu.setMnemonic(KeyEvent.VK_H);
+        JMenuItem item = newJMenuItem("Допомога", 'G');
+        item.addActionListener(event -> base.showHelp());
+        menu.add(item);
+        item = new JMenuItem("Перейти на StartFP100 (git)");
+        item.addActionListener(event -> base.openURL("https://github.com/RomanButsiy/StartFP100"));
+        menu.add(item);
+        menu.addSeparator();
+        item = newJMenuItem("Про StartFP100", 'A');
+        item.addActionListener(event -> base.handleAbout());
+        menu.add(item);
+        return menu;
+    }
+
+    private JMenu buildToolsMenu() {
+        toolsMenu = new JMenu("Інструменти");
+        toolsMenu.setMnemonic(KeyEvent.VK_T);
+        //addInternalTools(toolsMenu);
+
+
+
+        return toolsMenu;
     }
 
     private void buildExperimentMenu(JMenu experimentMenu) {
@@ -208,7 +238,7 @@ public class Editor extends JFrame implements RunnerListener  {
         item = Editor.newJMenuItem("Закрити", 'W');
         item.addActionListener(event -> base.handleClose(Editor.this));
         fileMenu.add(item);
-        saveAsMenuItem = new JMenuItem("Зберегти як...", 'S');
+        saveAsMenuItem = newJMenuItemShift("Зберегти як...", 'S');
         saveAsMenuItem.addActionListener(event -> handleSaveAs());
         fileMenu.add(saveAsMenuItem);
         fileMenu.addSeparator();
@@ -288,4 +318,11 @@ public class Editor extends JFrame implements RunnerListener  {
     public ExperimentController getExperimentController() {
         return experimentController;
     }
+
+    static public JMenuItem newJMenuItemShift(String title, int what) {
+        JMenuItem menuItem = new JMenuItem(title);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(what, SHORTCUT_KEY_MASK | ActionEvent.SHIFT_MASK));
+        return menuItem;
+    }
+
 }
