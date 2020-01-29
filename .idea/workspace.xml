@@ -9,10 +9,10 @@
     <list default="true" id="93b63df6-3c6c-411f-8753-d9cd68fc9762" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/base/Base.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/Base.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/base/BaseInit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/BaseInit.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/base/Editor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/Editor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/base/helpers/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/helpers/FileUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/base/processing/Experiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/processing/Experiment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/processing/ExperimentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/processing/ExperimentController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,10 +125,10 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="588" y="214" width="800" height="677" key="#Inspections/67.27.1853.1053@67.27.1853.1053" timestamp="1579014312507" />
-    <state x="801" y="256" width="374" height="592" key="#com.intellij.ide.util.MemberChooser" timestamp="1580298114694">
+    <state x="801" y="256" width="374" height="592" key="#com.intellij.ide.util.MemberChooser" timestamp="1580318462606">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="801" y="256" width="374" height="592" key="#com.intellij.ide.util.MemberChooser/67.27.1853.1053@67.27.1853.1053" timestamp="1580298114694" />
+    <state x="801" y="256" width="374" height="592" key="#com.intellij.ide.util.MemberChooser/67.27.1853.1053@67.27.1853.1053" timestamp="1580318462606" />
     <state x="731" y="285" width="525" height="428" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1579869158096">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -145,22 +145,22 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="776" y="310" width="424" height="484" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1579869167525" />
-    <state width="1807" height="178" key="GridCell.Tab.0.bottom" timestamp="1580304572518">
+    <state width="1807" height="178" key="GridCell.Tab.0.bottom" timestamp="1580319549286">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="178" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1580304572518" />
-    <state width="1807" height="178" key="GridCell.Tab.0.center" timestamp="1580304572517">
+    <state width="1807" height="178" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1580319549286" />
+    <state width="1807" height="178" key="GridCell.Tab.0.center" timestamp="1580319549286">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="178" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1580304572517" />
-    <state width="1807" height="178" key="GridCell.Tab.0.left" timestamp="1580304572517">
+    <state width="1807" height="178" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1580319549286" />
+    <state width="1807" height="178" key="GridCell.Tab.0.left" timestamp="1580319549286">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="178" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1580304572517" />
-    <state width="1807" height="178" key="GridCell.Tab.0.right" timestamp="1580304572518">
+    <state width="1807" height="178" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1580319549286" />
+    <state width="1807" height="178" key="GridCell.Tab.0.right" timestamp="1580319549286">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="178" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1580304572518" />
+    <state width="1807" height="178" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1580319549286" />
     <state width="1807" height="182" key="GridCell.Tab.1.bottom" timestamp="1580304214468">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -185,9 +185,17 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="476" y="130" width="1024" height="845" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1579869179481" />
-    <state x="657" y="253" key="run.anything.popup" timestamp="1580302229542">
+    <state width="498" height="446" key="SwitcherDM" timestamp="1580305598022">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="657" y="253" key="run.anything.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1580302229542" />
+    <state width="498" height="446" key="SwitcherDM/67.27.1853.1053@67.27.1853.1053" timestamp="1580305598022" />
+    <state x="689" y="181" width="598" height="743" key="refactoring.ChangeSignatureDialog" timestamp="1580311509891">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="689" y="181" width="598" height="743" key="refactoring.ChangeSignatureDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1580311509891" />
+    <state x="657" y="253" key="run.anything.popup" timestamp="1580313174450">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="657" y="253" key="run.anything.popup/67.27.1853.1053@67.27.1853.1053" timestamp="1580313174450" />
   </component>
 </project>

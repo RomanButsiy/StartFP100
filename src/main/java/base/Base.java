@@ -1,14 +1,22 @@
 package base;
 
 import base.helpers.BaseHelper;
+import base.helpers.FileUtils;
+import base.processing.Experiment;
+import libraries.MenuScroller;
 import libraries.Theme;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+
+import static base.BaseInit.showMessage;
+import static base.BaseInit.showWarning;
 
 public class Base {
 
@@ -107,6 +115,68 @@ public class Base {
         System.out.println("Open...");
     }
 
+    protected boolean addExperiments(JMenu menu, File folder) {
+        if (folder == null)
+            return false;
+        if (!folder.isDirectory()) return false;
+        File[] files = folder.listFiles();
+        if (files == null) return false;
+        Arrays.sort(files, (file1, file2) -> file1.getName().compareToIgnoreCase(file2.getName()));
+        boolean iFound = false;
+        for (File subfolder : files) {
+            if (!FileUtils.isSCCSOrHiddenFile(subfolder) && subfolder.isDirectory()
+                    && addExperimentsSubmenu(menu, subfolder.getName(), subfolder)) {
+                iFound = true;
+
+            }
+        }
+        return iFound;
+    }
+
+    private boolean addExperimentsSubmenu(JMenu menu, String name, File folder) {
+        ActionListener listener = e -> {
+            String path = e.getActionCommand();
+            File file = new File(path);
+            if (file.exists()) {
+                try {
+                    handleOpen(file);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            } else {
+                showWarning("Експеримент не існує",
+                         "Вибраного експерименту більше не існує.\n"
+                                + "Можливо, вам знадобиться перезапустити StartFP100,\n"
+                                + "щоб оновити меню експериментів.", null);
+            }
+        };
+
+        File entry = new File(folder, name + ".fim");
+        if (entry.exists()) {
+            if (!BaseInit.isSanitaryName(name)) {
+                    String complaining = "Експеримент " + name + " не можна використовувати.\n"
+                                            + "Імена експериментів повинні містити лише літери та цифри\n"
+                                            + "(лише ASCII символи без пробілів, і не може починатися з числа).\n"
+                                            + "Щоб позбутися цього повідомлення, видаліть або перейменуйте експеремент\n"
+                                             + entry.getAbsolutePath();
+                    showMessage("Ігнорування експерименту з поганою назвою", complaining);
+                return false;
+            }
+            JMenuItem item = new JMenuItem(name);
+            item.addActionListener(listener);
+            item.setActionCommand(entry.getAbsolutePath());
+            menu.add(item);
+            return true;
+        }
+        JMenu submenu = new JMenu(name);
+        boolean found = addExperiments(submenu, folder);
+        if (found) {
+            menu.add(submenu);
+            MenuScroller.setScrollerFor(submenu);
+        }
+        return found;
+    }
+
     public void rebuildRecentExperimentsMenuItems() {
         Set<File> recentExperiments = new LinkedHashSet<File>() {
             @Override
@@ -166,5 +236,17 @@ public class Base {
 
     public void handleActivated(Editor editor) {
         activeEditor = editor;
+    }
+
+    public void handlePrefs() {
+    }
+
+    public void handleQuit() {
+        if (!PreferencesData.getBoolean("runtime.experiment.running", false)) {
+            for (Editor editor : editors) {
+                editor.getExperimentController().exit();
+            }
+            System.exit(1);
+        }
     }
 }

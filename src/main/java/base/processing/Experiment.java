@@ -1,9 +1,10 @@
 package base.processing;
 
 
+import base.PreferencesData;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 
 public class Experiment {
 
@@ -47,5 +48,13 @@ public class Experiment {
 
     public void setUntitledAndNotSaved(boolean untitledAndNotSaved) {
         isUntitledAndNotSaved = untitledAndNotSaved;
+    }
+
+    public boolean isExperimentRunning() {
+        return PreferencesData.getBoolean("runtime.experiment.running", false);
+    }
+
+    public void setExperimentRunning(boolean experimentRunning) {
+        PreferencesData.setBoolean("runtime.experiment.running", experimentRunning);
     }
 }

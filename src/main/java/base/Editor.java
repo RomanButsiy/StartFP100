@@ -3,18 +3,25 @@ package base;
 import base.platforms.Platform;
 import base.processing.Experiment;
 import base.processing.ExperimentController;
+import base.view.StubMenuListener;
+import libraries.MenuScroller;
 
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Editor extends JFrame implements RunnerListener  {
 
+    private File file;
     private Experiment experiment;
     private ExperimentController experimentController;
     private JSplitPane splitPane;
@@ -26,6 +33,10 @@ public class Editor extends JFrame implements RunnerListener  {
     private JMenu fileMenu;
     private JMenu toolsMenu;
     private JMenu recentExperimentsMenu;
+    private JMenuItem saveAsMenuItem;
+
+
+    static JMenu experimentMenu;
 
     private static final int SHORTCUT_KEY_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
@@ -34,6 +45,7 @@ public class Editor extends JFrame implements RunnerListener  {
         this.base = iBase;
         this.platform = platform;
         this.untitled = untitled;
+        this.file = file;
 
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -81,6 +93,17 @@ public class Editor extends JFrame implements RunnerListener  {
     private void buildMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         final JMenu fileMenu = buildFileMenu();
+        fileMenu.addMenuListener(new StubMenuListener() {
+            @Override
+            public void menuSelected(MenuEvent e) {
+                List<Component> components = Arrays.asList(fileMenu.getMenuComponents());
+                if (!components.contains(experimentMenu)) {
+                    fileMenu.insert(experimentMenu, 3);
+                }
+                fileMenu.revalidate();
+                validate();
+            }
+        });
 
         menuBar.add(fileMenu);
 
@@ -115,13 +138,31 @@ public class Editor extends JFrame implements RunnerListener  {
         recentExperimentsMenu = new JMenu("Відкрити нещодавні");
         SwingUtilities.invokeLater(this::rebuildRecentExperimentsMenu);
         fileMenu.add(recentExperimentsMenu);
-
-
-
-
-
+        if (experimentMenu == null) {
+            experimentMenu = new JMenu("Експерименти");
+            MenuScroller.setScrollerFor(experimentMenu);
+            base.addExperiments(experimentMenu, BaseInit.getExperimentsFolder());
+        }
+        fileMenu.add(experimentMenu);
+        item = Editor.newJMenuItem("Закрити", 'W');
+        item.addActionListener(event -> base.handleClose(Editor.this));
+        fileMenu.add(item);
+        saveAsMenuItem = new JMenuItem("Зберегти як...", 'S');
+        saveAsMenuItem.addActionListener(event -> handleSaveAs());
+        fileMenu.add(saveAsMenuItem);
+        fileMenu.addSeparator();
+        item = newJMenuItem("Налаштування", ',');
+        item.addActionListener(event -> base.handlePrefs());
+        fileMenu.add(item);
+        fileMenu.addSeparator();
+        item = newJMenuItem("Вихід", 'Q');
+        item.addActionListener(event -> base.handleQuit());
+        fileMenu.add(item);
         return fileMenu;
 
+    }
+
+    private void handleSaveAs() {
     }
 
     public void rebuildRecentExperimentsMenu() {

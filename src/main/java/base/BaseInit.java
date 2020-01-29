@@ -35,6 +35,10 @@ public class BaseInit {
         return absoluteFile(PreferencesData.get("experiments.path"));
     }
 
+    static public boolean isSanitaryName(String name) {
+        return sanitizeName(name).equals(name);
+    }
+
     public static File getSettingsFile(String filename) {
         return new File(getSettingsFolder(), filename);
     }
@@ -108,6 +112,27 @@ public class BaseInit {
             showError("Проблема з налаштуванням платформи ",
                     "Під час завантаження сталася невідома помилка", e);
         }
+    }
+
+    static public String sanitizeName(String origName) {
+        char[] c = origName.toCharArray();
+        StringBuilder buffer = new StringBuilder();
+
+        for (int i = 0; i < c.length; i++) {
+            if (((c[i] >= '0') && (c[i] <= '9')) ||
+                    ((c[i] >= 'a') && (c[i] <= 'z')) ||
+                    ((c[i] >= 'A') && (c[i] <= 'Z')) ||
+                    ((i > 0) && (c[i] == '-')) ||
+                    ((i > 0) && (c[i] == '.'))) {
+                buffer.append(c[i]);
+            } else {
+                buffer.append('_');
+            }
+        }
+        if (buffer.length() > 63) {
+            buffer.setLength(63);
+        }
+        return buffer.toString();
     }
 
     static public void showError(String title, String message, int exit_code) {
