@@ -3,6 +3,7 @@ package base;
 import base.helpers.BaseHelper;
 import base.helpers.FileUtils;
 import base.processing.Experiment;
+import base.serial.DiscoveryManager;
 import libraries.MenuScroller;
 import libraries.Theme;
 
@@ -16,8 +17,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-import static base.BaseInit.showMessage;
-import static base.BaseInit.showWarning;
+import static base.BaseInit.*;
 
 public class Base {
 
@@ -291,5 +291,13 @@ public class Base {
         } catch (Exception e) {
             showWarning("Проблема відкриття URL", "Не вдалося відкрити URL-адресу\n" + url, e);
         }
+    }
+
+    public static DiscoveryManager getDiscoveryManager() {
+        return BaseInit.getDiscoveryManager();
+    }
+
+    public void handleTestConnection() {
+        System.out.println();
     }
 }

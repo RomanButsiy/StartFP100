@@ -6,6 +6,10 @@ import base.PreferencesData;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Platform {
 

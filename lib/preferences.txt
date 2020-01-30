@@ -49,6 +49,14 @@ preferences.readonly = false
 window.size.width.default = 600
 window.size.height.default = 500
 
+# default port is not defined
+#serial.port=
+serial.databits=8
+serial.stopbits=1
+serial.parity=N
+serial.debug_rate=9600
+serial.CRC=false
+
 
 
 

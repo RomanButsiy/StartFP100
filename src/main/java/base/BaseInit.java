@@ -3,12 +3,14 @@ package base;
 import java.io.File;
 import base.helpers.*;
 import base.platforms.Platform;
+import base.serial.DiscoveryManager;
 
 public class BaseInit {
 
     static Platform platform;
     static UserNotifier notifier = new BasicUserNotifier();
     static String currentDirectory = System.getProperty("user.dir");
+    private static DiscoveryManager discoveryManager;
 
     static public File getDefaultExperimentsFolder() {
         File experimentsFolder = null;
@@ -135,6 +137,13 @@ public class BaseInit {
         return buffer.toString();
     }
 
+    public static DiscoveryManager getDiscoveryManager() {
+        if (discoveryManager == null) {
+            discoveryManager = new DiscoveryManager();
+        }
+        return discoveryManager;
+    }
+
     static public void showError(String title, String message, int exit_code) {
         showError(title, message, null, exit_code);
     }
@@ -159,4 +168,7 @@ public class BaseInit {
         notifier.showWarning(title, message, e);
     }
 
+    public static void selectSerialPort(String port) {
+        PreferencesData.set("serial.port", port);
+    }
 }

@@ -3,6 +3,8 @@ package base;
 import base.platforms.Platform;
 import base.processing.Experiment;
 import base.processing.ExperimentController;
+import base.serial.Discovery;
+import base.serial.SerialDiscovery;
 import base.view.StubMenuListener;
 import libraries.MenuScroller;
 
@@ -16,6 +18,7 @@ import java.awt.event.WindowEvent;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +40,10 @@ public class Editor extends JFrame implements RunnerListener  {
     private JMenu toolsMenu;
     private JMenu recentExperimentsMenu;
     private JMenuItem saveAsMenuItem;
+    private static JMenu portMenu;
+    private static JMenu rateMenu;
+    private static JMenu signalMenu;
+
 
 
     static JMenu experimentMenu;
@@ -171,11 +178,119 @@ public class Editor extends JFrame implements RunnerListener  {
     private JMenu buildToolsMenu() {
         toolsMenu = new JMenu("Інструменти");
         toolsMenu.setMnemonic(KeyEvent.VK_T);
-        //addInternalTools(toolsMenu);
-
-
-
+        JMenuItem item = newJMenuItem("Налаштування експерименту", 'E');
+        item.addActionListener(event -> handleExperimentSettings());
+        toolsMenu.add(item);
+        if (signalMenu == null) {
+            signalMenu = new JMenu("Форма сигналу");
+        }
+        populateSignalMenu();
+        toolsMenu.add(signalMenu);
+        MenuScroller.setScrollerFor(signalMenu);
+        toolsMenu.addSeparator();
+        if (rateMenu == null) {
+            rateMenu = new JMenu("Швидкість");
+        }
+        populateRateMenu();
+        toolsMenu.add(rateMenu);
+        MenuScroller.setScrollerFor(rateMenu);
+        if (portMenu == null) {
+            portMenu = new JMenu("Порт");
+        }
+        populatePortMenu();
+        toolsMenu.add(portMenu);
+        MenuScroller.setScrollerFor(portMenu);
+        toolsMenu.addSeparator();
+        item = newJMenuItem("Перевірити з'єднання", 'T');
+        item.addActionListener(event -> base.handleTestConnection());
+        toolsMenu.add(item);
+        item = newJMenuItem("Налаштування", 'D');
+        item.addActionListener(event -> handleSettings());
+        toolsMenu.add(item);
+        toolsMenu.addMenuListener(new StubMenuListener() {
+            public void menuSelected(MenuEvent e) {
+                populatePortMenu();
+                for (Component c : toolsMenu.getMenuComponents()) {
+                    if ((c instanceof JMenu) && c.isVisible()) {
+                        JMenu menu = (JMenu)c;
+                        String name = menu.getText();
+                        if (name == null) continue;
+                        String baseName = name;
+                        int index = name.indexOf(':');
+                        if (index > 0) baseName = name.substring(0, index);
+                        String sel = null;
+                        int count = menu.getItemCount();
+                        for (int i=0; i < count; i++) {
+                            JMenuItem item = menu.getItem(i);
+                            if (item != null && item.isSelected()) {
+                                sel = item.getText();
+                                if (sel != null) break;
+                            }
+                        }
+                        if (sel == null) {
+                            if (!name.equals(baseName)) menu.setText(baseName);
+                        } else {
+                            if (sel.length() > 50) sel = sel.substring(0, 50) + "...";
+                            String newName = baseName + ": \"" + sel + "\"";
+                            if (!name.equals(newName)) menu.setText(newName);
+                        }
+                    }
+                }
+            }
+        });
         return toolsMenu;
+    }
+
+    private void handleSettings() {
+    }
+
+    private void populateSignalMenu() {
+    }
+
+    private void populateRateMenu() {
+    }
+
+    private void populatePortMenu() {
+        portMenu.removeAll();
+        boolean isLabel = true;
+        String selectedPort = PreferencesData.get("serial.port");
+        List<String> ports = Base.getDiscoveryManager().discovery();
+        for (String port : ports) {
+            if (isLabel) {
+                JMenuItem item = new JMenuItem("Послідовні порти");
+                item.setEnabled(false);
+                portMenu.add(item);
+                portMenu.addSeparator();
+                isLabel = false;
+            }
+            JCheckBoxMenuItem item = new JCheckBoxMenuItem(port);
+            item.addActionListener(event -> {
+                selectSerialPort(port);
+            });
+            item.setSelected(port.equals(selectedPort));
+            portMenu.add(item);
+        }
+        portMenu.setEnabled(portMenu.getMenuComponentCount() > 0);
+    }
+
+    private void selectSerialPort(String port) {
+        if (portMenu == null) return;
+        if (port == null) return;
+        JCheckBoxMenuItem selection = null;
+        for (int i = 0; i < portMenu.getItemCount(); i++) {
+            JMenuItem menuItem = portMenu.getItem(i);
+            if (!(menuItem instanceof JCheckBoxMenuItem)) {
+                continue;
+            }
+            JCheckBoxMenuItem checkBoxMenuItem = ((JCheckBoxMenuItem) menuItem);
+            checkBoxMenuItem.setState(false);
+            if (port.equals(checkBoxMenuItem.getText())) selection = checkBoxMenuItem;
+        }
+        if (selection != null) selection.setState(true);
+        BaseInit.selectSerialPort(port);
+    }
+
+    private void handleExperimentSettings() {
     }
 
     private void buildExperimentMenu(JMenu experimentMenu) {
