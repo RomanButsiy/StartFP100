@@ -68,6 +68,23 @@ public class Editor extends JFrame implements RunnerListener  {
             public void windowActivated(WindowEvent e) {
                 base.handleActivated(Editor.this);
             }
+            public void windowDeactivated(WindowEvent e) {
+                List<Component> toolsMenuItemsToRemove = new LinkedList<>();
+                for (Component menuItem : toolsMenu.getMenuComponents()) {
+                    if (menuItem instanceof JComponent) {
+                        Object removeOnWindowDeactivation = ((JComponent) menuItem).getClientProperty("removeOnWindowDeactivation");
+                        if (removeOnWindowDeactivation != null && Boolean.parseBoolean(removeOnWindowDeactivation.toString())) {
+                            toolsMenuItemsToRemove.add(menuItem);
+                        }
+                    }
+                }
+                for (Component menuItem : toolsMenuItemsToRemove) {
+                    toolsMenu.remove(menuItem);
+                }
+                toolsMenu.remove(signalMenu);
+                toolsMenu.remove(portMenu);
+                toolsMenu.remove(rateMenu);
+            }
         });
 
         buildMenuBar();
@@ -152,7 +169,23 @@ public class Editor extends JFrame implements RunnerListener  {
         buildExperimentMenu(experimentMenu);
         menuBar.add(experimentMenu);
         final JMenu toolsMenu = buildToolsMenu();
-
+        toolsMenu.addMenuListener(new StubMenuListener() {
+            @Override
+            public void menuSelected(MenuEvent e) {
+                List<Component> components = Arrays.asList(toolsMenu.getMenuComponents());
+                if (!components.contains(signalMenu)) {
+                    toolsMenu.insert(signalMenu, 1);
+                }
+                if (!components.contains(rateMenu)) {
+                    toolsMenu.insert(rateMenu, 3);
+                }
+                if (!components.contains(portMenu)) {
+                    toolsMenu.insert(portMenu, 4);
+                }
+                toolsMenu.revalidate();
+                validate();
+            }
+        });
         menuBar.add(toolsMenu);
         menuBar.add(buildHelpMenu());
         setJMenuBar(menuBar);

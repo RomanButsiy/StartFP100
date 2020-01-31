@@ -263,6 +263,7 @@ public class Base {
 
     public void handleActivated(Editor editor) {
         activeEditor = editor;
+        activeEditor.rebuildRecentExperimentsMenu();
     }
 
     public void handlePrefs() {
