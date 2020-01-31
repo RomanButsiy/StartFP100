@@ -3,6 +3,7 @@ package base;
 import base.platforms.Platform;
 import base.processing.Experiment;
 import base.processing.ExperimentController;
+import base.view.EditorToolbar;
 import base.view.StubMenuListener;
 import libraries.MenuScroller;
 
@@ -26,11 +27,14 @@ public class Editor extends JFrame implements RunnerListener  {
     private ExperimentController experimentController;
     private JSplitPane splitPane;
 
+    private final EditorToolbar toolbar;
 
     boolean untitled;
     final Base base;
     final Platform platform;
+    private final Box upper;
     private JMenu fileMenu;
+    static JMenu toolbarMenu;
     private JMenu toolsMenu;
     private JMenu recentExperimentsMenu;
     private JMenuItem saveAsMenuItem;
@@ -81,26 +85,42 @@ public class Editor extends JFrame implements RunnerListener  {
         });
 
         buildMenuBar();
+        Container contentPain = getContentPane();
+        contentPain.setLayout(new BorderLayout());
+        JPanel pane = new JPanel();
+        pane.setLayout(new BorderLayout());
+        contentPain.add(pane, BorderLayout.CENTER);
 
-        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        Box box = Box.createVerticalBox();
+        upper = Box.createVerticalBox();
+        if (toolbarMenu == null) {
+            toolbarMenu = new JMenu();
+            base.rebuildToolbarMenu(toolbarMenu);
+        }
+        JPanel consolePanel = new JPanel();
+        toolbar = new EditorToolbar(this, toolbarMenu);
+        upper.add(toolbar);
+
+        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upper, consolePanel);
 
         setSize(600, 480);
         setPlacement(storedLocation, defaultLocation);
 
         boolean loaded = handleOpenInternal(file);
         if (!loaded) experimentController = null;
+
     }
 
     private boolean handleOpenInternal(File experimentFile) {
         String fileName = experimentFile.getName();
         File file = Experiment.checkExperimentFile(experimentFile);
+        String properParent = fileName.substring(0, fileName.length() - 4);
         if (file == null) {
             if (!fileName.endsWith(".fim")) {
                 BaseInit.showWarning("Вибрано неправильний файл", "StartFP100 може відкривати лише власні експерименти\n" +
                                            "та інші файли, що закінчуються на .ino", null);
                 return false;
             } else {
-                String properParent = fileName.substring(0, fileName.length() - 4);
                 Object[] options = { "OK", "Скасувати" };
                 String prompt = "Файл " + fileName + " повинен бути всередині\n" +
                                 "папки експерименту " +  properParent + ".\n" +
@@ -138,6 +158,7 @@ public class Editor extends JFrame implements RunnerListener  {
         }
         experimentController = new ExperimentController(this, experiment);
         experiment.setUntitledAndNotSaved(untitled);
+        setTitle("StartFP100 | " + properParent);
         untitled = false;
         return true;
     }

@@ -305,4 +305,7 @@ public class Base {
     public void handleDeviceInformation() {
 
     }
+
+    public void rebuildToolbarMenu(JMenu toolbarMenu) {
+    }
 }
