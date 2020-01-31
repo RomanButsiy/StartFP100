@@ -3,22 +3,16 @@ package base;
 import base.platforms.Platform;
 import base.processing.Experiment;
 import base.processing.ExperimentController;
-import base.serial.Discovery;
-import base.serial.SerialDiscovery;
 import base.view.StubMenuListener;
 import libraries.MenuScroller;
 
 import javax.swing.*;
 import javax.swing.event.MenuEvent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,12 +37,11 @@ public class Editor extends JFrame implements RunnerListener  {
     private static JMenu portMenu;
     private static JMenu rateMenu;
     private static JMenu signalMenu;
-
-
-
-    static JMenu experimentMenu;
+    private static JMenu experimentMenu;
 
     private static final int SHORTCUT_KEY_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+    private static final String [] signals = { "Синусоїда", "Трапеція", "Трикутник", "Інший" };
+    private static final String [] rates = {"300", "1200", "2400", "4800", "9600", "19200", "38400", "57600", "74880", "115200", "230400"};
 
     public Editor(Base iBase, File file, int[] storedLocation, int[] defaultLocation,  Platform platform, boolean untitled) {
         super("StartFP100");
@@ -234,6 +227,9 @@ public class Editor extends JFrame implements RunnerListener  {
         toolsMenu.add(portMenu);
         MenuScroller.setScrollerFor(portMenu);
         toolsMenu.addSeparator();
+        item = newJMenuItem("Інформація про пристрій", 'I');
+        item.addActionListener(event -> base.handleDeviceInformation());
+        toolsMenu.add(item);
         item = newJMenuItem("Перевірити з'єднання", 'T');
         item.addActionListener(event -> base.handleTestConnection());
         toolsMenu.add(item);
@@ -243,6 +239,7 @@ public class Editor extends JFrame implements RunnerListener  {
         toolsMenu.addMenuListener(new StubMenuListener() {
             public void menuSelected(MenuEvent e) {
                 populatePortMenu();
+                populateSignalMenu();
                 for (Component c : toolsMenu.getMenuComponents()) {
                     if ((c instanceof JMenu) && c.isVisible()) {
                         JMenu menu = (JMenu)c;
@@ -278,9 +275,47 @@ public class Editor extends JFrame implements RunnerListener  {
     }
 
     private void populateSignalMenu() {
+        signalMenu.removeAll();
+        boolean isLabel = true;
+        String selectedSignal = PreferencesData.get("signal.form");
+        for (String signal : signals) {
+            if (isLabel) {
+                JMenuItem item = new JMenuItem("Форма сигналу");
+                item.setEnabled(false);
+                signalMenu.add(item);
+                signalMenu.addSeparator();
+                isLabel = false;
+            }
+            JCheckBoxMenuItem item = new JCheckBoxMenuItem(signal);
+            item.addActionListener(event -> {
+                selectSignalForm(signal);
+            });
+            item.setSelected(signal.equals(selectedSignal));
+            signalMenu.add(item);
+        }
+        signalMenu.setEnabled(signalMenu.getMenuComponentCount() > 0);
     }
 
     private void populateRateMenu() {
+        rateMenu.removeAll();
+        boolean isLabel = true;
+        String selectedRate = PreferencesData.get("serial.port.rate");
+        for (String rate : rates) {
+            if (isLabel) {
+                JMenuItem item = new JMenuItem("Швидкість");
+                item.setEnabled(false);
+                rateMenu.add(item);
+                rateMenu.addSeparator();
+                isLabel = false;
+            }
+            JCheckBoxMenuItem item = new JCheckBoxMenuItem(rate);
+            item.addActionListener(event -> {
+                selectRate(rate);
+            });
+            item.setSelected(rate.equals(selectedRate));
+            rateMenu.add(item);
+        }
+        rateMenu.setEnabled(rateMenu.getMenuComponentCount() > 0);
     }
 
     private void populatePortMenu() {
@@ -306,21 +341,35 @@ public class Editor extends JFrame implements RunnerListener  {
         portMenu.setEnabled(portMenu.getMenuComponentCount() > 0);
     }
 
-    private void selectSerialPort(String port) {
-        if (portMenu == null) return;
-        if (port == null) return;
+    private void selectAction(JMenu menu, String detail) {
+        if (menu == null) return;
+        if (detail == null) return;
         JCheckBoxMenuItem selection = null;
-        for (int i = 0; i < portMenu.getItemCount(); i++) {
-            JMenuItem menuItem = portMenu.getItem(i);
+        for (int i = 0; i < menu.getItemCount(); i++) {
+            JMenuItem menuItem = menu.getItem(i);
             if (!(menuItem instanceof JCheckBoxMenuItem)) {
                 continue;
             }
             JCheckBoxMenuItem checkBoxMenuItem = ((JCheckBoxMenuItem) menuItem);
             checkBoxMenuItem.setState(false);
-            if (port.equals(checkBoxMenuItem.getText())) selection = checkBoxMenuItem;
+            if (detail.equals(checkBoxMenuItem.getText())) selection = checkBoxMenuItem;
         }
         if (selection != null) selection.setState(true);
+    }
+
+    private void selectSerialPort(String port) {
+        selectAction(portMenu, port);
         BaseInit.selectSerialPort(port);
+    }
+
+    private void selectSignalForm(String signal) {
+        selectAction(signalMenu, signal);
+        BaseInit.selectSignalForm(signal);
+    }
+
+    private void selectRate(String rate) {
+        selectAction(rateMenu, rate);
+        BaseInit.selectRate(rate);
     }
 
     private void handleExperimentSettings() {

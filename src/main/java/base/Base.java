@@ -301,4 +301,8 @@ public class Base {
     public void handleTestConnection() {
         System.out.println();
     }
+
+    public void handleDeviceInformation() {
+
+    }
 }

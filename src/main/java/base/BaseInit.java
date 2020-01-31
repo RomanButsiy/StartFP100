@@ -171,4 +171,13 @@ public class BaseInit {
     public static void selectSerialPort(String port) {
         PreferencesData.set("serial.port", port);
     }
+
+    public static void selectSignalForm(String signal) {
+        PreferencesData.set("signal.form", signal);
+    }
+
+    public static void selectRate(String rate) {
+        PreferencesData.set("serial.port.rate", rate);
+    }
+
 }

@@ -1,12 +1,9 @@
 package base.helpers;
 
 import base.BaseInit;
-import base.Editor;
 import base.PreferencesData;
 import base.legacy.PApplet;
-import com.sun.jna.platform.FileUtils;
 import org.apache.commons.compress.utils.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,12 +14,12 @@ import static base.BaseInit.*;
 
 public class BaseHelper {
 
-
     public static final int RECENT_EXPERIMENTS_MAX_SIZE = 3;
     static public String[] months = {
             "jan", "feb", "mar", "apr", "may", "jun",
             "jul", "aug", "sep", "oct", "nov", "dec"
     };
+
 
     static public void copyFile(File sourceFile, File targetFile) throws IOException {
         InputStream from = null;
