@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static base.helpers.BaseHelper.copyFile;
+import static libraries.Theme.scale;
 
 public class Editor extends JFrame implements RunnerListener  {
 
@@ -98,11 +99,19 @@ public class Editor extends JFrame implements RunnerListener  {
             base.rebuildToolbarMenu(toolbarMenu);
         }
         JPanel consolePanel = new JPanel();
-        toolbar = new EditorToolbar(this, toolbarMenu);
+        toolbar = new EditorToolbar(this);
         upper.add(toolbar);
 
         splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upper, consolePanel);
+        splitPane.setContinuousLayout(true);
+        splitPane.setResizeWeight(1D);
+        splitPane.setBorder(null);
+        splitPane.setDividerSize(scale(splitPane.getDividerSize()));
+        splitPane.setMinimumSize(scale(new Dimension(600, 100)));
+        box.add(splitPane);
+        pane.add(box);
 
+        //pane.setTransferHandler(new FileDropHandler());
         setSize(600, 480);
         setPlacement(storedLocation, defaultLocation);
 
@@ -393,7 +402,10 @@ public class Editor extends JFrame implements RunnerListener  {
         BaseInit.selectRate(rate);
     }
 
-    private void handleExperimentSettings() {
+    public void handleExperimentSettings() {
+        toolbar.activateSettings();
+        JOptionPane.showMessageDialog(this, "Тут мають бути налаштування", "Налаштування", JOptionPane.INFORMATION_MESSAGE);
+        toolbar.deactivateSettings();
     }
 
     private void buildExperimentMenu(JMenu experimentMenu) {
@@ -411,14 +423,20 @@ public class Editor extends JFrame implements RunnerListener  {
         item.setEnabled(Base.openFolderAvailable());
     }
 
-    private void handleStop() {
-        System.out.println("Experiment stopped");
+    public void handleStop() {
+        if (!experiment.isExperimentRunning()) return;
+        toolbar.deactivateRun();
+        toolbar.activateStop();
         experiment.setExperimentRunning(false);
+        JOptionPane.showMessageDialog(this, "Експеримент зупинкно", "Повідомлення", JOptionPane.INFORMATION_MESSAGE);
+        toolbar.deactivateStop();
     }
 
-    private void handleRun() {
-        System.out.println("Experiment started");
+    public void handleRun() {
+        if (experiment.isExperimentRunning()) return;
+        toolbar.activateRun();
         experiment.setExperimentRunning(true);
+        JOptionPane.showMessageDialog(this, "Експеримент запущено", "Повідомлення", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private JMenu buildFileMenu() {
