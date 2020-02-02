@@ -303,4 +303,18 @@ public class EditorToolbar extends JComponent implements MouseInputListener, Key
         deactivate(SETTINGS);
     }
 
+    public Dimension getPreferredSize() {
+        return getMinimumSize();
+    }
+
+
+    public Dimension getMinimumSize() {
+        return new Dimension((BUTTON_COUNT + 1) * BUTTON_WIDTH, BUTTON_HEIGHT);
+    }
+
+
+    public Dimension getMaximumSize() {
+        return new Dimension(scale(30000), BUTTON_HEIGHT);
+    }
+
 }

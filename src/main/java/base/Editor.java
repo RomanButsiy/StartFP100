@@ -3,6 +3,8 @@ package base;
 import base.platforms.Platform;
 import base.processing.Experiment;
 import base.processing.ExperimentController;
+import base.view.DiagramTab;
+import base.view.EditorHeader;
 import base.view.EditorToolbar;
 import base.view.StubMenuListener;
 import libraries.MenuScroller;
@@ -14,6 +16,7 @@ import java.awt.event.*;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +32,7 @@ public class Editor extends JFrame implements RunnerListener  {
     private JSplitPane splitPane;
 
     private final EditorToolbar toolbar;
+    private ArrayList<DiagramTab> tabs = new ArrayList<>();
 
     boolean untitled;
     final Base base;
@@ -44,9 +48,12 @@ public class Editor extends JFrame implements RunnerListener  {
     private static JMenu signalMenu;
     private static JMenu experimentMenu;
 
+    final EditorHeader header;
+
     private static final int SHORTCUT_KEY_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
     private static final String [] signals = { "Синусоїда", "Трапеція", "Трикутник", "Інший" };
     private static final String [] rates = {"300", "1200", "2400", "4800", "9600", "19200", "38400", "57600", "74880", "115200", "230400"};
+    private int currentTabIndex;
 
     public Editor(Base iBase, File file, int[] storedLocation, int[] defaultLocation,  Platform platform, boolean untitled) {
         super("StartFP100");
@@ -61,7 +68,6 @@ public class Editor extends JFrame implements RunnerListener  {
                 base.handleClose(Editor.this);
             }
         });
-
         addWindowListener(new WindowAdapter() {
             public void windowActivated(WindowEvent e) {
                 base.handleActivated(Editor.this);
@@ -91,7 +97,6 @@ public class Editor extends JFrame implements RunnerListener  {
         JPanel pane = new JPanel();
         pane.setLayout(new BorderLayout());
         contentPain.add(pane, BorderLayout.CENTER);
-
         Box box = Box.createVerticalBox();
         upper = Box.createVerticalBox();
         if (toolbarMenu == null) {
@@ -100,7 +105,9 @@ public class Editor extends JFrame implements RunnerListener  {
         }
         JPanel consolePanel = new JPanel();
         toolbar = new EditorToolbar(this);
+        header = new EditorHeader(this);
         upper.add(toolbar);
+        upper.add(header);
 
         splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upper, consolePanel);
         splitPane.setContinuousLayout(true);
@@ -112,7 +119,7 @@ public class Editor extends JFrame implements RunnerListener  {
         pane.add(box);
 
         //pane.setTransferHandler(new FileDropHandler());
-        setSize(600, 480);
+        //setSize(800, 480);
         setPlacement(storedLocation, defaultLocation);
 
         boolean loaded = handleOpenInternal(file);
@@ -168,8 +175,23 @@ public class Editor extends JFrame implements RunnerListener  {
         experimentController = new ExperimentController(this, experiment);
         experiment.setUntitledAndNotSaved(untitled);
         setTitle("StartFP100 | " + properParent);
+        createTabs();
         untitled = false;
         return true;
+    }
+
+    public int getCurrentTabIndex() {
+        return currentTabIndex;
+    }
+
+    private void createTabs() {
+        tabs.clear();
+        currentTabIndex = -1;
+        DiagramTab tab = new DiagramTab(this, "Якись_графік");
+        DiagramTab tab2 = new DiagramTab(this, "Якись_графік_2");
+        tabs.add(tab);
+        tabs.add(tab2);
+        currentTabIndex = 0;
     }
 
     private void buildMenuBar() {
@@ -559,6 +581,14 @@ public class Editor extends JFrame implements RunnerListener  {
         JMenuItem menuItem = new JMenuItem(title);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(what, SHORTCUT_KEY_MASK | ActionEvent.SHIFT_MASK));
         return menuItem;
+    }
+
+    public List<DiagramTab> getTabs() {
+        return tabs;
+    }
+
+    public void selectTab(final int index) {
+        currentTabIndex = index;
     }
 
 }
