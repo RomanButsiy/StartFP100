@@ -49,6 +49,9 @@ preferences.readonly = false
 window.size.width.default = 600
 window.size.height.default = 500
 
+window.size.width.min = 500
+window.size.height.min = 400
+
 # default port is not defined
 #serial.port=
 serial.databits=8
@@ -56,6 +59,10 @@ serial.stopbits=1
 serial.parity=N
 serial.debug_rate=9600
 serial.CRC=false
+
+# font size for diagrams
+diagrams.font=Monospaced,plain,12
+console.lines = 4
 
 
 

@@ -160,4 +160,8 @@ public class EditorHeader  extends JComponent {
         return scale(new Dimension(30000, GRID_SIZE));
     }
 
+    public void rebuild() {
+        repaint();
+        Toolkit.getDefaultToolkit().sync();
+    }
 }

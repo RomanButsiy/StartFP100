@@ -3,10 +3,7 @@ package base;
 import base.platforms.Platform;
 import base.processing.Experiment;
 import base.processing.ExperimentController;
-import base.view.DiagramTab;
-import base.view.EditorHeader;
-import base.view.EditorToolbar;
-import base.view.StubMenuListener;
+import base.view.*;
 import libraries.MenuScroller;
 
 import javax.swing.*;
@@ -49,6 +46,9 @@ public class Editor extends JFrame implements RunnerListener  {
     private static JMenu experimentMenu;
 
     final EditorHeader header;
+    EditorConsole console;
+    EditorLineStatus lineStatus;
+    private JPanel diagramPanel;
 
     private static final int SHORTCUT_KEY_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
     private static final String [] signals = { "Синусоїда", "Трапеція", "Трикутник", "Інший" };
@@ -108,7 +108,15 @@ public class Editor extends JFrame implements RunnerListener  {
         header = new EditorHeader(this);
         upper.add(toolbar);
         upper.add(header);
-
+        consolePanel.setLayout(new BorderLayout());
+        console = new EditorConsole(base);
+        console.setName("console");
+        console.setBorder(null);
+        consolePanel.add(console, BorderLayout.CENTER);
+        lineStatus = new EditorLineStatus();
+        consolePanel.add(lineStatus, BorderLayout.SOUTH);
+        diagramPanel = new JPanel(new BorderLayout());
+        upper.add(diagramPanel);
         splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, upper, consolePanel);
         splitPane.setContinuousLayout(true);
         splitPane.setResizeWeight(1D);
@@ -117,14 +125,22 @@ public class Editor extends JFrame implements RunnerListener  {
         splitPane.setMinimumSize(scale(new Dimension(600, 100)));
         box.add(splitPane);
         pane.add(box);
-
         //pane.setTransferHandler(new FileDropHandler());
-        //setSize(800, 480);
+        setMinimumSize(scale(new Dimension(
+                PreferencesData.getInteger("window.size.width.min"),
+                PreferencesData.getInteger("window.size.height.min"))));
         setPlacement(storedLocation, defaultLocation);
-
+        pack();
         boolean loaded = handleOpenInternal(file);
         if (!loaded) experimentController = null;
+        EditorConsole.setCurrentEditorConsole(console);
+    }
 
+    public void applyPreferences() {
+        for (DiagramTab tab: tabs) {
+            //tab.applyPreferences();
+        }
+        console.applyPreferences();
     }
 
     private boolean handleOpenInternal(File experimentFile) {
@@ -191,7 +207,7 @@ public class Editor extends JFrame implements RunnerListener  {
         DiagramTab tab2 = new DiagramTab(this, "Якись_графік_2");
         tabs.add(tab);
         tabs.add(tab2);
-        currentTabIndex = 0;
+        selectTab(0);
     }
 
     private void buildMenuBar() {
@@ -411,7 +427,12 @@ public class Editor extends JFrame implements RunnerListener  {
 
     private void selectSerialPort(String port) {
         selectAction(portMenu, port);
-        BaseInit.selectSerialPort(port);
+        base.selectSerialPort(port);
+    }
+
+    public void selectSerialPort() {
+        lineStatus.setPort(PreferencesData.get("serial.port"));
+        lineStatus.repaint();
     }
 
     private void selectSignalForm(String signal) {
@@ -450,7 +471,8 @@ public class Editor extends JFrame implements RunnerListener  {
         toolbar.deactivateRun();
         toolbar.activateStop();
         experiment.setExperimentRunning(false);
-        JOptionPane.showMessageDialog(this, "Експеримент зупинкно", "Повідомлення", JOptionPane.INFORMATION_MESSAGE);
+        setLineStatusText("Експеримент зупинено");
+        JOptionPane.showMessageDialog(this, "Експеримент зупинено", "Повідомлення", JOptionPane.INFORMATION_MESSAGE);
         toolbar.deactivateStop();
     }
 
@@ -458,7 +480,13 @@ public class Editor extends JFrame implements RunnerListener  {
         if (experiment.isExperimentRunning()) return;
         toolbar.activateRun();
         experiment.setExperimentRunning(true);
+        setLineStatusText("Експеримент запущено");
         JOptionPane.showMessageDialog(this, "Експеримент запущено", "Повідомлення", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void setLineStatusText(String s) {
+        lineStatus.setText(s);
+        lineStatus.repaint();
     }
 
     private JMenu buildFileMenu() {
@@ -589,6 +617,15 @@ public class Editor extends JFrame implements RunnerListener  {
 
     public void selectTab(final int index) {
         currentTabIndex = index;
+        header.rebuild();
+        SwingUtilities.invokeLater(() -> {
+            diagramPanel.removeAll();
+            diagramPanel.add(tabs.get(index), BorderLayout.CENTER);
+            tabs.get(index).requestFocusInWindow();
+            diagramPanel.revalidate();
+            diagramPanel.repaint();
+        });
     }
+
 
 }

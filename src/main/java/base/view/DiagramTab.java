@@ -14,10 +14,11 @@ public class DiagramTab extends JPanel {
         super(new BorderLayout());
         this.editor = editor;
         this.name = name;
-        add(new JButton(name), BorderLayout.CENTER);
+        add(new JLabel(name), BorderLayout.CENTER);
     }
 
     public String getPrettyName() {
         return name;
     }
+
 }

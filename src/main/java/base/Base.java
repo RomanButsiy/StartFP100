@@ -6,6 +6,7 @@ import base.processing.Experiment;
 import base.serial.DiscoveryManager;
 import libraries.MenuScroller;
 import libraries.Theme;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,6 +61,52 @@ public class Base {
         } catch (Exception e) {
             showWarning("Проблема відкриття папки", "Не вдалося відкрити папку " + file.getAbsolutePath(), e);
         }
+    }
+
+    public void selectSerialPort(String port) {
+        BaseInit.selectSerialPort(port);
+        for (Editor editor : editors) {
+            editor.selectSerialPort();
+        }
+    }
+
+    public void addEditorFontResizeListeners(Component comp) {
+        addEditorFontResizeMouseWheelListener(comp);
+    }
+
+    public void addEditorFontResizeMouseWheelListener(Component comp) {
+        comp.addMouseWheelListener(e -> {
+            if (e.isControlDown()) {
+                if (e.getWheelRotation() < 0) {
+                    this.handleFontSizeChange(1);
+                } else {
+                    this.handleFontSizeChange(-1);
+                }
+            } else {
+                if (e.getComponent() != null && e.getComponent().getParent() != null) {
+                    e.getComponent().getParent().dispatchEvent(e);
+                }
+            }
+        });
+    }
+
+    public void handleFontSizeChange(int change) {
+        String pieces[] = PreferencesData.get("editor.font").split(",");
+        try {
+            int newSize = Integer.parseInt(pieces[2]) + change;
+            if (newSize < 4)
+                newSize = 4;
+            pieces[2] = String.valueOf(newSize);
+        } catch (NumberFormatException e) {
+            // ignore
+            return;
+        }
+        PreferencesData.set("editor.font", StringUtils.join(pieces, ','));
+        getEditors().forEach(Editor::applyPreferences);
+    }
+
+    public List<Editor> getEditors() {
+        return new LinkedList<>(editors);
     }
 
     public void handleClose(Editor editor) {
