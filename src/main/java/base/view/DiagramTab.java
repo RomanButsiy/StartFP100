@@ -14,7 +14,7 @@ public class DiagramTab extends JPanel {
         super(new BorderLayout());
         this.editor = editor;
         this.name = name;
-        add(new JLabel(name), BorderLayout.CENTER);
+        add(new JButton(name.replace("_", " ") + ". Тут могла бути ваша реклама"), BorderLayout.CENTER);
     }
 
     public String getPrettyName() {

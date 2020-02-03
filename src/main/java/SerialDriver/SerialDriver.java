@@ -1,54 +1,64 @@
 package SerialDriver;
 
-import MenuBar.PortAndSpeed;
 import jssc.SerialPort;
+import jssc.SerialPortEvent;
+import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
 
-public class SerialDriver {
+public class SerialDriver implements SerialPortEventListener {
 
     private static SerialPort serialPort;
-    private boolean isInit = false;
-    private String initException = null;
+    private IDataReadAction dataReadAction;
 
-    public SerialDriver() {
-    }
-
-    public String getInitException() {
-        return initException;
-    }
-
-    public static SerialPort getSerialPort() {
-        return serialPort;
-    }
-
-    public boolean isInit() {
-        return isInit;
-    }
-
-    public void initPort(PortAndSpeed portAndSpeed) {
-        String port = portAndSpeed.getPort();
-        if (port == null ) return;
+    public SerialDriver(String port, String rate, IDataReadAction dataReadAction) throws SerialPortException {
+        this.dataReadAction = dataReadAction;
         serialPort = new SerialPort(port);
         try {
             serialPort.openPort();
-            serialPort.setParams(Integer.parseInt(portAndSpeed.getSpeed()),
+            serialPort.setParams(Integer.parseInt(rate),
                     SerialPort.DATABITS_8,
                     SerialPort.STOPBITS_1,
                     SerialPort.PARITY_NONE);
+            serialPort.addEventListener(this);
         } catch (SerialPortException e) {
-            e.printStackTrace();
-            initException = e.toString();
-            return;
+            dispose();
+            throw e;
         }
-        isInit = true;
     }
 
-    public void write(String text) {
+    public void dispose(){
+        if (serialPort != null) {
+            try {
+                if (serialPort.isOpened()) {
+                    serialPort.closePort();  // close the port
+                }
+            } catch (SerialPortException e) {
+                e.printStackTrace();
+            } finally {
+                serialPort = null;
+            }
+        }
+    }
+
+    public void write(String text) throws SerialPortException {
         try {
             serialPort.writeString(text);
         } catch (SerialPortException e) {
-            e.printStackTrace();
-            initException = e.toString();
+            dispose();
+            throw e;
+        }
+
+    }
+
+    @Override
+    public void serialEvent(SerialPortEvent serialPortEvent) {
+        if(serialPortEvent.isRXCHAR() && serialPortEvent.getEventValue() > 0) {
+            try {
+                String data = serialPort.readString(serialPortEvent.getEventValue());
+                dataReadAction.dataReadAction(data);
+            }
+            catch (SerialPortException ignored) {
+            }
         }
     }
 }

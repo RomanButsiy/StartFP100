@@ -134,6 +134,7 @@ public class Editor extends JFrame implements RunnerListener  {
         boolean loaded = handleOpenInternal(file);
         if (!loaded) experimentController = null;
         EditorConsole.setCurrentEditorConsole(console);
+        if (base.editors.isEmpty()) base.handleTestConnection(this);
     }
 
     public void applyPreferences() {
@@ -299,7 +300,7 @@ public class Editor extends JFrame implements RunnerListener  {
         item.addActionListener(event -> base.handleDeviceInformation());
         toolsMenu.add(item);
         item = newJMenuItem("Перевірити з'єднання", 'T');
-        item.addActionListener(event -> base.handleTestConnection());
+        item.addActionListener(event -> base.handleTestModulesConnection());
         toolsMenu.add(item);
         item = newJMenuItem("Налаштування", 'D');
         item.addActionListener(event -> handleSettings());
@@ -345,8 +346,8 @@ public class Editor extends JFrame implements RunnerListener  {
     private void populateSignalMenu() {
         signalMenu.removeAll();
         boolean isLabel = true;
-        String selectedSignal = PreferencesData.get("signal.form");
-        for (String signal : signals) {
+        int selectedSignal = PreferencesData.getInteger("signal.form");
+        for (int i = 0; i < signals.length; i++) {
             if (isLabel) {
                 JMenuItem item = new JMenuItem("Форма сигналу");
                 item.setEnabled(false);
@@ -354,11 +355,12 @@ public class Editor extends JFrame implements RunnerListener  {
                 signalMenu.addSeparator();
                 isLabel = false;
             }
-            JCheckBoxMenuItem item = new JCheckBoxMenuItem(signal);
+            JCheckBoxMenuItem item = new JCheckBoxMenuItem(signals[i]);
+            int finalI = i;
             item.addActionListener(event -> {
-                selectSignalForm(signal);
+                selectSignalForm(finalI);
             });
-            item.setSelected(signal.equals(selectedSignal));
+            item.setSelected(i == selectedSignal);
             signalMenu.add(item);
         }
         signalMenu.setEnabled(signalMenu.getMenuComponentCount() > 0);
@@ -435,8 +437,8 @@ public class Editor extends JFrame implements RunnerListener  {
         lineStatus.repaint();
     }
 
-    private void selectSignalForm(String signal) {
-        selectAction(signalMenu, signal);
+    private void selectSignalForm(int signal) {
+        selectAction(signalMenu, signals[signal]);
         BaseInit.selectSignalForm(signal);
     }
 
@@ -598,7 +600,7 @@ public class Editor extends JFrame implements RunnerListener  {
 
     @Override
     public void statusNotice(String message) {
-        System.out.println("Notice: " + message + "\n");
+        System.out.println(message);
     }
 
     public ExperimentController getExperimentController() {

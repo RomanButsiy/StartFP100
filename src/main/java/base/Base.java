@@ -1,19 +1,19 @@
 package base;
 
 import base.helpers.BaseHelper;
+import base.helpers.CheckModules;
 import base.helpers.FileUtils;
-import base.processing.Experiment;
 import base.serial.DiscoveryManager;
+import base.view.EditorConsole;
+import libraries.I7000;
 import libraries.MenuScroller;
 import libraries.Theme;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -42,8 +42,8 @@ public class Base {
         } catch (Exception ignored) { }
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
         restoreExperiment(); // fix me!
+        I7000.useCRC = PreferencesData.getBoolean("use.CRC", false);
         if (editors.isEmpty()) handleNew();
-
 
 
 
@@ -311,6 +311,7 @@ public class Base {
     public void handleActivated(Editor editor) {
         activeEditor = editor;
         activeEditor.rebuildRecentExperimentsMenu();
+        EditorConsole.setCurrentEditorConsole(editor.console);
     }
 
     public void handlePrefs() {
@@ -345,8 +346,20 @@ public class Base {
         return BaseInit.getDiscoveryManager();
     }
 
-    public void handleTestConnection() {
-        System.out.println();
+
+    public void handleTestModulesConnection() {
+        base.helpers.BaseHelper.LittleBitPreferencesModuleTest(activeEditor);
+        if (!PreferencesData.getBoolean("runtime.valid.modules", false)) {
+            activeEditor.statusNotice("Перейдіть у Інструменти -> Налаштування і оновіть список модулів");
+            return;
+        }
+        if (!PreferencesData.getBoolean("check.modules", false)) return;
+        new Thread(() -> new CheckModules(activeEditor)).start();
+    }
+
+    public void handleTestConnection(Editor editor) {
+        if (activeEditor == null) activeEditor = editor;
+        handleTestModulesConnection();
     }
 
     public void handleDeviceInformation() {

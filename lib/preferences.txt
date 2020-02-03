@@ -49,20 +49,42 @@ preferences.readonly = false
 window.size.width.default = 600
 window.size.height.default = 500
 
-window.size.width.min = 500
-window.size.height.min = 400
+window.size.width.min = 600
+window.size.height.min = 500
 
 # default port is not defined
-#serial.port=
+serial.port=/dev/ttyUSB0
 serial.databits=8
 serial.stopbits=1
 serial.parity=N
-serial.debug_rate=9600
-serial.CRC=false
+serial.port.rate=115200
+
+# experiment settings
+signal.form=0
+
+# modules
+number.of.modules=4
+module.0.id=01
+module.1.id=02
+module.2.id=03
+module.3.id=04
+
+# id of DAC module
+type.dac.module=7021
+module.7021.id=04
+
+# modules settings
+response.timeout=200
+check.modules=true
+check.modules.config=false
+
+use.CRC=false
+
 
 # font size for diagrams
 diagrams.font=Monospaced,plain,12
 console.lines = 4
+
 
 
 

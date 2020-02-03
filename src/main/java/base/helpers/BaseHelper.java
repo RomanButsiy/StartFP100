@@ -1,6 +1,7 @@
 package base.helpers;
 
 import base.BaseInit;
+import base.Editor;
 import base.PreferencesData;
 import base.legacy.PApplet;
 import org.apache.commons.compress.utils.IOUtils;
@@ -8,7 +9,9 @@ import org.apache.commons.compress.utils.IOUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import static base.BaseInit.*;
 
@@ -137,4 +140,44 @@ public class BaseHelper {
         return null;
     }
 
+    public static void LittleBitPreferencesModuleTest(Editor activeEditor) {
+        int numberOfModules = PreferencesData.getInteger("number.of.modules", 0);
+        List<String> IdModules = new ArrayList<>();
+        if (numberOfModules <= 0) {
+            activeEditor.statusError("Список модулів пустий");
+            activeEditor.statusNotice("Перейдіть у Інструменти -> Налаштування і обновіть його");
+            PreferencesData.setBoolean("runtime.valid.modules", false);
+            return;
+        }
+        String dacModule = PreferencesData.get("type.dac.module");
+        if (dacModule == null) {
+            activeEditor.statusError("Тип цифро-аналогового модуля не вказано");
+            PreferencesData.setBoolean("runtime.valid.modules", false);
+            return;
+        }
+        String IdDacModule = PreferencesData.get("module." + dacModule + ".id");
+        if (IdDacModule == null) {
+            activeEditor.statusError("Id цифро-аналогового модуля не вказано");
+            PreferencesData.setBoolean("runtime.valid.modules", false);
+            return;
+        }
+        boolean flag = false;
+        for (int i = 0; i < numberOfModules; i++) {
+            String id = PreferencesData.get("module." + i +".id");
+            if (id == null) continue;
+            if (id.equals(IdDacModule)) {
+                flag = true;
+                continue;
+            }
+            IdModules.add(id);
+        }
+        if (!flag) {
+            activeEditor.statusError("Id цифро-аналогового модуля вказано невірно");
+            PreferencesData.setBoolean("runtime.valid.modules", false);
+            return;
+        }
+        PreferencesData.set("runtime.dac.module", IdDacModule);
+        PreferencesData.setCollection("runtime.Id.modules", IdModules);
+        PreferencesData.setBoolean("runtime.valid.modules", true);
+    }
 }
