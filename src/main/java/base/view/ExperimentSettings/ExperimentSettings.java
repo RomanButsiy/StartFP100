@@ -1,7 +1,8 @@
-package base.view;
+package base.view.ExperimentSettings;
 
 import base.Editor;
 import base.PreferencesData;
+import base.helpers.SendOne;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -49,6 +50,10 @@ public class ExperimentSettings extends JDialog{
                     String.format("Виберіть значення (%s)", getIndex()), JOptionPane.QUESTION_MESSAGE, null, str, str[lastResult]);
             if (result == null) return;
             PreferencesData.setInteger("runtime.last.result", IntStream.range(0, str.length).filter(i -> str[i].equals(result)).findFirst().orElse(0));
+            if (!PreferencesData.getBoolean("runtime.dac.module.ready", false)) {
+
+            }
+          //  new SendOne(editor, result, );
         });
     }
 

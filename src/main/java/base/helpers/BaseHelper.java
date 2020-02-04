@@ -4,6 +4,7 @@ import base.BaseInit;
 import base.Editor;
 import base.PreferencesData;
 import base.legacy.PApplet;
+import jssc.SerialPortException;
 import org.apache.commons.compress.utils.IOUtils;
 
 import javax.swing.*;
@@ -76,6 +77,19 @@ public class BaseHelper {
             throw new IOException();
         }
         return newExperimentFile;
+    }
+
+    public static void parsePortException(Editor editor, SerialPortException e) {
+        if (e.toString().contains("Port busy")) {
+            editor.statusError("Порт зайнятий");
+            editor.statusNotice("Закрийте програми, які можуть використовувати порт");
+            return;
+        }
+        if (e.toString().contains("Port not found")) {
+            editor.statusError("Пристрій не підключено");
+            return;
+        }
+        editor.statusError(e);
     }
 
     public static int[] retrieveExperimentLocation() {
@@ -151,13 +165,13 @@ public class BaseHelper {
         }
         String dacModule = PreferencesData.get("type.dac.module");
         if (dacModule == null) {
-            activeEditor.statusError("Тип цифро-аналогового модуля не вказано");
+            activeEditor.statusError("Тип цифро-аналогового перетворювача не вказано");
             PreferencesData.setBoolean("runtime.valid.modules", false);
             return;
         }
         String IdDacModule = PreferencesData.get("module." + dacModule + ".id");
         if (IdDacModule == null) {
-            activeEditor.statusError("Id цифро-аналогового модуля не вказано");
+            activeEditor.statusError("Id цифро-аналогового перетворювача не вказано");
             PreferencesData.setBoolean("runtime.valid.modules", false);
             return;
         }
@@ -172,7 +186,7 @@ public class BaseHelper {
             IdModules.add(id);
         }
         if (!flag) {
-            activeEditor.statusError("Id цифро-аналогового модуля вказано невірно");
+            activeEditor.statusError("Id цифро-аналогового перетворювача вказано невірно");
             PreferencesData.setBoolean("runtime.valid.modules", false);
             return;
         }
@@ -180,4 +194,10 @@ public class BaseHelper {
         PreferencesData.setCollection("runtime.Id.modules", IdModules);
         PreferencesData.setBoolean("runtime.valid.modules", true);
     }
+
+    public static boolean recheckModules(Editor editor) {
+
+        return true;
+    }
+
 }

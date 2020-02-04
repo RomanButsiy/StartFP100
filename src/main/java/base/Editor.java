@@ -4,7 +4,7 @@ import base.platforms.Platform;
 import base.processing.Experiment;
 import base.processing.ExperimentController;
 import base.view.*;
-import base.view.ExperimentSettings;
+import base.view.ExperimentSettings.ExperimentSettings;
 import libraries.MenuScroller;
 
 import javax.swing.*;
@@ -45,11 +45,17 @@ public class Editor extends JFrame implements RunnerListener  {
     private static JMenu rateMenu;
     private static JMenu signalMenu;
     private static JMenu experimentMenu;
+    private JMenuItem experimentSettingsItem;
+    private JMenuItem settingsItem;
+    private JMenuItem testModulesItem;
+    private JMenuItem experimentStartItem;
+    private JMenuItem modulesInfoItem;
 
     final EditorHeader header;
     EditorConsole console;
     EditorLineStatus lineStatus;
     private JPanel diagramPanel;
+    private boolean enableRun = true;
 
     private static final int SHORTCUT_KEY_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
     public static final String [] signals = { "Синусоїда", "Трапеція", "Трикутник", "Інший" };
@@ -274,9 +280,9 @@ public class Editor extends JFrame implements RunnerListener  {
     private JMenu buildToolsMenu() {
         toolsMenu = new JMenu("Інструменти");
         toolsMenu.setMnemonic(KeyEvent.VK_T);
-        JMenuItem item = newJMenuItem("Налаштування експерименту", 'E');
-        item.addActionListener(event -> handleExperimentSettings());
-        toolsMenu.add(item);
+        experimentSettingsItem = newJMenuItem("Налаштування експерименту", 'E');
+        experimentSettingsItem.addActionListener(event -> handleExperimentSettings());
+        toolsMenu.add(experimentSettingsItem);
         if (signalMenu == null) {
             signalMenu = new JMenu("Форма сигналу");
         }
@@ -297,15 +303,15 @@ public class Editor extends JFrame implements RunnerListener  {
         toolsMenu.add(portMenu);
         MenuScroller.setScrollerFor(portMenu);
         toolsMenu.addSeparator();
-        item = newJMenuItem("Інформація про пристрій", 'I');
-        item.addActionListener(event -> base.handleDeviceInformation());
-        toolsMenu.add(item);
-        item = newJMenuItem("Перевірити з'єднання", 'T');
-        item.addActionListener(event -> base.handleTestModulesConnection());
-        toolsMenu.add(item);
-        item = newJMenuItem("Налаштування", 'D');
-        item.addActionListener(event -> handleSettings());
-        toolsMenu.add(item);
+        modulesInfoItem = newJMenuItem("Інформація про пристрій", 'I');
+        modulesInfoItem.addActionListener(event -> base.handleDeviceInformation());
+        toolsMenu.add(modulesInfoItem);
+        testModulesItem = newJMenuItem("Перевірити з'єднання", 'T');
+        testModulesItem.addActionListener(event -> base.handleTestModulesConnection());
+        toolsMenu.add(testModulesItem);
+        settingsItem = newJMenuItem("Налаштування", 'D');
+        settingsItem.addActionListener(event -> handleSettings());
+        toolsMenu.add(settingsItem);
         toolsMenu.addMenuListener(new StubMenuListener() {
             public void menuSelected(MenuEvent e) {
                 populatePortMenu();
@@ -342,6 +348,15 @@ public class Editor extends JFrame implements RunnerListener  {
     }
 
     private void handleSettings() {
+    }
+
+    public void setEnabledItem(boolean param) {
+        enableRun = param;
+        experimentSettingsItem.setEnabled(param);
+        settingsItem.setEnabled(param);
+        testModulesItem.setEnabled(param);
+        experimentStartItem.setEnabled(param);
+        modulesInfoItem.setEnabled(param);
     }
 
     private void populateSignalMenu() {
@@ -449,20 +464,20 @@ public class Editor extends JFrame implements RunnerListener  {
     }
 
     public void handleExperimentSettings() {
+        if (!enableRun) return;
         toolbar.activateSettings();
         ExperimentSettings experimentSettings = new ExperimentSettings(Editor.this);
         experimentSettings.setLocationRelativeTo(Editor.this);
         experimentSettings.setVisible(true);
-        //JOptionPane.showMessageDialog(this, "Тут мають бути налаштування", "Налаштування", JOptionPane.INFORMATION_MESSAGE);
         toolbar.deactivateSettings();
     }
 
     private void buildExperimentMenu(JMenu experimentMenu) {
         experimentMenu.removeAll();
-        JMenuItem item = newJMenuItem("Розпочати експеримент", 'R');
-        item.addActionListener(event -> handleRun());
-        experimentMenu.add(item);
-        item = newJMenuItem("Зупинити експеримент", 'U');
+        experimentStartItem = newJMenuItem("Розпочати експеримент", 'R');
+        experimentStartItem.addActionListener(event -> handleRun());
+        experimentMenu.add(experimentStartItem);
+        JMenuItem item = newJMenuItem("Зупинити експеримент", 'U');
         item.addActionListener(event -> handleStop());
         experimentMenu.add(item);
         experimentMenu.addSeparator();
@@ -483,6 +498,7 @@ public class Editor extends JFrame implements RunnerListener  {
     }
 
     public void handleRun() {
+        if (!enableRun) return;
         if (experiment.isExperimentRunning()) return;
         toolbar.activateRun();
         experiment.setExperimentRunning(true);

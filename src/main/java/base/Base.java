@@ -353,7 +353,7 @@ public class Base {
             activeEditor.statusNotice("Перейдіть у Інструменти -> Налаштування і оновіть список модулів");
             return;
         }
-        if (!PreferencesData.getBoolean("check.modules", false)) return;
+        activeEditor.setEnabledItem(false);
         new Thread(() -> new CheckModules(activeEditor)).start();
     }
 

@@ -8,6 +8,8 @@ import libraries.I7000;
 
 import java.util.List;
 
+import static base.helpers.BaseHelper.parsePortException;
+
 public class CheckModules {
     private final Editor editor;
     private SerialDriver serialDriver;
@@ -28,16 +30,8 @@ public class CheckModules {
         try {
             serialDriver = new SerialDriver(port, rate, this::dataReadAction);
         } catch (SerialPortException e) {
-            if (e.toString().contains("Port busy")) {
-                editor.statusError("Порт зайнятий");
-                editor.statusNotice("Закрийте програми, які можуть використовувати порт");
-                return;
-            }
-            if (e.toString().contains("Port not found")) {
-                editor.statusError("Пристрій не підключено");
-                return;
-            }
-            editor.statusError(e);
+            parsePortException(editor, e);
+            editor.setEnabledItem(true);
             return;
         }
         this.serialDriver = serialDriver;
@@ -49,6 +43,7 @@ public class CheckModules {
         }
         PreferencesData.setBoolean("runtime.dac.module.ready", SearchDevices(dacModule, responseTimeout));
         serialDriver.dispose();
+        editor.setEnabledItem(true);
     }
 
     private boolean SearchDevices(String module, int responseTimeout) {
