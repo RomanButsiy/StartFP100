@@ -7,25 +7,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="93b63df6-3c6c-411f-8753-d9cd68fc9762" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/preferences.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lib/preferences.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ContentPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ContentPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ContentPanelInit.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/MenuBar/IGetPortAndSpeed.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/MenuBar/ISettingsAction.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/MenuBar/MenuBar.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/MenuBar/PortAndSpeed.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/MenuBar/ToolsMenu.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SerialDriver/PortReader.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SerialDriver/SerialDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/SerialDriver/SerialDriver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/SettingsPanel/SettingsPanel.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/StartFP100.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/StartFP100.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/Base.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/Base.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/BaseInit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/BaseInit.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/base/Editor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/Editor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/helpers/BaseHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/helpers/BaseHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/view/DiagramTab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/view/DiagramTab.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/libraries/I7000.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/libraries/I7000.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/base/helpers/CheckModules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/helpers/CheckModules.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,9 +56,12 @@
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="experimental" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/base/view" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="" />
     </key>
@@ -142,10 +131,10 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="726" y="310" width="524" height="484" key="#com.intellij.codeInsight.editorActions.RestoreReferencesDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1580758179781" />
-    <state x="801" y="256" width="374" height="592" key="#com.intellij.ide.util.MemberChooser" timestamp="1580758191726">
+    <state x="801" y="256" width="374" height="592" key="#com.intellij.ide.util.MemberChooser" timestamp="1580839434972">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="801" y="256" width="374" height="592" key="#com.intellij.ide.util.MemberChooser/67.27.1853.1053@67.27.1853.1053" timestamp="1580758191726" />
+    <state x="801" y="256" width="374" height="592" key="#com.intellij.ide.util.MemberChooser/67.27.1853.1053@67.27.1853.1053" timestamp="1580839434972" />
     <state x="731" y="285" width="525" height="428" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1580569646347">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -154,10 +143,10 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="746" y="439" width="494" height="237" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/67.27.1853.1053@67.27.1853.1053" timestamp="1580330676249" />
-    <state x="726" y="301" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1580244145070">
+    <state x="726" y="301" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1580828957903">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="726" y="301" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1580244145070" />
+    <state x="726" y="301" width="524" height="502" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1580828957903" />
     <state x="726" y="301" width="524" height="502" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog" timestamp="1580747415101">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -170,22 +159,22 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="776" y="310" width="424" height="484" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1580569659172" />
-    <state width="1807" height="178" key="GridCell.Tab.0.bottom" timestamp="1580764650984">
+    <state width="1807" height="178" key="GridCell.Tab.0.bottom" timestamp="1580844617183">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="178" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1580764650984" />
-    <state width="1807" height="178" key="GridCell.Tab.0.center" timestamp="1580764650984">
+    <state width="1807" height="178" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1580844617183" />
+    <state width="1807" height="178" key="GridCell.Tab.0.center" timestamp="1580844617183">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="178" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1580764650984" />
-    <state width="1807" height="178" key="GridCell.Tab.0.left" timestamp="1580764650983">
+    <state width="1807" height="178" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1580844617183" />
+    <state width="1807" height="178" key="GridCell.Tab.0.left" timestamp="1580844617182">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="178" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1580764650983" />
-    <state width="1807" height="178" key="GridCell.Tab.0.right" timestamp="1580764650984">
+    <state width="1807" height="178" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1580844617182" />
+    <state width="1807" height="178" key="GridCell.Tab.0.right" timestamp="1580844617183">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="178" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1580764650984" />
+    <state width="1807" height="178" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1580844617183" />
     <state width="1807" height="182" key="GridCell.Tab.1.bottom" timestamp="1580333784667">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -206,10 +195,10 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="526" y="210" width="924" height="684" key="Maven.ArtifactSearchDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1580241446530" />
-    <state x="476" y="130" width="1024" height="845" key="SettingsEditor" timestamp="1580569685077">
+    <state x="476" y="130" width="1024" height="845" key="SettingsEditor" timestamp="1580828867409">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="476" y="130" width="1024" height="845" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1580569685077" />
+    <state x="476" y="130" width="1024" height="845" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1580828867409" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1580305598022">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>

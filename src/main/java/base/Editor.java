@@ -4,6 +4,7 @@ import base.platforms.Platform;
 import base.processing.Experiment;
 import base.processing.ExperimentController;
 import base.view.*;
+import base.view.ExperimentSettings;
 import libraries.MenuScroller;
 
 import javax.swing.*;
@@ -51,9 +52,10 @@ public class Editor extends JFrame implements RunnerListener  {
     private JPanel diagramPanel;
 
     private static final int SHORTCUT_KEY_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-    private static final String [] signals = { "Синусоїда", "Трапеція", "Трикутник", "Інший" };
+    public static final String [] signals = { "Синусоїда", "Трапеція", "Трикутник", "Інший" };
     private static final String [] rates = {"300", "1200", "2400", "4800", "9600", "19200", "38400", "57600", "74880", "115200", "230400"};
     private int currentTabIndex;
+    private ExperimentSettings experimentSettings;
 
     public Editor(Base iBase, File file, int[] storedLocation, int[] defaultLocation,  Platform platform, boolean untitled) {
         super("StartFP100");
@@ -125,7 +127,6 @@ public class Editor extends JFrame implements RunnerListener  {
         splitPane.setMinimumSize(scale(new Dimension(600, 100)));
         box.add(splitPane);
         pane.add(box);
-        //pane.setTransferHandler(new FileDropHandler());
         setMinimumSize(scale(new Dimension(
                 PreferencesData.getInteger("window.size.width.min"),
                 PreferencesData.getInteger("window.size.height.min"))));
@@ -449,7 +450,10 @@ public class Editor extends JFrame implements RunnerListener  {
 
     public void handleExperimentSettings() {
         toolbar.activateSettings();
-        JOptionPane.showMessageDialog(this, "Тут мають бути налаштування", "Налаштування", JOptionPane.INFORMATION_MESSAGE);
+        ExperimentSettings experimentSettings = new ExperimentSettings(Editor.this);
+        experimentSettings.setLocationRelativeTo(Editor.this);
+        experimentSettings.setVisible(true);
+        //JOptionPane.showMessageDialog(this, "Тут мають бути налаштування", "Налаштування", JOptionPane.INFORMATION_MESSAGE);
         toolbar.deactivateSettings();
     }
 

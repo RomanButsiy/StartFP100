@@ -33,6 +33,10 @@ public class CheckModules {
                 editor.statusNotice("Закрийте програми, які можуть використовувати порт");
                 return;
             }
+            if (e.toString().contains("Port not found")) {
+                editor.statusError("Пристрій не підключено");
+                return;
+            }
             editor.statusError(e);
             return;
         }

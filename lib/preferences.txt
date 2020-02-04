@@ -61,6 +61,18 @@ serial.port.rate=115200
 
 # experiment settings
 signal.form=0
+signal.form.min=0
+signal.form.max=5
+signal.form.period=10000
+
+# Technical units - 0, % of full range - 1, hexadecimal code - 2
+signal.type=0
+
+# 0...20 mA -> 30, 4...20 mA -> 31 and 0...+10 V -> 32
+signal.out.range=32
+
+# Instantly -> 0, 0.0625 V/s or 0.125 mA/s -> 1,..., 512.0 V/s or 1024.0 mA/s -> 14. See manual
+signal.speed.change=0
 
 # modules
 number.of.modules=4
@@ -84,7 +96,6 @@ use.CRC=false
 # font size for diagrams
 diagrams.font=Monospaced,plain,12
 console.lines = 4
-
 
 
 
