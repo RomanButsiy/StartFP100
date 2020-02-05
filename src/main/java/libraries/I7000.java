@@ -1,5 +1,9 @@
 package libraries;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
 public class I7000 {
 
     public static boolean useCRC = false;
@@ -26,6 +30,7 @@ public class I7000 {
     }
 
     public static String removeCRC(int startIndex, String str) {
+        if (str == null) return null;
         return str.substring(startIndex, str.length() - (useCRC ? 3 : 1));
     }
 
@@ -33,4 +38,18 @@ public class I7000 {
         return str.substring(startIndex, str.length() - (useCRC ? 3 : 1));
     }
 
+    public static String formatTypeTechnicalUnits(String data) {
+        return formatTypeTechnicalUnits((float) Integer.parseInt(data));
+    }
+
+    public static String formatTypeTechnicalUnits(float data) {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
+        DecimalFormat decimalFormat = new DecimalFormat("00.000", symbols);
+        return decimalFormat.format(data);
+    }
+
+    public static String setAnalogOutTechnicalUnits(String id, float result) {
+        String str = "#" + id + formatTypeTechnicalUnits(result);
+        return filter(str);
+    }
 }

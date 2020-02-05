@@ -307,7 +307,7 @@ public class Editor extends JFrame implements RunnerListener  {
         modulesInfoItem.addActionListener(event -> base.handleDeviceInformation());
         toolsMenu.add(modulesInfoItem);
         testModulesItem = newJMenuItem("Перевірити з'єднання", 'T');
-        testModulesItem.addActionListener(event -> base.handleTestModulesConnection());
+        testModulesItem.addActionListener(event -> base.handleTestModulesConnection(true));
         toolsMenu.add(testModulesItem);
         settingsItem = newJMenuItem("Налаштування", 'D');
         settingsItem.addActionListener(event -> handleSettings());

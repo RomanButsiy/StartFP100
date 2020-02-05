@@ -3,8 +3,12 @@ package base.view.ExperimentSettings;
 import base.Editor;
 import base.PreferencesData;
 import base.helpers.SendOne;
+import libraries.I7000;
 
 import javax.swing.*;
+import javax.swing.event.CaretListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.stream.IntStream;
@@ -18,7 +22,6 @@ public class ExperimentSettings extends JDialog{
     private JTextField signalMax;
     private JTextField signalMin;
     private JTextField signalPeriod;
-    private JTextField signalFq;
     private JButton someButton;
     private JLabel minLabel;
     private JLabel maxLabel;
@@ -26,19 +29,21 @@ public class ExperimentSettings extends JDialog{
     public ExperimentSettings(Editor editor) {
         super(editor);
         this.editor = editor;
+        String value = getIndex();
         setTitle("Налаштування експерименту");
         for (String signal : Editor.signals) {
             signalForm.addItem(signal);
         }
         signalForm.setSelectedIndex(PreferencesData.getInteger("signal.form"));
-        maxLabel.setText(String.format("Максимальне значення (%s):", getIndex()));
-        minLabel.setText(String.format("Мінімальне значення (%s):", getIndex()));
+        maxLabel.setText(String.format("Максимальне значення (%s):", value));
+        minLabel.setText(String.format("Мінімальне значення (%s):", value));
         add(rootPanel);
         setModal(true);
         setResizable(false);
         pack();
         cancelButton.addActionListener(actionEvent -> setVisible(false));
         okButton.addActionListener(actionEvent -> {
+
             setVisible(false);
         });
         someButton.addActionListener(actionEvent -> {
@@ -47,13 +52,30 @@ public class ExperimentSettings extends JDialog{
             int lastResult = PreferencesData.getInteger("runtime.last.result", 0);
             if (lastResult >= str.length) lastResult = 0;
             String result = (String) JOptionPane.showInputDialog(null, "Надіслати одне значення\nдля перевірки модуля",
-                    String.format("Виберіть значення (%s)", getIndex()), JOptionPane.QUESTION_MESSAGE, null, str, str[lastResult]);
+                    String.format("Виберіть значення (%s)", value), JOptionPane.QUESTION_MESSAGE, null, str, str[lastResult]);
             if (result == null) return;
             PreferencesData.setInteger("runtime.last.result", IntStream.range(0, str.length).filter(i -> str[i].equals(result)).findFirst().orElse(0));
-            if (!PreferencesData.getBoolean("runtime.dac.module.ready", false)) {
-
+            if (PreferencesData.get("runtime.dac.module") == null) {
+                editor.statusError("Id цифро-аналогового перетворювача не вказано");
+                return;
             }
-          //  new SendOne(editor, result, );
+
+            String command = I7000.setAnalogOutTechnicalUnits(PreferencesData.get("runtime.dac.module"), (float) Integer.parseInt(result));
+            SendOne sendOne = new SendOne(editor, command);
+            String response = I7000.removeCRC(0, sendOne.getResult());
+            if (response == null) {
+                editor.statusError("Цифро-аналогового перетворювач не відповідає");
+                return;
+            }
+            if (response.contains(">")) {
+                editor.statusNotice(String.format("На виході цифро-аналогового перетворювача %s %s", I7000.formatTypeTechnicalUnits(result), value));
+                return;
+            }
+            if (response.contains("?")) {
+                editor.statusError("Вихід за межі дозволеного діапазоеу");
+                return;
+            }
+            editor.statusError("Недопучтима команда");
         });
     }
 

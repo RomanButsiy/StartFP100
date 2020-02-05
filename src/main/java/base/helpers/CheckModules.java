@@ -3,7 +3,6 @@ package base.helpers;
 import SerialDriver.SerialDriver;
 import base.Editor;
 import base.PreferencesData;
-import jssc.SerialPortException;
 import libraries.I7000;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class CheckModules {
         serialBuffer = new StringBuffer();
         try {
             serialDriver = new SerialDriver(port, rate, this::dataReadAction);
-        } catch (SerialPortException e) {
+        } catch (Exception e) {
             parsePortException(editor, e);
             editor.setEnabledItem(true);
             return;
@@ -56,8 +55,9 @@ public class CheckModules {
                 return false;
             }
             editor.statusNotice("Модуль: " + module + " Назва: " + I7000.removeCRC(3, serialBuffer) + " -> Готовий");
-        } catch (SerialPortException | InterruptedException e) {
+        } catch (Exception e) {
             editor.statusError(e);
+            return false;
         }
         return true;
     }

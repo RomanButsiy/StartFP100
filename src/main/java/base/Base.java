@@ -346,15 +346,19 @@ public class Base {
         return BaseInit.getDiscoveryManager();
     }
 
-
-    public void handleTestModulesConnection() {
+    public void handleTestModulesConnection(boolean b) {
         base.helpers.BaseHelper.LittleBitPreferencesModuleTest(activeEditor);
         if (!PreferencesData.getBoolean("runtime.valid.modules", false)) {
             activeEditor.statusNotice("Перейдіть у Інструменти -> Налаштування і оновіть список модулів");
             return;
         }
+        if (!(PreferencesData.getBoolean("check.modules", false) || b)) return; // перевірка якщо виставлено прапорець
         activeEditor.setEnabledItem(false);
         new Thread(() -> new CheckModules(activeEditor)).start();
+    }
+
+    public void handleTestModulesConnection() {
+        handleTestModulesConnection(false);
     }
 
     public void handleTestConnection(Editor editor) {
@@ -368,4 +372,5 @@ public class Base {
 
     public void rebuildToolbarMenu(JMenu toolbarMenu) {
     }
+
 }

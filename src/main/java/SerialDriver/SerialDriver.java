@@ -10,7 +10,7 @@ public class SerialDriver implements SerialPortEventListener {
     private static SerialPort serialPort;
     private IDataReadAction dataReadAction;
 
-    public SerialDriver(String port, String rate, IDataReadAction dataReadAction) throws SerialPortException {
+    public SerialDriver(String port, String rate, IDataReadAction dataReadAction) throws Exception {
         this.dataReadAction = dataReadAction;
         serialPort = new SerialPort(port);
         try {
@@ -40,7 +40,7 @@ public class SerialDriver implements SerialPortEventListener {
         }
     }
 
-    public void write(String text) throws SerialPortException {
+    public void write(String text) throws Exception {
         try {
             serialPort.writeString(text);
         } catch (SerialPortException e) {

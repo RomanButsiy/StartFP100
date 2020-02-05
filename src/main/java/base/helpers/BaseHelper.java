@@ -79,14 +79,14 @@ public class BaseHelper {
         return newExperimentFile;
     }
 
-    public static void parsePortException(Editor editor, SerialPortException e) {
+    public static void parsePortException(Editor editor, Exception e) {
         if (e.toString().contains("Port busy")) {
             editor.statusError("Порт зайнятий");
             editor.statusNotice("Закрийте програми, які можуть використовувати порт");
             return;
         }
         if (e.toString().contains("Port not found")) {
-            editor.statusError("Пристрій не підключено");
+            editor.statusError("До вказаного порта нічого не підключено");
             return;
         }
         editor.statusError(e);
