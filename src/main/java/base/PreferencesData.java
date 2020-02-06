@@ -54,7 +54,7 @@ public class PreferencesData {
 
     }
 
-    static protected void save() {
+    static public void save() {
         if (!doSave) return;
         if (getBoolean("preferences.readonly")) return;
         // on startup, don't worry about it
@@ -94,6 +94,11 @@ public class PreferencesData {
     static public String get(String attribute, String defaultValue) {
         String value = get(attribute);
         return (value == null) ? defaultValue : value;
+    }
+
+    static public String get(String attribute, int defaultValue) {
+        String value = get(attribute);
+        return (value == null) ? String.valueOf(defaultValue) : value;
     }
 
     static public String getNonEmpty(String attribute, String defaultValue) {
