@@ -19,12 +19,12 @@ public class CheckModules {
         String port = PreferencesData.get("serial.port");
         String rate = PreferencesData.get("serial.port.rate", "115200");
         if (port == null) {
+            editor.setEnabledItem(true);
             editor.statusError("Порт не вибрано");
             return;
         }
         editor.statusNotice("Перевірка модулів FP100...");
         editor.statusNotice("Порт: " + port + " | Швидкість: " + rate);
-        SerialDriver serialDriver;
         serialBuffer = new StringBuffer();
         try {
             serialDriver = new SerialDriver(port, rate, this::dataReadAction);
@@ -33,7 +33,6 @@ public class CheckModules {
             editor.setEnabledItem(true);
             return;
         }
-        this.serialDriver = serialDriver;
         List<String> modules = (List<String>) PreferencesData.getCollection("runtime.Id.modules");
         String dacModule = PreferencesData.get("runtime.dac.module");
         int responseTimeout = PreferencesData.getInteger("response.timeout", 200);

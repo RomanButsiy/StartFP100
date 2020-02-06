@@ -41,8 +41,8 @@ public class Base {
             BaseInit.getPlatform().setLookAndFeel();
         } catch (Exception ignored) { }
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-        restoreExperiment(); // fix me!
         I7000.useCRC = PreferencesData.getBoolean("use.CRC", false);
+        restoreExperiment(); // fix me!
         if (editors.isEmpty()) handleNew();
 
 
@@ -53,7 +53,6 @@ public class Base {
     static protected boolean openFolderAvailable() {
         return BaseInit.getPlatform().openFolderAvailable();
     }
-
 
     static public void openFolder(File file) {
         try {
@@ -110,6 +109,10 @@ public class Base {
     }
 
     public void handleClose(Editor editor) {
+        if (editor.getExperiment().isExperimentRunning()) {
+            JOptionPane.showMessageDialog(editor, "Щоб вийти, завершіть експеримент", "Експеримент запущено", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
         editor.getExperimentController().exit();
         if (editors.size() == 1) {
             editor.setVisible(false);
@@ -133,7 +136,7 @@ public class Base {
     }
 
     private void restoreExperiment() throws Exception {
-        String path = PreferencesData.get("last.experiment.path");
+        String path = PreferencesData.getNonEmpty("last.experiment.path", null);
         if (path == null) return;
         if (BaseInit.getExperimentsFolder() != null && !new File(path).isAbsolute()) {
             File absolute = new File(BaseInit.getExperimentsFolder(), path);

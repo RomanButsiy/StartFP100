@@ -1,5 +1,6 @@
 package base;
 
+import base.helpers.CheckModules;
 import base.platforms.Platform;
 import base.processing.Experiment;
 import base.processing.ExperimentController;
@@ -19,6 +20,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static base.helpers.BaseHelper.LittleBitPreferencesModuleTest;
 import static base.helpers.BaseHelper.copyFile;
 import static libraries.Theme.scale;
 
@@ -191,7 +193,7 @@ public class Editor extends JFrame implements RunnerListener  {
             }
         }
         try {
-            experiment = new Experiment(file);
+            experiment = new Experiment(this, file, properParent);
         } catch (IOException e) {
             BaseInit.showWarning("Помилка", "Не вдалося створити експкримент.", e);
             return false;
@@ -488,22 +490,39 @@ public class Editor extends JFrame implements RunnerListener  {
     }
 
     public void handleStop() {
-        if (!experiment.isExperimentRunning()) return;
+        if (!PreferencesData.getBoolean("runtime.experiment.running", false) || !experiment.isExperimentRunning()) return;
         toolbar.deactivateRun();
         toolbar.activateStop();
-        experiment.setExperimentRunning(false);
-        setLineStatusText("Експеримент зупинено");
-        JOptionPane.showMessageDialog(this, "Експеримент зупинено", "Повідомлення", JOptionPane.INFORMATION_MESSAGE);
+       // JOptionPane.showMessageDialog(this, "Експеримент зупинено", "Повідомлення", JOptionPane.INFORMATION_MESSAGE);
         toolbar.deactivateStop();
+        experiment.stopExperiment();
+        setEnabledItem(true);
+        Base.getDiscoveryManager().getSerialDiscoverer().pausePolling(false);
+        setLineStatusText("Експеримент зупинено");
     }
 
     public void handleRun() {
         if (!enableRun) return;
-        if (experiment.isExperimentRunning()) return;
+        if (PreferencesData.getBoolean("runtime.experiment.running", false)) return;
+        LittleBitPreferencesModuleTest(this);
+        if (!PreferencesData.getBoolean("runtime.valid.modules", false)) return;
+        if (!PreferencesData.getBoolean("runtime.dac.module.ready", false)) {
+            setEnabledItem(false);
+            new CheckModules(this);
+            if (!PreferencesData.getBoolean("runtime.dac.module.ready", false)){
+                int action = JOptionPane.showConfirmDialog(this, "Модулі не готові.\nПрдовжити?", "Запуск", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (action == JOptionPane.NO_OPTION) return;
+            }
+        }
+        String startQuestion = (PreferencesData.getNonEmpty("last.experiment.path", null) != null || experiment.isRuntimeRunning()?
+                 "Продовжити виконання експерименту: " : "Запустити експеримент: ") + experiment.getName() + "?";
+        int action = JOptionPane.showConfirmDialog(this, startQuestion, "Запуск", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (action == JOptionPane.NO_OPTION) return;
+        Base.getDiscoveryManager().getSerialDiscoverer().pausePolling(true);
         toolbar.activateRun();
-        experiment.setExperimentRunning(true);
+        setEnabledItem(false);
+        experiment.runExperiment();
         setLineStatusText("Експеримент запущено");
-        JOptionPane.showMessageDialog(this, "Експеримент запущено", "Повідомлення", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void setLineStatusText(String s) {

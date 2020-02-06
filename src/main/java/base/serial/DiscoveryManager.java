@@ -5,7 +5,7 @@ import java.util.List;
 
 public class DiscoveryManager {
 
-    final SerialDiscovery serialDiscoverer = new SerialDiscovery();
+    private final SerialDiscovery serialDiscoverer = new SerialDiscovery();
 
     public DiscoveryManager() {
         try {
@@ -24,6 +24,10 @@ public class DiscoveryManager {
         });
         closeHook.setName("DiscoveryManager closeHook");
         Runtime.getRuntime().addShutdownHook(closeHook);
+    }
+
+    public SerialDiscovery getSerialDiscoverer() {
+        return serialDiscoverer;
     }
 
     public List<String> discovery() {
