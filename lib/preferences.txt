@@ -76,11 +76,11 @@ signal.out.range=32
 signal.speed.change=0
 
 # modules
-number.of.modules=4
+number.of.modules=3
 module.0.id=01
 module.1.id=02
-module.2.id=03
-module.3.id=04
+# module.2.id=03
+module.2.id=04
 
 # id of DAC module
 type.dac.module=7021

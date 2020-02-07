@@ -52,4 +52,13 @@ public class I7000 {
         String str = "#" + id + formatTypeTechnicalUnits(result);
         return filter(str);
     }
+
+    public static String setAnalogInTechnicalUnits(String idModule) {
+        String str = "#" + idModule;
+        return filter(str);
+    }
+
+    public static String getSynchronizedSampling() {
+        return filter("#**");
+    }
 }
