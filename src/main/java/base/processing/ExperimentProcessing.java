@@ -3,12 +3,11 @@ package base.processing;
 import SerialDriver.SerialDriver;
 import base.Editor;
 import base.PreferencesData;
-import base.helpers.CheckModules;
-import base.serial.SerialDiscovery;
 import libraries.I7000;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 
 import static base.helpers.BaseHelper.parsePortException;
@@ -20,10 +19,11 @@ public class ExperimentProcessing implements Runnable {
     private SerialDriver serialDriver;
     private StringBuffer serialBuffer;
     private volatile boolean stopExperiment;
-    private boolean useFirstBuffer = true;
+    private AtomicBoolean useFirstBuffer = new AtomicBoolean(true);
     private List<String> bufferOne = Collections.synchronizedList(new ArrayList<>());
     private List<String> bufferTwo = Collections.synchronizedList(new ArrayList<>());
     private Timer checkErrorStatusTimer;
+    private Timer getNewDataTimer;
     private volatile Integer[] err;
 
     public ExperimentProcessing(Editor editor, Experiment experiment) {
@@ -34,6 +34,7 @@ public class ExperimentProcessing implements Runnable {
     public void stop() {
         stopExperiment = true;
         checkErrorStatusTimer.cancel();
+        getNewDataTimer.cancel();
     }
 
     private void stopAll() {
@@ -103,7 +104,7 @@ public class ExperimentProcessing implements Runnable {
                     }
                     sErr++;
                 }
-                if (useFirstBuffer) {
+                if (useFirstBuffer.get()) {
                     bufferOne.add(String.valueOf(result));
                 } else {
                     bufferTwo.add(String.valueOf(result));
@@ -111,7 +112,6 @@ public class ExperimentProcessing implements Runnable {
                 while ((System.currentTimeMillis() - timeAll < responseTimeout)) {
                     Thread.sleep(1);
                 }
-                System.out.println(System.currentTimeMillis() - timeAll);
                 if (stopExperiment) return;
             }
         }
@@ -152,12 +152,23 @@ public class ExperimentProcessing implements Runnable {
         bufferOne.clear();
         bufferTwo.clear();
         checkErrorStatus();
+        getNewData();
         try {
             start();
         } catch (Exception e) {
             e.printStackTrace();
         }
         serialDriver.dispose();
+    }
+
+    private void getNewData() {
+        getNewDataTimer = new Timer(ExperimentProcessing.class.getName());
+        getNewDataTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                toggle();
+            }
+        }, 10000, 10000);
     }
 
     private void checkErrorStatus() {
@@ -171,12 +182,17 @@ public class ExperimentProcessing implements Runnable {
                 if (IntStream.range(0, err.length).filter(i -> err[i] > 2).findFirst().orElse(-1) != -1) {
                     editor.statusError("Помилка очікування");
                     editor.statusError("Модуль не відповідає");
-                    for (String s : bufferOne)
-                    System.out.println(s);
                     stopAll();
                 }
             }
         }, 0, period);
+    }
+
+    protected void toggle() {
+        boolean temp;
+        do {
+            temp = useFirstBuffer.get();
+        } while(!useFirstBuffer.compareAndSet(temp, !temp));
     }
 
     private void dataReadAction(String s) {
