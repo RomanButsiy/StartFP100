@@ -3,9 +3,11 @@ package base.processing;
 import SerialDriver.SerialDriver;
 import base.Editor;
 import base.PreferencesData;
+import base.legacy.PApplet;
 import libraries.I7000;
+import org.apache.commons.compress.utils.IOUtils;
 
-import java.lang.reflect.Array;
+import java.io.PrintWriter;;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
@@ -34,10 +36,9 @@ public class ExperimentProcessing implements Runnable {
     public void stop() {
         stopExperiment = true;
         checkErrorStatusTimer.cancel();
-        getNewDataTimer.cancel();
     }
 
-    private void stopAll() {
+    public void stopAll() {
         editor.handleStop();
     }
 
@@ -167,6 +168,29 @@ public class ExperimentProcessing implements Runnable {
             @Override
             public void run() {
                 toggle();
+                PrintWriter writer = null;
+                try {
+                    writer = PApplet.createWriter(experiment.getFile(), true);
+                    Thread.sleep(200);
+                    if (useFirstBuffer.get()) {
+                        for (String str : bufferTwo) writer.println(str);
+                        bufferTwo.clear();
+                    } else {
+                        for (String str : bufferOne) writer.println(str);
+                        bufferOne.clear();
+                    }
+                } catch (Exception e) {
+                    editor.statusError("Не вдалося записати дані експерименту у файл: " + e.getMessage());
+                    stopAll();
+                } finally {
+                    IOUtils.closeQuietly(writer);
+                    if (stopExperiment) {
+                        getNewDataTimer.cancel();
+                        editor.getProgressBar().closeProgressBar();
+                        editor.getToolbar().deactivateStop();
+                        editor.setLineStatusText("Експеримент зупинено");
+                    }
+                }
             }
         }, 10000, 10000);
     }

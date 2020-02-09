@@ -3,9 +3,10 @@ package base.processing;
 
 import base.Editor;
 import base.PreferencesData;
+import org.apache.commons.compress.utils.IOUtils;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class Experiment {
 
@@ -75,29 +76,23 @@ public class Experiment {
         PreferencesData.setBoolean("runtime.experiment.running", experimentRunning);
     }
 
-    public void runExperiment() {
+    public void runExperiment() throws Exception{
         setExperimentRunning(true);
+        if (isUntitledAndNotSaved) setFileHeader();
         setUntitledAndNotSaved(false);
         PreferencesData.set("runtime.last.experiment.running", name);
         PreferencesData.set("last.experiment.path", file.getAbsolutePath());
         PreferencesData.save();
         isRuntimeRunning = true;
-        try {
-            new Thread(experimentProcessing).start();
-        } catch (Exception e) {
-            System.err.println("Error starting discovery method: " + experimentProcessing.toString());
-            e.printStackTrace();
-        }
-        Thread closeHook = new Thread(() -> {
-            try {
-                experimentProcessing.stop();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        new Thread(experimentProcessing).start();
+        Thread closeHook = new Thread(experimentProcessing::stopAll);
         closeHook.setName("ExperimentProcessing closeHook");
         Runtime.getRuntime().addShutdownHook(closeHook);
 
+    }
+
+    private void setFileHeader() {
+        //create header
     }
 
     public void stopExperiment() {

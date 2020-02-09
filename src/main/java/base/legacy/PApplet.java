@@ -81,8 +81,12 @@ public class PApplet {
     }
 
     static public PrintWriter createWriter(File file) throws IOException {
+        return createWriter(file, false);
+    }
+
+    static public PrintWriter createWriter(File file, boolean append) throws IOException {
         createPath(file);
-        OutputStream output = new FileOutputStream(file);
+        OutputStream output = new FileOutputStream(file, append);
         try {
             if (file.getName().toLowerCase().endsWith(".gz")) {
                 output = new GZIPOutputStream(output);

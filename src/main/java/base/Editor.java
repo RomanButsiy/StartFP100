@@ -6,6 +6,7 @@ import base.processing.Experiment;
 import base.processing.ExperimentController;
 import base.view.*;
 import base.view.ExperimentSettings.ExperimentSettings;
+import base.view.ProgressBar.ProgressBar;
 import libraries.MenuScroller;
 
 import javax.swing.*;
@@ -58,6 +59,8 @@ public class Editor extends JFrame implements RunnerListener  {
     EditorLineStatus lineStatus;
     private JPanel diagramPanel;
     private boolean enableRun = true;
+
+    private ProgressBar progressBar;
 
     private static final int SHORTCUT_KEY_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
     public static final String [] signals = { "Синусоїда", "Трапеція", "Трикутник", "Інший" };
@@ -350,6 +353,7 @@ public class Editor extends JFrame implements RunnerListener  {
     }
 
     private void handleSettings() {
+
     }
 
     public void setEnabledItem(boolean param) {
@@ -493,12 +497,11 @@ public class Editor extends JFrame implements RunnerListener  {
         if (!PreferencesData.getBoolean("runtime.experiment.running", false) || !experiment.isExperimentRunning()) return;
         toolbar.deactivateRun();
         toolbar.activateStop();
-       // JOptionPane.showMessageDialog(this, "Експеримент зупинено", "Повідомлення", JOptionPane.INFORMATION_MESSAGE);
-        toolbar.deactivateStop();
+        setLineStatusText("Зупинка експерименту...");
+        new Thread(this::createProgressBar).start();
         experiment.stopExperiment();
         setEnabledItem(true);
         Base.getDiscoveryManager().getSerialDiscoverer().pausePolling(false);
-        setLineStatusText("Експеримент зупинено");
     }
 
     public void handleRun() {
@@ -521,11 +524,15 @@ public class Editor extends JFrame implements RunnerListener  {
         Base.getDiscoveryManager().getSerialDiscoverer().pausePolling(true);
         toolbar.activateRun();
         setEnabledItem(false);
-        experiment.runExperiment();
+        try {
+            experiment.runExperiment();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         setLineStatusText("Експеримент запущено");
     }
 
-    private void setLineStatusText(String s) {
+    public void setLineStatusText(String s) {
         lineStatus.setText(s);
         lineStatus.repaint();
     }
@@ -668,5 +675,17 @@ public class Editor extends JFrame implements RunnerListener  {
         });
     }
 
+    private void createProgressBar() {
+        progressBar = new ProgressBar(Editor.this);
+        progressBar.setLocationRelativeTo(Editor.this);
+        progressBar.setVisible(true);
+    }
 
+    public EditorToolbar getToolbar() {
+        return toolbar;
+    }
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
+    }
 }
