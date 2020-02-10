@@ -39,7 +39,7 @@ public class ExperimentProcessing implements Runnable {
     }
 
     public void stopAll() {
-        editor.handleStop();
+        editor.handleStopAll();
     }
 
     public void start() throws Exception {
@@ -142,17 +142,17 @@ public class ExperimentProcessing implements Runnable {
         String port = PreferencesData.get("serial.port");
         String rate = PreferencesData.get("serial.port.rate");
         serialBuffer = new StringBuffer();
+        checkErrorStatus();
         try {
             serialDriver = new SerialDriver(port, rate, this::dataReadAction);
         } catch (Exception e) {
             parsePortException(editor, e);
-            editor.handleStop();
+            editor.stopExperimentPortException();
             return;
         }
         stopExperiment = false;
         bufferOne.clear();
         bufferTwo.clear();
-        checkErrorStatus();
         getNewData();
         try {
             start();
@@ -173,9 +173,11 @@ public class ExperimentProcessing implements Runnable {
                     writer = PApplet.createWriter(experiment.getFile(), true);
                     Thread.sleep(200);
                     if (useFirstBuffer.get()) {
+                        new Thread(() -> editor.getExperimentController().addDataOnTabs(bufferTwo)).start();
                         for (String str : bufferTwo) writer.println(str);
                         bufferTwo.clear();
                     } else {
+                        new Thread(() -> editor.getExperimentController().addDataOnTabs(bufferOne)).start();
                         for (String str : bufferOne) writer.println(str);
                         bufferOne.clear();
                     }
@@ -211,6 +213,7 @@ public class ExperimentProcessing implements Runnable {
             }
         }, 0, period);
     }
+
 
     protected void toggle() {
         boolean temp;

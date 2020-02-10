@@ -191,6 +191,7 @@ public class BaseHelper {
             return;
         }
         PreferencesData.set("runtime.dac.module", IdDacModule);
+        PreferencesData.setInteger("runtime.count.modules", IdModules.size());
         PreferencesData.setCollection("runtime.Id.modules", IdModules);
         PreferencesData.setBoolean("runtime.valid.modules", true);
     }

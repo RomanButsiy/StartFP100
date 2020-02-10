@@ -2,6 +2,7 @@ package base.view;
 
 import base.Editor;
 import base.processing.ExperimentController;
+import base.view.charts.ChartTab;
 import libraries.Theme;
 
 import javax.swing.*;
@@ -112,7 +113,7 @@ public class EditorHeader  extends JComponent {
         fontAscent = metrics.getAscent();
         g.setColor(backgroundColor);
         g.fillRect(0, 0, imageW, imageH);
-        List<DiagramTab> tabs = editor.getTabs();
+        List<ChartTab> tabs = editor.getTabs();
         int codeCount = tabs.size();
         if ((tabLeft == null) || (tabLeft.length < codeCount)) {
             tabLeft = new int[codeCount];
@@ -120,7 +121,7 @@ public class EditorHeader  extends JComponent {
         }
         int x = scale(6);
         int i = 0;
-        for (DiagramTab tab : tabs) {
+        for (ChartTab tab : tabs) {
             String diagramName = " " + tab.getPrettyName() + " ";
             int textWidth = (int) font.getStringBounds(diagramName, g.getFontRenderContext()).getWidth();
             int pieceCount = 2 + (textWidth / PIECE_WIDTH);

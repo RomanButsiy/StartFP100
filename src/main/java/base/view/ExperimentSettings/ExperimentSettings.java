@@ -27,7 +27,7 @@ public class ExperimentSettings extends JDialog implements FocusListener {
     private JLabel maxLabel;
     private JTextField signalMax;
     private final int signalOutRange = PreferencesData.getInteger("signal.out.range");
-    private final String signalPeriodDef = PreferencesData.get("signal.form.period", signalOutRange);
+    private final String responseTimeout = PreferencesData.get("response.timeout", "200");
     private final String signalMaxDef = PreferencesData.get("signal.form.max", getMax());
     private final String signalMinDef = PreferencesData.get("signal.form.min", getMin());
 
@@ -51,6 +51,7 @@ public class ExperimentSettings extends JDialog implements FocusListener {
         signalMax.addFocusListener(this);
         signalMin.addFocusListener(this);
         signalPeriod.addFocusListener(this);
+        String signalPeriodDef = PreferencesData.get("signal.form.period", responseTimeout);
         signalPeriod.setText(signalPeriodDef);
         signalMin.setText(signalMinDef);
         signalMax.setText(signalMaxDef);
@@ -124,7 +125,7 @@ public class ExperimentSettings extends JDialog implements FocusListener {
     }
 
     private String formatPeriod(String data) {
-        if (data.equals("") || data.equals(".")) data = PreferencesData.get("response.timeout", "200");
+        if (data.equals("") || data.equals(".")) data = responseTimeout;
         int result, timeout;
         result = timeout = PreferencesData.getInteger("response.timeout", 200);
         try {

@@ -11,7 +11,7 @@ public class ProgressBar extends JDialog {
 
     public ProgressBar(Editor editor) {
         super(editor);
-        //setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setTitle("Завершення експерименту");
         add(rootPanel);
         progressBar1.setIndeterminate(true);
@@ -21,7 +21,7 @@ public class ProgressBar extends JDialog {
     }
 
     public void closeProgressBar() {
-        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        setVisible(false);
     }
 
 }

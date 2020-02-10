@@ -44,10 +44,6 @@ public class Base {
         I7000.useCRC = PreferencesData.getBoolean("use.CRC", false);
         restoreExperiment(); // fix me!
         if (editors.isEmpty()) handleNew();
-
-
-
-        //save();
     }
 
     static protected boolean openFolderAvailable() {
@@ -90,7 +86,7 @@ public class Base {
     }
 
     public void handleFontSizeChange(int change) {
-        String pieces[] = PreferencesData.get("editor.font").split(",");
+        String[] pieces = PreferencesData.get("editor.font").split(",");
         try {
             int newSize = Integer.parseInt(pieces[2]) + change;
             if (newSize < 4)

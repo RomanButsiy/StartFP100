@@ -3,10 +3,13 @@ package base.processing;
 
 import base.Editor;
 import base.PreferencesData;
+import base.legacy.PApplet;
 import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Experiment {
 
@@ -92,7 +95,27 @@ public class Experiment {
     }
 
     private void setFileHeader() {
-        //create header
+        List<String> title = new ArrayList<>();
+        String description = "# Time, Number of ADC(s), Timeout, Type of range, Signal form, Period, Min, Max";
+        title.add(String.valueOf(java.time.Clock.systemUTC().instant()));
+        title.add(PreferencesData.get("runtime.count.modules", "0"));
+        title.add(PreferencesData.get("response.timeout"));
+        title.add(PreferencesData.get("signal.out.range"));
+        title.add(PreferencesData.get("signal.form"));
+        title.add(PreferencesData.get("signal.form.period"));
+        title.add(PreferencesData.get("signal.form.min"));
+        title.add(PreferencesData.get("signal.form.max"));
+        PrintWriter writer = null;
+        try {
+            writer = PApplet.createWriter(getFile(), true);
+            writer.println(description);
+            writer.print("title=");
+            writer.println(String.join(",", title));
+        } catch (Exception e) {
+            editor.statusError("Не вдалося записати дані експерименту у файл: " + e.getMessage());
+        } finally {
+            IOUtils.closeQuietly(writer);
+        }
     }
 
     public void stopExperiment() {

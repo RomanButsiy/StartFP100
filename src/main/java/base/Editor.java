@@ -7,6 +7,7 @@ import base.processing.ExperimentController;
 import base.view.*;
 import base.view.ExperimentSettings.ExperimentSettings;
 import base.view.ProgressBar.ProgressBar;
+import base.view.charts.ChartTab;
 import libraries.MenuScroller;
 
 import javax.swing.*;
@@ -16,9 +17,7 @@ import java.awt.event.*;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 
 import static base.helpers.BaseHelper.LittleBitPreferencesModuleTest;
@@ -33,7 +32,7 @@ public class Editor extends JFrame implements RunnerListener  {
     private JSplitPane splitPane;
 
     private final EditorToolbar toolbar;
-    private ArrayList<DiagramTab> tabs = new ArrayList<>();
+    private ArrayList<ChartTab> tabs = new ArrayList<>();
 
     boolean untitled;
     final Base base;
@@ -147,10 +146,11 @@ public class Editor extends JFrame implements RunnerListener  {
         if (!loaded) experimentController = null;
         EditorConsole.setCurrentEditorConsole(console);
         if (base.editors.isEmpty()) base.handleTestConnection(this);
+        selectSerialPort();
     }
 
     public void applyPreferences() {
-        for (DiagramTab tab: tabs) {
+        for (ChartTab tab: tabs) {
             //tab.applyPreferences();
         }
         console.applyPreferences();
@@ -197,11 +197,11 @@ public class Editor extends JFrame implements RunnerListener  {
         }
         try {
             experiment = new Experiment(this, file, properParent);
+            experimentController = new ExperimentController(this, experiment);
         } catch (IOException e) {
             BaseInit.showWarning("Помилка", "Не вдалося створити експкримент.", e);
             return false;
         }
-        experimentController = new ExperimentController(this, experiment);
         experiment.setUntitledAndNotSaved(untitled);
         setTitle("StartFP100 | " + properParent);
         createTabs();
@@ -216,8 +216,8 @@ public class Editor extends JFrame implements RunnerListener  {
     private void createTabs() {
         tabs.clear();
         currentTabIndex = -1;
-        DiagramTab tab = new DiagramTab(this, "Якись_графік");
-        DiagramTab tab2 = new DiagramTab(this, "Якись_графік_2");
+        ChartTab tab = new ChartTab(this, "Якись_графік");
+        ChartTab tab2 = new ChartTab(this, "Якись_графік_2");
         tabs.add(tab);
         tabs.add(tab2);
         selectTab(0);
@@ -353,7 +353,6 @@ public class Editor extends JFrame implements RunnerListener  {
     }
 
     private void handleSettings() {
-
     }
 
     public void setEnabledItem(boolean param) {
@@ -495,6 +494,12 @@ public class Editor extends JFrame implements RunnerListener  {
 
     public void handleStop() {
         if (!PreferencesData.getBoolean("runtime.experiment.running", false) || !experiment.isExperimentRunning()) return;
+        int action = JOptionPane.showConfirmDialog(this, "Зупинити експеримент", "Зупинка", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+        if (action == JOptionPane.NO_OPTION) return;
+        handleStopAll();
+    }
+
+    public void handleStopAll() {
         toolbar.deactivateRun();
         toolbar.activateStop();
         setLineStatusText("Зупинка експерименту...");
@@ -502,6 +507,14 @@ public class Editor extends JFrame implements RunnerListener  {
         experiment.stopExperiment();
         setEnabledItem(true);
         Base.getDiscoveryManager().getSerialDiscoverer().pausePolling(false);
+    }
+
+    public void stopExperimentPortException() {
+        toolbar.deactivateRun();
+        setEnabledItem(true);
+        experiment.stopExperiment();
+        Base.getDiscoveryManager().getSerialDiscoverer().pausePolling(false);
+        setLineStatusText("Експеримент зупинено");
     }
 
     public void handleRun() {
@@ -659,7 +672,7 @@ public class Editor extends JFrame implements RunnerListener  {
         return menuItem;
     }
 
-    public List<DiagramTab> getTabs() {
+    public List<ChartTab> getTabs() {
         return tabs;
     }
 
@@ -688,4 +701,5 @@ public class Editor extends JFrame implements RunnerListener  {
     public ProgressBar getProgressBar() {
         return progressBar;
     }
+
 }
