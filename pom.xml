@@ -62,6 +62,21 @@
             <artifactId>jtouchbar</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.modules</groupId>
+            <artifactId>org-netbeans-lib-profiler-charts</artifactId>
+            <version>RELEASE112</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.modules</groupId>
+            <artifactId>org-netbeans-modules-profiler-api</artifactId>
+            <version>RELEASE112</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.modules</groupId>
+            <artifactId>org-netbeans-lib-profiler-ui</artifactId>
+            <version>RELEASE112</version>
+        </dependency>
     </dependencies>
 
 </project>

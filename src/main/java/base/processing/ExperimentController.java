@@ -57,7 +57,7 @@ public class ExperimentController {
     public void addDataOnTabs(List<String> buffer) {
         int numberOfModules = PreferencesData.getInteger("runtime.count.modules", 0);
         if (numberOfModules == 0 || buffer.isEmpty()) return;
-
+        System.out.println(buffer);
     }
 
     private void parseKey(int equals, String line) {
