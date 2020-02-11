@@ -90,7 +90,7 @@ public class ExperimentProcessing implements Runnable {
                             flag = true;
                             if (serialBuffer.indexOf(">") == -1) {
                                 err[sErr]++;
-                                result.append("NULL");
+                                result.append("0");
                                 break;
                             }
                             result.append(I7000.removeCRC(1, serialBuffer));
@@ -101,7 +101,7 @@ public class ExperimentProcessing implements Runnable {
                     }
                     if (!flag) {
                         err[sErr]++;
-                        result.append("NULL");
+                        result.append("0");
                     }
                     sErr++;
                 }
@@ -173,11 +173,11 @@ public class ExperimentProcessing implements Runnable {
                     writer = PApplet.createWriter(experiment.getFile(), true);
                     Thread.sleep(200);
                     if (useFirstBuffer.get()) {
-                        new Thread(() -> editor.getExperimentController().addDataOnTabs(bufferTwo)).start();
+                        addDataOnTabs(bufferTwo);
                         for (String str : bufferTwo) writer.println(str);
                         bufferTwo.clear();
                     } else {
-                        new Thread(() -> editor.getExperimentController().addDataOnTabs(bufferOne)).start();
+                        addDataOnTabs(bufferOne);
                         for (String str : bufferOne) writer.println(str);
                         bufferOne.clear();
                     }
@@ -194,7 +194,7 @@ public class ExperimentProcessing implements Runnable {
                     }
                 }
             }
-        }, 10000, 10000);
+        }, 5000, 5000);
     }
 
     private void checkErrorStatus() {
@@ -214,6 +214,10 @@ public class ExperimentProcessing implements Runnable {
         }, 0, period);
     }
 
+    private void addDataOnTabs(List<String> buffer) {
+        editor.getExperimentController().addDataOnTabs(buffer);
+        //new Thread(() -> editor.getExperimentController().addDataOnTabs(buffer)).start();
+    }
 
     protected void toggle() {
         boolean temp;

@@ -321,7 +321,6 @@ public class SimpleXYChartUtils {
         chartView.putClientProperty("scrollerPanel", scrollerPanel); // NOI18N
 
         if (supportsZooming) setZoomingEnabled(chartView, supportsZooming);
-
         return chartView;
     }
 

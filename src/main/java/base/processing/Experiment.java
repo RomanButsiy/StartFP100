@@ -96,14 +96,16 @@ public class Experiment {
 
     private void setFileHeader() {
         List<String> title = new ArrayList<>();
-        String description = "# Time, Number of ADC(s), Timeout, Type of range, Signal form, Period, Min, Max";
+        String description = "# Time, Number of ADC(s), Timeout, Analog input type, Type of range, Signal form, Period, Min, Max";
         title.add(String.valueOf(java.time.Clock.systemUTC().instant()));
         title.add(PreferencesData.get("runtime.count.modules", "0"));
         title.add(PreferencesData.get("response.timeout"));
+        title.add(PreferencesData.get("analog.input.type"));
         title.add(PreferencesData.get("signal.out.range"));
         title.add(PreferencesData.get("signal.form"));
         title.add(PreferencesData.get("signal.form.period"));
         title.add(PreferencesData.get("signal.form.min"));
+        title.add(PreferencesData.get("signal.form.max"));
         title.add(PreferencesData.get("signal.form.max"));
         PrintWriter writer = null;
         try {

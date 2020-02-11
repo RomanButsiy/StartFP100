@@ -7,11 +7,13 @@ import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ExperimentController {
 
+    private long timeStart = Long.parseLong(PreferencesData.get("chart.time.start", "75600000"));
     private final Editor editor;
     private final Experiment experiment;
 
@@ -54,10 +56,24 @@ public class ExperimentController {
         }
     }
 
-    public void addDataOnTabs(List<String> buffer) {
-        int numberOfModules = PreferencesData.getInteger("runtime.count.modules", 0);
-        if (numberOfModules == 0 || buffer.isEmpty()) return;
-        System.out.println(buffer);
+    public synchronized void addDataOnTabs(List<String> buffer) {
+        final int numberOfModules = PreferencesData.getInteger("runtime.count.modules", 0);
+        final int responseTimeout = PreferencesData.getInteger("response.timeout", 200);
+        if (numberOfModules == 0 || buffer.size() == 0) return;
+        int coefficient = editor.getTabs().get(0).getCoefficient();
+        long[] timestamps = new long[buffer.size()];
+        long[][][] values = new long[numberOfModules][buffer.size()][1];
+        for (int t = 0; t < buffer.size(); t++) {
+            timestamps[t] = timeStart;
+            timeStart += responseTimeout;
+            long[] val = getLong(buffer.get(t), coefficient);
+            for (int i = 0; i < numberOfModules; i++) {
+                values[i][t][0] = val[i + 1];
+            }
+        }
+        for (int i = 0; i < numberOfModules; i++) {
+            editor.getTabs().get(i).setData(timestamps, values[i]);
+        }
     }
 
     private void parseKey(int equals, String line) {
@@ -70,15 +86,17 @@ public class ExperimentController {
 
     private void setDefaultPreferences(String value) {
         List<String> values = (ArrayList<String>) toCollection(value);
-        if (values.size() == 8) {
-            PreferencesData.set("runtime.time", values.get(0));
-            PreferencesData.set("runtime.count.modules", values.get(1));
-            PreferencesData.set("response.timeout", values.get(2));
-            PreferencesData.set("signal.out.range", values.get(3));
-            PreferencesData.set("signal.form", values.get(4));
-            PreferencesData.set("signal.form.period", values.get(5));
-            PreferencesData.set("signal.form.min", values.get(6));
-            PreferencesData.set("signal.form.max", values.get(7));
+        if (values.size() == 9) {
+            int i = 0;
+            PreferencesData.set("runtime.time", values.get(i++));
+            PreferencesData.set("runtime.count.modules", values.get(i++));
+            PreferencesData.set("response.timeout", values.get(i++));
+            PreferencesData.set("analog.input.type", values.get(i++));
+            PreferencesData.set("signal.out.range", values.get(i++));
+            PreferencesData.set("signal.form", values.get(i++));
+            PreferencesData.set("signal.form.period", values.get(i++));
+            PreferencesData.set("signal.form.min", values.get(i++));
+            PreferencesData.set("signal.form.max", values.get(i));
         }
     }
 
@@ -86,6 +104,20 @@ public class ExperimentController {
         return Arrays.stream(value.split(","))
                 .filter((v) -> !v.trim().isEmpty())
                 .collect(Collectors.toList());
+    }
+
+    private long[] getLong(String str, int coefficient) {
+        String[] s = str.split(",");
+        long[] l = new long[s.length];
+        for (int i = 0; i < s.length; i++) {
+            try {
+                l[i] = (long) (int) (Double.parseDouble(s[i]) * coefficient);
+            } catch (NumberFormatException e) {
+                l[i] = 0L;
+                editor.statusError(e);
+            }
+        }
+        return l;
     }
 
 }

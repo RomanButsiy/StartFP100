@@ -75,6 +75,13 @@ signal.out.range=32
 # Instantly -> 0, 0.0625 V/s or 0.125 mA/s -> 1,..., 512.0 V/s or 1024.0 mA/s -> 14. See manual
 signal.speed.change=0
 
+# Analog input type: -15 to +15 mV -> 00, -50 to +50 mV -> 01, -100 to +100 mV -> 02,
+# -500 to +500 mV -> 03, -1 to +1 V -> 04, -2.5 to +2.5 V -> 05, -20 to +20 mV -> 06
+analog.input.type=05
+
+# Chart settings
+chart.values.limit=1296000
+
 # modules
 number.of.modules=3
 module.0.id=01
