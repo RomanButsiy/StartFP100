@@ -174,6 +174,10 @@ public class PreferencesData {
         return Float.parseFloat(get(attribute));
     }
 
+    static public double getDouble(String attribute) {
+        return Double.parseDouble(get(attribute));
+    }
+
     static public PreferencesMap getMap() {
         return new PreferencesMap(prefs);
     }

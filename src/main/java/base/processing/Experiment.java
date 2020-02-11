@@ -106,7 +106,6 @@ public class Experiment {
         title.add(PreferencesData.get("signal.form.period"));
         title.add(PreferencesData.get("signal.form.min"));
         title.add(PreferencesData.get("signal.form.max"));
-        title.add(PreferencesData.get("signal.form.max"));
         PrintWriter writer = null;
         try {
             writer = PApplet.createWriter(getFile(), true);
@@ -120,6 +119,14 @@ public class Experiment {
         }
     }
 
+    public float round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (float) tmp / factor;
+    }
+
     public void stopExperiment() {
         experimentProcessing.stop();
         setExperimentRunning(false);
@@ -128,6 +135,29 @@ public class Experiment {
     }
 
     public float[] generateSignal() {
+        double signalMax = PreferencesData.getDouble("signal.form.max");
+        double signalMin = PreferencesData.getDouble("signal.form.min");
+        int signalPeriod = PreferencesData.getInteger("signal.form.period");
+        int signalForm = PreferencesData.getInteger("signal.form");
+        int responseTimeout = PreferencesData.getInteger("response.timeout");
+        double stepDouble = 1f * signalPeriod / responseTimeout;
+        int step = (int) Math.round(stepDouble);
+        float[] signal = new float[step];
+        if (signalForm == 0) { //Синусоїда
+            double sinStep = 2 * Math.PI / stepDouble;
+            double difference = (signalMax - signalMin) / 2.0;
+            for (int i = 0; i < step; i++) {
+                signal[i] = round((difference * Math.sin(i * sinStep) + difference + signalMin), 3);
+            }
+            return signal;
+        }
+        if (signalForm == 1) { //Трапеція
+
+        }
+        if (signalForm == 2) { //Трикутник
+
+        }
+        // Інший
         return new float[]{8.640f, 2.230f, 1.100f, 8.000f, 1.520f, 5.250f, 5.341f, 5.341f, 5.341f, 5.341f,
                 5.341f, 5.341f, 8.640f, 2.230f, 1.100f, 8.000f, 1.520f, 5.250f, 5.341f, 5.341f,
                 5.341f, 5.341f, 8.640f, 2.230f, 1.100f, 8.000f, 1.520f, 5.250f, 5.341f, 5.341f,

@@ -216,6 +216,7 @@ public class ExperimentProcessing implements Runnable {
 
     private void addDataOnTabs(List<String> buffer) {
         editor.getExperimentController().addDataOnTabs(buffer);
+        // need fix
         //new Thread(() -> editor.getExperimentController().addDataOnTabs(buffer)).start();
     }
 
