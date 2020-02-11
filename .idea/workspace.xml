@@ -8,12 +8,6 @@
   <component name="ChangeListManager">
     <list default="true" id="93b63df6-3c6c-411f-8753-d9cd68fc9762" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/preferences.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lib/preferences.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/processing/Experiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/processing/Experiment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/processing/ExperimentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/processing/ExperimentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/processing/ExperimentProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/processing/ExperimentProcessing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/view/charts/ChartFactory/xy/SimpleXYChartUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/view/charts/ChartFactory/xy/SimpleXYChartUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/view/charts/ChartTab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/view/charts/ChartTab.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,22 +161,22 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="776" y="310" width="424" height="484" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1580569659172" />
-    <state width="1807" height="204" key="GridCell.Tab.0.bottom" timestamp="1581440650609">
+    <state width="1807" height="204" key="GridCell.Tab.0.bottom" timestamp="1581440806129">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="204" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1581440650609" />
-    <state width="1807" height="204" key="GridCell.Tab.0.center" timestamp="1581440650609">
+    <state width="1807" height="204" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1581440806129" />
+    <state width="1807" height="204" key="GridCell.Tab.0.center" timestamp="1581440806129">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="204" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1581440650609" />
-    <state width="1807" height="204" key="GridCell.Tab.0.left" timestamp="1581440650608">
+    <state width="1807" height="204" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1581440806129" />
+    <state width="1807" height="204" key="GridCell.Tab.0.left" timestamp="1581440806128">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="204" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1581440650608" />
-    <state width="1807" height="204" key="GridCell.Tab.0.right" timestamp="1581440650609">
+    <state width="1807" height="204" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1581440806128" />
+    <state width="1807" height="204" key="GridCell.Tab.0.right" timestamp="1581440806129">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="204" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1581440650609" />
+    <state width="1807" height="204" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1581440806129" />
     <state width="1807" height="182" key="GridCell.Tab.1.bottom" timestamp="1581018498172">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
