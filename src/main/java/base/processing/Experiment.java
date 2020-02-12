@@ -140,22 +140,46 @@ public class Experiment {
         int signalPeriod = PreferencesData.getInteger("signal.form.period");
         int signalForm = PreferencesData.getInteger("signal.form");
         int responseTimeout = PreferencesData.getInteger("response.timeout");
+        int tau = PreferencesData.getInteger("signal.form.tau", 1000);
         double stepDouble = 1f * signalPeriod / responseTimeout;
         int step = (int) Math.round(stepDouble);
         float[] signal = new float[step];
+        double difference = (signalMax - signalMin) / 2.0;
+        double signalUp = difference + signalMin;
         if (signalForm == 0) { //Синусоїда
             double sinStep = 2 * Math.PI / stepDouble;
-            double difference = (signalMax - signalMin) / 2.0;
             for (int i = 0; i < step; i++) {
-                signal[i] = round((difference * Math.sin(i * sinStep) + difference + signalMin), 3);
+                signal[i] = round((difference * Math.sin(i * sinStep) + signalUp), 3);
             }
             return signal;
         }
         if (signalForm == 1) { //Трапеція
-
+            double omega = 2 * Math.PI / signalPeriod;
+            double sum;
+            for(int i = 0; i < step; i++) {
+                sum = 0;
+                for(int k = 1; k <= 49; k += 2) {
+                    sum += ((Math.sin(k * omega * tau) / Math.pow(k, 2)) * Math.sin(k * omega * i * responseTimeout));
+                }
+                signal[i] = round((4 * difference / (omega * tau * Math.PI)) * sum + signalUp, 3);
+                if (signal[i] > signalMax) signal[i] = round(signalMax, 3);
+                if (signal[i] < signalMin) signal[i] = round(signalMin, 3);
+            }
+            return signal;
         }
         if (signalForm == 2) { //Трикутник
-
+            double omega = 2 * Math.PI / signalPeriod;
+            double sum;
+            for(int i = 0; i < step; i++) {
+                sum = 0;
+                for(int k = 1; k <= 13; k += 2) {
+                    sum += (Math.pow(-1.0, (k - 1) / 2.0)) * (Math.sin(k * omega * i * responseTimeout) / Math.pow(k, 2));
+                }
+                signal[i] = round((8 *  difference / Math.pow(Math.PI, 2)) * sum + signalUp, 3);
+                if (Math.round((stepDouble / 4.0)) == i) signal[i] = round(signalMax, 3);
+                if (Math.round(((3.0 / 4.0) * stepDouble)) == i) signal[i] = round(signalMin, 3);
+            }
+            return signal;
         }
         // Інший
         return new float[]{8.640f, 2.230f, 1.100f, 8.000f, 1.520f, 5.250f, 5.341f, 5.341f, 5.341f, 5.341f,
@@ -163,5 +187,9 @@ public class Experiment {
                 5.341f, 5.341f, 8.640f, 2.230f, 1.100f, 8.000f, 1.520f, 5.250f, 5.341f, 5.341f,
                 5.341f, 5.341f, 8.640f, 2.230f, 1.100f, 8.000f, 1.520f, 5.250f, 5.341f, 5.341f,
                 5.341f, 5.341f, 8.640f, 2.230f, 1.100f, 8.000f, 1.520f, 5.250f, 5.341f, 5.341f,};
+    }
+
+    private double getK(double y1, double x1, double y2, double x2) {
+        return ((y2 - y1) / (x2 - x1));
     }
 }

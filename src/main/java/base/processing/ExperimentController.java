@@ -68,7 +68,7 @@ public class ExperimentController {
             timeStart += responseTimeout;
             long[] val = getLong(buffer.get(t), coefficient);
             for (int i = 0; i < numberOfModules; i++) {
-                values[i][t][0] = val[i + 1];
+                values[i][t][0] = val[i];
             }
         }
         for (int i = 0; i < numberOfModules; i++) {

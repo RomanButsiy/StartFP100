@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 
 import static base.PreferencesData.save;
 
-public class ExperimentSettings extends JDialog implements FocusListener {
+public class ExperimentSettings extends JDialog implements FocusListener, ItemListener{
     private JPanel rootPanel;
     private JButton cancelButton;
     private JButton okButton;
@@ -26,6 +26,8 @@ public class ExperimentSettings extends JDialog implements FocusListener {
     private JLabel minLabel;
     private JLabel maxLabel;
     private JTextField signalMax;
+    private JLabel tauLabel;
+    private JTextField signalTau;
     private final int signalOutRange = PreferencesData.getInteger("signal.out.range");
     private final String responseTimeout = PreferencesData.get("response.timeout", "200");
     private final String signalMaxDef = PreferencesData.get("signal.form.max", getMax());
@@ -35,6 +37,7 @@ public class ExperimentSettings extends JDialog implements FocusListener {
         super(editor);
         String value = getIndex();
         setTitle("Налаштування експерименту");
+        signalForm.addItemListener(this);
         for (String signal : Editor.signals) {
             signalForm.addItem(signal);
         }
@@ -48,13 +51,17 @@ public class ExperimentSettings extends JDialog implements FocusListener {
         ((AbstractDocument) signalMax.getDocument()).setDocumentFilter(new MaxMinDocumentFilter());
         ((AbstractDocument) signalMin.getDocument()).setDocumentFilter(new MaxMinDocumentFilter());
         ((AbstractDocument) signalPeriod.getDocument()).setDocumentFilter(new PeriodDocumentFilter());
+        ((AbstractDocument) signalTau.getDocument()).setDocumentFilter(new PeriodDocumentFilter());
         signalMax.addFocusListener(this);
         signalMin.addFocusListener(this);
         signalPeriod.addFocusListener(this);
+        signalTau.addFocusListener(this);
         String signalPeriodDef = PreferencesData.get("signal.form.period", responseTimeout);
         signalPeriod.setText(signalPeriodDef);
         signalMin.setText(signalMinDef);
         signalMax.setText(signalMaxDef);
+        String tauDef = PreferencesData.get("signal.form.tau", responseTimeout);
+        signalTau.setText(tauDef);
         cancelButton.addActionListener(actionEvent -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
         okButton.addActionListener(actionEvent -> {
             if (signalMax.getText().equals(signalMin.getText())) {
@@ -68,9 +75,14 @@ public class ExperimentSettings extends JDialog implements FocusListener {
                 signalMax.setText(str);
                 return;
             }
+            if (Integer.parseInt(signalTau.getText()) > (Integer.parseInt(signalPeriod.getText()) / 4)) {
+                signalTau.setText(String.valueOf((Integer.parseInt(signalPeriod.getText()) / 4)));
+                if (signalTau.isEnabled()) return;
+            }
             PreferencesData.set("signal.form.max", signalMax.getText());
             PreferencesData.set("signal.form.min", signalMin.getText());
             PreferencesData.set("signal.form.period", signalPeriod.getText());
+            PreferencesData.set("signal.form.tau", signalTau.getText());
             PreferencesData.setInteger("signal.form", signalForm.getSelectedIndex());
             save();
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
@@ -122,10 +134,27 @@ public class ExperimentSettings extends JDialog implements FocusListener {
         if (focusEvent.getSource() == signalMin) {
             signalMin.setText(formatMaxMin(signalMin.getText()));
         }
+        if (focusEvent.getSource() == signalTau) {
+            signalTau.setText(formatTau(signalTau.getText()));
+        }
+    }
+
+    private String formatTau(String data) {
+        if (data.equals("")) data = responseTimeout;
+        int tau, timeout;
+        tau = timeout = PreferencesData.getInteger("response.timeout", 200);
+        int signalPeriod4 = Integer.parseInt(signalPeriod.getText()) / 4;
+        try {
+            tau = Integer.parseInt(data);
+        } catch (NumberFormatException ignored) {}
+        if (tau < timeout) tau = timeout;
+        if (tau > (signalPeriod4)) tau = signalPeriod4;
+
+        return String.valueOf(tau);
     }
 
     private String formatPeriod(String data) {
-        if (data.equals("") || data.equals(".")) data = responseTimeout;
+        if (data.equals("")) data = responseTimeout;
         int result, timeout;
         result = timeout = PreferencesData.getInteger("response.timeout", 200);
         try {
@@ -146,6 +175,16 @@ public class ExperimentSettings extends JDialog implements FocusListener {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.US);
         DecimalFormat decimalFormat = new DecimalFormat("#.######", symbols);
         return decimalFormat.format(result);
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent itemEvent) {
+        if (itemEvent.getStateChange() == ItemEvent.DESELECTED) return;
+        if (signalForm.getSelectedIndex() == 1) {
+            signalTau.setEnabled(true);
+            return;
+        }
+        signalTau.setEnabled(false);
     }
 
     private static class MaxMinDocumentFilter extends DocumentFilter {

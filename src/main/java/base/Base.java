@@ -42,7 +42,7 @@ public class Base {
         } catch (Exception ignored) { }
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
         I7000.useCRC = PreferencesData.getBoolean("use.CRC", false);
-        restoreExperiment(); // fix me!
+        restoreExperiment();
         if (editors.isEmpty()) handleNew();
     }
 

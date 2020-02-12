@@ -187,10 +187,10 @@ public class ExperimentProcessing implements Runnable {
                 } finally {
                     IOUtils.closeQuietly(writer);
                     if (stopExperiment) {
-                        getNewDataTimer.cancel();
                         editor.getProgressBar().closeProgressBar();
                         editor.getToolbar().deactivateStop();
                         editor.setLineStatusText("Експеримент зупинено");
+                        getNewDataTimer.cancel();
                     }
                 }
             }
@@ -217,7 +217,6 @@ public class ExperimentProcessing implements Runnable {
     private void addDataOnTabs(List<String> buffer) {
         editor.getExperimentController().addDataOnTabs(buffer);
         // need fix
-        //new Thread(() -> editor.getExperimentController().addDataOnTabs(buffer)).start();
     }
 
     protected void toggle() {
