@@ -96,7 +96,7 @@ public class Experiment {
 
     private void setFileHeader() {
         List<String> title = new ArrayList<>();
-        String description = "# Time, Number of ADC(s), Timeout, Analog input type, Type of range, Signal form, Period, Min, Max";
+        String description = "# Time, Number of ADC(s), Timeout, Analog input type, Type of range, Signal form, Period, Min, Max, Tau";
         title.add(String.valueOf(java.time.Clock.systemUTC().instant()));
         title.add(PreferencesData.get("runtime.count.modules", "0"));
         title.add(PreferencesData.get("response.timeout"));
@@ -106,6 +106,7 @@ public class Experiment {
         title.add(PreferencesData.get("signal.form.period"));
         title.add(PreferencesData.get("signal.form.min"));
         title.add(PreferencesData.get("signal.form.max"));
+        title.add(PreferencesData.get("signal.form.tau"));
         PrintWriter writer = null;
         try {
             writer = PApplet.createWriter(getFile(), true);
@@ -140,7 +141,7 @@ public class Experiment {
         int signalPeriod = PreferencesData.getInteger("signal.form.period");
         int signalForm = PreferencesData.getInteger("signal.form");
         int responseTimeout = PreferencesData.getInteger("response.timeout");
-        int tau = PreferencesData.getInteger("signal.form.tau", 1000);
+        int tau = PreferencesData.getInteger("signal.form.tau");
         double stepDouble = 1f * signalPeriod / responseTimeout;
         int step = (int) Math.round(stepDouble);
         float[] signal = new float[step];
@@ -189,7 +190,4 @@ public class Experiment {
                 5.341f, 5.341f, 8.640f, 2.230f, 1.100f, 8.000f, 1.520f, 5.250f, 5.341f, 5.341f,};
     }
 
-    private double getK(double y1, double x1, double y2, double x2) {
-        return ((y2 - y1) / (x2 - x1));
-    }
 }

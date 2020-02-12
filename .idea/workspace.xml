@@ -7,13 +7,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="93b63df6-3c6c-411f-8753-d9cd68fc9762" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/StartFP100_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/StartFP100_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/Base.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/Base.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/preferences.txt" beforeDir="false" afterPath="$PROJECT_DIR$/lib/preferences.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/base/Editor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/Editor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/base/processing/Experiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/processing/Experiment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/base/processing/ExperimentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/processing/ExperimentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/processing/ExperimentProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/processing/ExperimentProcessing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/view/ExperimentSettings/ExperimentSettings.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/view/ExperimentSettings/ExperimentSettings.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/base/view/ExperimentSettings/ExperimentSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/view/ExperimentSettings/ExperimentSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/base/view/ProgressBar/ProgressBar.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/view/ProgressBar/ProgressBar.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/base/view/ProgressBar/ProgressBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/view/ProgressBar/ProgressBar.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,10 +145,10 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="801" y="256" width="374" height="592" key="#com.intellij.ide.util.MemberChooser/67.27.1853.1053@67.27.1853.1053" timestamp="1581528288255" />
-    <state x="731" y="285" width="525" height="428" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1580569646347">
+    <state x="731" y="285" width="525" height="428" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1581531279700">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="731" y="285" width="525" height="428" key="#com.intellij.ide.util.TreeClassChooserDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1580569646347" />
+    <state x="731" y="285" width="525" height="428" key="#com.intellij.ide.util.TreeClassChooserDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1581531279700" />
     <state x="746" y="439" width="494" height="237" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1580330676249">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -163,26 +165,26 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="721" y="310" width="524" height="484" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1579869023688" />
-    <state x="776" y="310" width="424" height="484" key="FileChooserDialogImpl" timestamp="1580569659172">
+    <state x="776" y="310" width="424" height="484" key="FileChooserDialogImpl" timestamp="1581531288724">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="776" y="310" width="424" height="484" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1580569659172" />
-    <state width="1807" height="316" key="GridCell.Tab.0.bottom" timestamp="1581530528853">
+    <state x="776" y="310" width="424" height="484" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1581531288724" />
+    <state width="1807" height="316" key="GridCell.Tab.0.bottom" timestamp="1581538865024">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="316" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1581530528853" />
-    <state width="1807" height="316" key="GridCell.Tab.0.center" timestamp="1581530528853">
+    <state width="1807" height="316" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1581538865024" />
+    <state width="1807" height="316" key="GridCell.Tab.0.center" timestamp="1581538865023">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="316" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1581530528853" />
-    <state width="1807" height="316" key="GridCell.Tab.0.left" timestamp="1581530528853">
+    <state width="1807" height="316" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1581538865023" />
+    <state width="1807" height="316" key="GridCell.Tab.0.left" timestamp="1581538865023">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="316" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1581530528853" />
-    <state width="1807" height="316" key="GridCell.Tab.0.right" timestamp="1581530528853">
+    <state width="1807" height="316" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1581538865023" />
+    <state width="1807" height="316" key="GridCell.Tab.0.right" timestamp="1581538865024">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="316" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1581530528853" />
+    <state width="1807" height="316" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1581538865024" />
     <state width="1807" height="182" key="GridCell.Tab.1.bottom" timestamp="1581528860048">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -203,10 +205,10 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="526" y="210" width="924" height="684" key="Maven.ArtifactSearchDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1580241446530" />
-    <state x="476" y="130" width="1024" height="845" key="SettingsEditor" timestamp="1580828867409">
+    <state x="476" y="130" width="1024" height="845" key="SettingsEditor" timestamp="1581531308545">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="476" y="130" width="1024" height="845" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1580828867409" />
+    <state x="476" y="130" width="1024" height="845" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1581531308545" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1580305598022">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -215,10 +217,10 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="761" y="472" width="454" height="160" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/67.27.1853.1053@67.27.1853.1053" timestamp="1580497168876" />
-    <state x="689" y="181" width="598" height="743" key="refactoring.ChangeSignatureDialog" timestamp="1580909283560">
+    <state x="689" y="181" width="598" height="743" key="refactoring.ChangeSignatureDialog" timestamp="1581534753246">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="689" y="181" width="598" height="743" key="refactoring.ChangeSignatureDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1580909283560" />
+    <state x="689" y="181" width="598" height="743" key="refactoring.ChangeSignatureDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1581534753246" />
     <state x="657" y="253" key="run.anything.popup" timestamp="1580746339826">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>

@@ -92,7 +92,7 @@ public class ExperimentSettings extends JDialog implements FocusListener, ItemLi
             if (str == null) return;
             int lastResult = PreferencesData.getInteger("runtime.last.result", 0);
             if (lastResult >= str.length) lastResult = 0;
-            String result = (String) JOptionPane.showInputDialog(null, "Надіслати одне значення\nдля перевірки модуля",
+            String result = (String) JOptionPane.showInputDialog(this, "Надіслати одне значення\nдля перевірки модуля",
                     String.format("Виберіть значення (%s)", value), JOptionPane.QUESTION_MESSAGE, null, str, str[lastResult]);
             if (result == null) return;
             PreferencesData.setInteger("runtime.last.result", IntStream.range(0, str.length).filter(i -> str[i].equals(result)).findFirst().orElse(0));

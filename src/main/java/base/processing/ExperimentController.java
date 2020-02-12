@@ -3,6 +3,7 @@ package base.processing;
 import base.Editor;
 import base.PreferencesData;
 import base.legacy.PApplet;
+import base.view.ProgressBar.ProgressBar;
 import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.FileInputStream;
@@ -16,6 +17,7 @@ public class ExperimentController {
     private long timeStart = Long.parseLong(PreferencesData.get("chart.time.start", "75600000"));
     private final Editor editor;
     private final Experiment experiment;
+    private ProgressBar progressBar;
 
     public ExperimentController(Editor editor, Experiment experiment) throws IOException {
         this.editor = editor;
@@ -43,17 +45,18 @@ public class ExperimentController {
     private void load(FileInputStream fileInputStream) {
         String[] lines = PApplet.loadStrings(fileInputStream);
         if (lines == null) return;
-        List<String> loadData = new ArrayList<>();
+        List<String> loadedData = new ArrayList<>();
         for (String line : lines) {
             if (line.length() == 0 || line.charAt(0) == '#') continue;
             int equals = line.indexOf('=');
             if (equals == -1) {
-
+                loadedData.add(line);
             } else {
                 parseKey(equals, line);
             }
-
         }
+        editor.createTabs(PreferencesData.getInteger("runtime.count.modules", 0));
+        addDataOnTabs(loadedData);
     }
 
     public synchronized void addDataOnTabs(List<String> buffer) {
@@ -68,7 +71,7 @@ public class ExperimentController {
             timeStart += responseTimeout;
             long[] val = getLong(buffer.get(t), coefficient);
             for (int i = 0; i < numberOfModules; i++) {
-                values[i][t][0] = val[i];
+                values[i][t][0] = val[i+1];
             }
         }
         for (int i = 0; i < numberOfModules; i++) {
@@ -86,7 +89,7 @@ public class ExperimentController {
 
     private void setDefaultPreferences(String value) {
         List<String> values = (ArrayList<String>) toCollection(value);
-        if (values.size() == 9) {
+        if (values.size() == 10) {
             int i = 0;
             PreferencesData.set("runtime.time", values.get(i++));
             PreferencesData.set("runtime.count.modules", values.get(i++));
@@ -96,7 +99,8 @@ public class ExperimentController {
             PreferencesData.set("signal.form", values.get(i++));
             PreferencesData.set("signal.form.period", values.get(i++));
             PreferencesData.set("signal.form.min", values.get(i++));
-            PreferencesData.set("signal.form.max", values.get(i));
+            PreferencesData.set("signal.form.max", values.get(i++));
+            PreferencesData.set("signal.form.tau", values.get(i));
         }
     }
 

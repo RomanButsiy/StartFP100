@@ -24,7 +24,7 @@ import static base.helpers.BaseHelper.LittleBitPreferencesModuleTest;
 import static base.helpers.BaseHelper.copyFile;
 import static libraries.Theme.scale;
 
-public class Editor extends JFrame implements RunnerListener  {
+public class Editor extends JFrame implements RunnerListener {
 
     private File file;
     private Experiment experiment;
@@ -62,12 +62,12 @@ public class Editor extends JFrame implements RunnerListener  {
     private ProgressBar progressBar;
 
     private static final int SHORTCUT_KEY_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-    public static final String [] signals = { "Синусоїда", "Трапеція", "Трикутник", "Інший" };
-    private static final String [] rates = {"300", "1200", "2400", "4800", "9600", "19200", "38400", "57600", "74880", "115200", "230400"};
+    public static final String[] signals = {"Синусоїда", "Трапеція", "Трикутник", "Інший"};
+    private static final String[] rates = {"300", "1200", "2400", "4800", "9600", "19200", "38400", "57600", "74880", "115200", "230400"};
     private int currentTabIndex;
     private ExperimentSettings experimentSettings;
 
-    public Editor(Base iBase, File file, int[] storedLocation, int[] defaultLocation,  Platform platform, boolean untitled) {
+    public Editor(Base iBase, File file, int[] storedLocation, int[] defaultLocation, Platform platform, boolean untitled) {
         super("StartFP100");
         this.base = iBase;
         this.platform = platform;
@@ -84,6 +84,7 @@ public class Editor extends JFrame implements RunnerListener  {
             public void windowActivated(WindowEvent e) {
                 base.handleActivated(Editor.this);
             }
+
             public void windowDeactivated(WindowEvent e) {
                 List<Component> toolsMenuItemsToRemove = new LinkedList<>();
                 for (Component menuItem : toolsMenu.getMenuComponents()) {
@@ -150,7 +151,7 @@ public class Editor extends JFrame implements RunnerListener  {
     }
 
     public void applyPreferences() {
-        for (ChartTab tab: tabs) {
+        for (ChartTab tab : tabs) {
             //tab.applyPreferences();
         }
         console.applyPreferences();
@@ -163,13 +164,13 @@ public class Editor extends JFrame implements RunnerListener  {
         if (file == null) {
             if (!fileName.endsWith(".fim")) {
                 BaseInit.showWarning("Вибрано неправильний файл", "StartFP100 може відкривати лише власні експерименти\n" +
-                                           "та інші файли, що закінчуються на .ino", null);
+                        "та інші файли, що закінчуються на .ino", null);
                 return false;
             } else {
-                Object[] options = { "OK", "Скасувати" };
+                Object[] options = {"OK", "Скасувати"};
                 String prompt = "Файл " + fileName + " повинен бути всередині\n" +
-                                "папки експерименту " +  properParent + ".\n" +
-                                "Створити цю папку, перемістити файл та продовжити?";
+                        "папки експерименту " + properParent + ".\n" +
+                        "Створити цю папку, перемістити файл та продовжити?";
 
                 int result = JOptionPane.showOptionDialog(this, prompt, "Перемістити?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (result != JOptionPane.YES_OPTION) {
@@ -197,15 +198,14 @@ public class Editor extends JFrame implements RunnerListener  {
         }
         try {
             experiment = new Experiment(this, file, properParent);
+            experiment.setUntitledAndNotSaved(untitled);
             experimentController = new ExperimentController(this, experiment);
         } catch (IOException e) {
             BaseInit.showWarning("Помилка", "Не вдалося створити експкримент.", e);
             return false;
         }
-        experiment.setUntitledAndNotSaved(untitled);
         setTitle("StartFP100 | " + properParent);
-        createTabs();
-        untitled = false;
+        if (tabs.size() == 0) createTabs(2);
         return true;
     }
 
@@ -213,13 +213,12 @@ public class Editor extends JFrame implements RunnerListener  {
         return currentTabIndex;
     }
 
-    private void createTabs() {
+    public void createTabs(int integer) {
         tabs.clear();
         currentTabIndex = -1;
-        ChartTab tab = new ChartTab(this, "Якись_графік");
-        ChartTab tab2 = new ChartTab(this, "Якись_графік_2");
-        tabs.add(tab);
-        tabs.add(tab2);
+        for (int i = 0; i < integer; i++) {
+            tabs.add(new ChartTab(this, "Якись_графік_" + i));
+        }
         selectTab(0);
     }
 
@@ -323,7 +322,7 @@ public class Editor extends JFrame implements RunnerListener  {
                 populateSignalMenu();
                 for (Component c : toolsMenu.getMenuComponents()) {
                     if ((c instanceof JMenu) && c.isVisible()) {
-                        JMenu menu = (JMenu)c;
+                        JMenu menu = (JMenu) c;
                         String name = menu.getText();
                         if (name == null) continue;
                         String baseName = name;
@@ -331,7 +330,7 @@ public class Editor extends JFrame implements RunnerListener  {
                         if (index > 0) baseName = name.substring(0, index);
                         String sel = null;
                         int count = menu.getItemCount();
-                        for (int i=0; i < count; i++) {
+                        for (int i = 0; i < count; i++) {
                             JMenuItem item = menu.getItem(i);
                             if (item != null && item.isSelected()) {
                                 sel = item.getText();
@@ -493,7 +492,8 @@ public class Editor extends JFrame implements RunnerListener  {
     }
 
     public void handleStop() {
-        if (!PreferencesData.getBoolean("runtime.experiment.running", false) || !experiment.isExperimentRunning()) return;
+        if (!PreferencesData.getBoolean("runtime.experiment.running", false) || !experiment.isExperimentRunning())
+            return;
         int action = JOptionPane.showConfirmDialog(this, "Зупинити експеримент", "Зупинка", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (action == JOptionPane.NO_OPTION) return;
         handleStopAll();
@@ -503,7 +503,7 @@ public class Editor extends JFrame implements RunnerListener  {
         toolbar.deactivateRun();
         toolbar.activateStop();
         setLineStatusText("Зупинка експерименту...");
-        new Thread(this::createProgressBar).start();
+        new Thread(() -> createProgressBar(0)).start();
         experiment.stopExperiment();
         setEnabledItem(true);
         Base.getDiscoveryManager().getSerialDiscoverer().pausePolling(false);
@@ -522,16 +522,14 @@ public class Editor extends JFrame implements RunnerListener  {
         if (PreferencesData.getBoolean("runtime.experiment.running", false)) return;
         LittleBitPreferencesModuleTest(this);
         if (!PreferencesData.getBoolean("runtime.valid.modules", false)) return;
+        setEnabledItem(false);
+        new CheckModules(this);
         if (!PreferencesData.getBoolean("runtime.dac.module.ready", false)) {
-            setEnabledItem(false);
-            new CheckModules(this);
-            if (!PreferencesData.getBoolean("runtime.dac.module.ready", false)){
-                int action = JOptionPane.showConfirmDialog(this, "Модулі не готові.\nПрдовжити?", "Запуск", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                if (action == JOptionPane.NO_OPTION) return;
-            }
+            int action = JOptionPane.showConfirmDialog(this, "Модулі не готові.\nПрдовжити?", "Запуск", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (action == JOptionPane.NO_OPTION) return;
         }
-        String startQuestion = (PreferencesData.getNonEmpty("last.experiment.path", null) != null || experiment.isRuntimeRunning()?
-                 "Продовжити виконання експерименту: " : "Запустити експеримент: ") + experiment.getName() + "?";
+        String startQuestion = (PreferencesData.getNonEmpty("last.experiment.path", null) != null || experiment.isRuntimeRunning() ?
+                "Продовжити виконання експерименту: " : "Запустити експеримент: ") + experiment.getName() + "?";
         int action = JOptionPane.showConfirmDialog(this, startQuestion, "Запуск", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (action == JOptionPane.NO_OPTION) return;
         Base.getDiscoveryManager().getSerialDiscoverer().pausePolling(true);
@@ -604,7 +602,7 @@ public class Editor extends JFrame implements RunnerListener  {
 
     public void rebuildRecentExperimentsMenu() {
         recentExperimentsMenu.removeAll();
-        for (JMenuItem recentExperimentMenuItem  : base.getRecentExperimentsMenuItems()) {
+        for (JMenuItem recentExperimentMenuItem : base.getRecentExperimentsMenuItems()) {
             recentExperimentsMenu.add(recentExperimentMenuItem);
         }
     }
@@ -688,8 +686,8 @@ public class Editor extends JFrame implements RunnerListener  {
         });
     }
 
-    private void createProgressBar() {
-        progressBar = new ProgressBar(Editor.this);
+    public void createProgressBar(int type) {
+        progressBar = new ProgressBar(Editor.this, type);
         progressBar.setLocationRelativeTo(Editor.this);
         progressBar.setVisible(true);
     }
