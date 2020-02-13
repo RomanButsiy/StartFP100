@@ -88,9 +88,9 @@ public class Experiment {
         PreferencesData.save();
         isRuntimeRunning = true;
         new Thread(experimentProcessing).start();
-        Thread closeHook = new Thread(experimentProcessing::stopAll);
-        closeHook.setName("ExperimentProcessing closeHook");
-        Runtime.getRuntime().addShutdownHook(closeHook);
+//        Thread closeHook = new Thread(experimentProcessing::stopAll);
+//        closeHook.setName("ExperimentProcessing closeHook");
+//        Runtime.getRuntime().addShutdownHook(closeHook);
 
     }
 

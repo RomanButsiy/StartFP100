@@ -19,7 +19,7 @@ public class ExperimentController {
     private final Experiment experiment;
     private ProgressBar progressBar;
 
-    public ExperimentController(Editor editor, Experiment experiment) throws IOException {
+    public ExperimentController(Editor editor, Experiment experiment) throws Exception {
         this.editor = editor;
         this.experiment = experiment;
         initExperiment();
@@ -31,7 +31,7 @@ public class ExperimentController {
         }
     }
 
-    private void initExperiment() throws IOException {
+    private void initExperiment() throws Exception {
         if (experiment.isUntitledAndNotSaved()) return;
         FileInputStream fileInputStream = null;
         try {
@@ -42,7 +42,7 @@ public class ExperimentController {
         }
     }
 
-    private void load(FileInputStream fileInputStream) {
+    private void load(FileInputStream fileInputStream) throws Exception {
         String[] lines = PApplet.loadStrings(fileInputStream);
         if (lines == null) return;
         List<String> loadedData = new ArrayList<>();
@@ -59,7 +59,7 @@ public class ExperimentController {
         addDataOnTabs(loadedData);
     }
 
-    public synchronized void addDataOnTabs(List<String> buffer) {
+    public synchronized void addDataOnTabs(List<String> buffer) throws Exception {
         final int numberOfModules = PreferencesData.getInteger("runtime.count.modules", 0);
         final int responseTimeout = PreferencesData.getInteger("response.timeout", 200);
         if (numberOfModules == 0 || buffer.size() == 0) return;

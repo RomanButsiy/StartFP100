@@ -200,12 +200,12 @@ public class Editor extends JFrame implements RunnerListener {
             experiment = new Experiment(this, file, properParent);
             experiment.setUntitledAndNotSaved(untitled);
             experimentController = new ExperimentController(this, experiment);
-        } catch (IOException e) {
+        } catch (Exception e) {
             BaseInit.showWarning("Помилка", "Не вдалося створити експкримент.", e);
             return false;
         }
         setTitle("StartFP100 | " + properParent);
-        if (tabs.size() == 0) createTabs(2);
+        //if (tabs.size() == 0) createTabs(2);
         return true;
     }
 
@@ -503,7 +503,13 @@ public class Editor extends JFrame implements RunnerListener {
         toolbar.deactivateRun();
         toolbar.activateStop();
         setLineStatusText("Зупинка експерименту...");
-        new Thread(() -> createProgressBar(0)).start();
+        Thread thread = new Thread(this::createProgressBar);
+        thread.start();
+        while (thread.getState() != Thread.State.WAITING) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ignored) { }
+        }
         experiment.stopExperiment();
         setEnabledItem(true);
         Base.getDiscoveryManager().getSerialDiscoverer().pausePolling(false);
@@ -686,8 +692,8 @@ public class Editor extends JFrame implements RunnerListener {
         });
     }
 
-    public void createProgressBar(int type) {
-        progressBar = new ProgressBar(Editor.this, type);
+    public void createProgressBar() {
+        progressBar = new ProgressBar(Editor.this);
         progressBar.setLocationRelativeTo(Editor.this);
         progressBar.setVisible(true);
     }

@@ -182,16 +182,16 @@ public class ExperimentProcessing implements Runnable {
                         bufferOne.clear();
                     }
                 } catch (Exception e) {
-                    editor.statusError("Не вдалося записати дані експерименту у файл: " + e.getMessage());
+                    editor.statusError(e);
                     stopAll();
                 } finally {
                     IOUtils.closeQuietly(writer);
-                    if (stopExperiment) {
-                        editor.getProgressBar().closeProgressBar();
-                        editor.getToolbar().deactivateStop();
-                        editor.setLineStatusText("Експеримент зупинено");
-                        getNewDataTimer.cancel();
-                    }
+                }
+                if (stopExperiment) {
+                    editor.getProgressBar().closeProgressBar();
+                    editor.getToolbar().deactivateStop();
+                    editor.setLineStatusText("Експеримент зупинено");
+                    getNewDataTimer.cancel();
                 }
             }
         }, 5000, 5000);
@@ -214,7 +214,7 @@ public class ExperimentProcessing implements Runnable {
         }, 0, period);
     }
 
-    private void addDataOnTabs(List<String> buffer) {
+    private void addDataOnTabs(List<String> buffer) throws Exception {
         editor.getExperimentController().addDataOnTabs(buffer);
         // need fix
     }
