@@ -35,7 +35,7 @@ public class Editor extends JFrame implements RunnerListener {
     private ArrayList<ChartTab> tabs = new ArrayList<>();
 
     boolean untitled;
-    final Base base;
+    public final Base base;
     final Platform platform;
     private final Box upper;
     private JMenu fileMenu;
@@ -164,7 +164,7 @@ public class Editor extends JFrame implements RunnerListener {
         if (file == null) {
             if (!fileName.endsWith(".fim")) {
                 BaseInit.showWarning("Вибрано неправильний файл", "StartFP100 може відкривати лише власні експерименти\n" +
-                        "та інші файли, що закінчуються на .ino", null);
+                        "та інші файли, що закінчуються на .fim", null);
                 return false;
             } else {
                 Object[] options = {"OK", "Скасувати"};
@@ -206,7 +206,7 @@ public class Editor extends JFrame implements RunnerListener {
         }
         setTitle("StartFP100 | " + properParent);
         //if (tabs.size() == 0) createTabs(2);
-        return true;
+        return experimentController.isHeader();
     }
 
     public int getCurrentTabIndex() {
@@ -604,6 +604,23 @@ public class Editor extends JFrame implements RunnerListener {
     }
 
     private void handleSaveAs() {
+        handleStop();
+        statusNotice("Збереження...");
+        try {
+            if (experimentController.saveAs()) {
+                statusNotice("Експеримент збережено");
+                updateTitle();
+            } else {
+                statusNotice("Зберігання скасовано");
+            }
+        } catch (Exception e) {
+            statusError(e);
+        }
+
+    }
+
+    private void updateTitle() {
+        setTitle("StartFP100 | " + experiment.getName());
     }
 
     public void rebuildRecentExperimentsMenu() {

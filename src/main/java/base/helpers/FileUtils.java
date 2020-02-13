@@ -37,4 +37,7 @@ public class FileUtils {
         return file.isHidden() || file.getName().charAt(0) == '.';
     }
 
+    public static String addExtension(String name, String extension) {
+        return extension.equals("") ? name : (name + "." + extension);
+    }
 }

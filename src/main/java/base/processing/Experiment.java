@@ -1,21 +1,23 @@
 package base.processing;
 
 
+import base.BaseInit;
 import base.Editor;
 import base.PreferencesData;
+import base.helpers.FileUtils;
 import base.legacy.PApplet;
 import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+
+import static base.helpers.BaseHelper.copyFile;
 
 public class Experiment {
 
     private final Editor editor;
     private String name;
-    private File folder;
     private File file;
     private boolean isUntitledAndNotSaved = false;
     private boolean isExperimentRunning = false;
@@ -23,7 +25,6 @@ public class Experiment {
     private final ExperimentProcessing experimentProcessing;
 
     public Experiment(Editor editor, File file, String name) throws IOException {
-        this.folder = file.getParentFile();
         this.file = file;
         this.name = name;
         this.editor = editor;
@@ -35,7 +36,7 @@ public class Experiment {
     }
 
     public File getFolder() {
-        return folder;
+        return file.getParentFile();
     }
 
     public String getName() {
@@ -81,7 +82,9 @@ public class Experiment {
 
     public void runExperiment() throws Exception{
         setExperimentRunning(true);
-        if (isUntitledAndNotSaved) setFileHeader();
+        if (isUntitledAndNotSaved) {
+            setFileHeader(getFile());
+        }
         setUntitledAndNotSaved(false);
         PreferencesData.set("runtime.last.experiment.running", name);
         PreferencesData.set("last.experiment.path", file.getAbsolutePath());
@@ -94,7 +97,7 @@ public class Experiment {
 
     }
 
-    private void setFileHeader() {
+    private void setFileHeader(File file) {
         List<String> title = new ArrayList<>();
         String description = "# Time, Number of ADC(s), Timeout, Analog input type, Type of range, Signal form, Period, Min, Max, Tau";
         title.add(String.valueOf(java.time.Clock.systemUTC().instant()));
@@ -109,7 +112,7 @@ public class Experiment {
         title.add(PreferencesData.get("signal.form.tau"));
         PrintWriter writer = null;
         try {
-            writer = PApplet.createWriter(getFile(), true);
+            writer = PApplet.createWriter(file, true);
             writer.println(description);
             writer.print("title=");
             writer.println(String.join(",", title));
@@ -118,6 +121,7 @@ public class Experiment {
         } finally {
             IOUtils.closeQuietly(writer);
         }
+        editor.createTabs(PreferencesData.getInteger("runtime.count.modules", 0));
     }
 
     public float round(double value, int places) {
@@ -188,6 +192,38 @@ public class Experiment {
                 5.341f, 5.341f, 8.640f, 2.230f, 1.100f, 8.000f, 1.520f, 5.250f, 5.341f, 5.341f,
                 5.341f, 5.341f, 8.640f, 2.230f, 1.100f, 8.000f, 1.520f, 5.250f, 5.341f, 5.341f,
                 5.341f, 5.341f, 8.640f, 2.230f, 1.100f, 8.000f, 1.520f, 5.250f, 5.341f, 5.341f,};
+    }
+
+    public void saveAs(File newFolder) throws IOException {
+        File newPrimary = checkNewFolderName(newFolder);
+        if (!newFolder.mkdirs()) {
+            String msg = String.format("Неможливо створити теку %s", newFolder.getAbsolutePath());
+            throw new IOException(msg);
+        }
+        if (isUntitledAndNotSaved) {
+            setFileHeader(newPrimary);
+            FileUtils.recursiveDelete(file.getParentFile());
+            file = newPrimary;
+            name = newPrimary.getName();
+            isUntitledAndNotSaved = false;
+            return;
+        }
+        try {
+            copyFile(getFile(), newPrimary);
+            file = newPrimary;
+            name = newPrimary.getName();
+        } catch (IOException e) {
+            throw new IOException("Не вдалося зберегти файл");
+        }
+    }
+
+    protected File checkNewFolderName(File newFolder) throws IOException {
+        String newPrimary = FileUtils.addExtension(newFolder.getName(), "fim");
+        if (newFolder.exists()) {
+            String msg = String.format("Тека %s вже існує.", newFolder.getAbsoluteFile());
+            throw new IOException(msg);
+        }
+        return new File(newFolder, newPrimary);
     }
 
 }

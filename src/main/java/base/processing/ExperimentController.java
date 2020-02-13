@@ -1,23 +1,28 @@
 package base.processing;
 
+import base.Base;
+import base.BaseInit;
 import base.Editor;
 import base.PreferencesData;
+import base.helpers.FileUtils;
 import base.legacy.PApplet;
-import base.view.ProgressBar.ProgressBar;
 import org.apache.commons.compress.utils.IOUtils;
 
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Array;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ExperimentController {
 
     private long timeStart = Long.parseLong(PreferencesData.get("chart.time.start", "75600000"));
-    private final Editor editor;
-    private final Experiment experiment;
-    private ProgressBar progressBar;
+    private Editor editor;
+    private Experiment experiment;
+    private boolean isHeader = true;
 
     public ExperimentController(Editor editor, Experiment experiment) throws Exception {
         this.editor = editor;
@@ -33,6 +38,7 @@ public class ExperimentController {
 
     private void initExperiment() throws Exception {
         if (experiment.isUntitledAndNotSaved()) return;
+        isHeader = false;
         FileInputStream fileInputStream = null;
         try {
             fileInputStream = new FileInputStream(experiment.getFile());
@@ -42,14 +48,26 @@ public class ExperimentController {
         }
     }
 
+    public boolean isHeader() {
+        return isHeader;
+    }
+
     private void load(FileInputStream fileInputStream) throws Exception {
         String[] lines = PApplet.loadStrings(fileInputStream);
         if (lines == null) return;
+        if (lines.length == 0 ) {
+            fileEmpty();
+            return;
+        }
         List<String> loadedData = new ArrayList<>();
         for (String line : lines) {
             if (line.length() == 0 || line.charAt(0) == '#') continue;
             int equals = line.indexOf('=');
             if (equals == -1) {
+                if (!isHeader) {
+                    invalidFileException();
+                    return;
+                }
                 loadedData.add(line);
             } else {
                 parseKey(equals, line);
@@ -57,6 +75,14 @@ public class ExperimentController {
         }
         editor.createTabs(PreferencesData.getInteger("runtime.count.modules", 0));
         addDataOnTabs(loadedData);
+    }
+
+    private void fileEmpty() {
+        JOptionPane.showMessageDialog(editor, "Файл пустий", "Помилка відкриття", JOptionPane.WARNING_MESSAGE);
+    }
+
+    private void invalidFileException() {
+        JOptionPane.showMessageDialog(editor, "Некоректна структура файлу", "Помилка відкриття", JOptionPane.ERROR_MESSAGE);
     }
 
     public synchronized void addDataOnTabs(List<String> buffer) throws Exception {
@@ -101,6 +127,7 @@ public class ExperimentController {
             PreferencesData.set("signal.form.min", values.get(i++));
             PreferencesData.set("signal.form.max", values.get(i++));
             PreferencesData.set("signal.form.tau", values.get(i));
+            if (PreferencesData.getInteger("runtime.count.modules", 0) > 0) isHeader = true;
         }
     }
 
@@ -124,4 +151,55 @@ public class ExperimentController {
         return l;
     }
 
+    public boolean saveAs() {
+        FileDialog fd = new FileDialog(editor, "Зберегти як...", FileDialog.SAVE);
+        fd.setDirectory(experiment.getFolder().getParentFile().getAbsolutePath());
+        String oldName = experiment.getName();
+        fd.setFile(oldName);
+        fd.setVisible(true);
+        String newParentDir = fd.getDirectory();
+        String newName = fd.getFile();
+        if (newName == null) return false;
+        newName = checkName(newName);
+        File newFolder;
+        if (newName.endsWith(".fim") && newParentDir.endsWith(newName.substring(0, newName.lastIndexOf('.'))+ File.separator)) {
+            newFolder = new File(newParentDir);
+        } else {
+            newFolder = new File(newParentDir, newName);
+        }
+        if (newFolder.equals(experiment.getFolder())) {
+            return true;
+        }
+        try {
+            String newPath = newFolder.getCanonicalPath() + File.separator;
+            String oldPath = experiment.getFolder().getCanonicalPath() + File.separator;
+            if (newPath.indexOf(oldPath) == 0) {
+                BaseInit.showWarning("Як сюрреалістично!",
+                        "Ви не можете зберегти експеримент\n" +
+                                "в його власну теку. Це буде тривати вічно.", null);
+                return false;
+            }
+        } catch (IOException ignored) { }
+        if (newFolder.exists()) {
+            FileUtils.recursiveDelete(newFolder);
+        }
+        try {
+            experiment.saveAs(newFolder);
+        } catch (IOException e) {
+            BaseInit.showWarning("Помилка", e.getMessage(), null);
+        }
+        experiment.setUntitledAndNotSaved(false);
+        return true;
+    }
+
+    private String checkName(String origName) {
+        String newName = BaseInit.sanitizeName(origName);
+        if (!newName.equals(origName)) {
+            String msg = "Назва експерименту має бути змінена.\n" +
+                            "Назви експериментів повинні починатися з літери чи цифри, а потім букви,\n" +
+                            "цифри, тире, крапки та підкреслення. Максимальна довжина - 63 символи.";
+            editor.statusError(msg);
+        }
+        return newName;
+    }
 }
