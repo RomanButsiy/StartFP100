@@ -8,10 +8,12 @@
   <component name="ChangeListManager">
     <list default="true" id="93b63df6-3c6c-411f-8753-d9cd68fc9762" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/Editor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/Editor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/helpers/FileUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/helpers/FileUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/processing/Experiment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/processing/Experiment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/processing/ExperimentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/processing/ExperimentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/liblistSerialsj.so" beforeDir="false" afterPath="$PROJECT_DIR$/lib/liblistSerialsj.so" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/base/Base.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/Base.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/base/BaseInit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/BaseInit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/base/platforms/Platform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/platforms/Platform.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/base/platforms/linux/Platform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/platforms/linux/Platform.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/base/platforms/windows/Platform.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/platforms/windows/Platform.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +56,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/Meta" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
@@ -165,22 +167,22 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="776" y="310" width="424" height="484" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1581531288724" />
-    <state width="1807" height="144" key="GridCell.Tab.0.bottom" timestamp="1581606909300">
+    <state width="1807" height="328" key="GridCell.Tab.0.bottom" timestamp="1581632472881">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="144" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1581606909300" />
-    <state width="1807" height="144" key="GridCell.Tab.0.center" timestamp="1581606909300">
+    <state width="1807" height="328" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1581632472881" />
+    <state width="1807" height="328" key="GridCell.Tab.0.center" timestamp="1581632472881">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="144" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1581606909299" />
-    <state width="1807" height="144" key="GridCell.Tab.0.left" timestamp="1581606909299">
+    <state width="1807" height="328" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1581632472881" />
+    <state width="1807" height="328" key="GridCell.Tab.0.left" timestamp="1581632472881">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="144" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1581606909299" />
-    <state width="1807" height="144" key="GridCell.Tab.0.right" timestamp="1581606909300">
+    <state width="1807" height="328" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1581632472881" />
+    <state width="1807" height="328" key="GridCell.Tab.0.right" timestamp="1581632472881">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="144" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1581606909300" />
+    <state width="1807" height="328" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1581632472881" />
     <state width="1807" height="182" key="GridCell.Tab.1.bottom" timestamp="1581541637262">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -201,10 +203,10 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="526" y="210" width="924" height="684" key="Maven.ArtifactSearchDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1580241446530" />
-    <state x="476" y="130" width="1024" height="845" key="SettingsEditor" timestamp="1581531308545">
+    <state x="476" y="130" width="1024" height="845" key="SettingsEditor" timestamp="1581618067974">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state x="476" y="130" width="1024" height="845" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1581531308545" />
+    <state x="476" y="130" width="1024" height="845" key="SettingsEditor/67.27.1853.1053@67.27.1853.1053" timestamp="1581618067974" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1580305598022">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>

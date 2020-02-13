@@ -1,5 +1,6 @@
 package base.platforms.linux;
 
+import base.BaseInit;
 import base.PreferencesData;
 
 import javax.swing.*;

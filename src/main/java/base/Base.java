@@ -366,7 +366,35 @@ public class Base {
     }
 
     public void handleDeviceInformation() {
-
+        if (nativeException != null) {
+            activeEditor.statusError(nativeException);
+            return;
+        }
+        String info = BaseInit.getPlatform().resolveDeviceAttachedToNative(PreferencesData.get("serial.port"));
+        StringBuilder stringBuilder = new StringBuilder();
+        String noInfo = "Інформація відсутня";
+        if (info.length() > 4) {
+            String[] str = info.split(" ");
+            if (str.length != 1) {
+                for(int i = 1; i < str.length; i++) {
+                    if (str[i].equals("-")) {
+                        stringBuilder.append("\n");
+                        continue;
+                    }
+                    stringBuilder.append(str[i]);
+                    stringBuilder.append(" ");
+                }
+                stringBuilder.append("\n");
+            }
+            if (str.length != 0) {
+                stringBuilder.append(str[0]);
+            } else {
+                stringBuilder.append(noInfo);
+            }
+        } else {
+            stringBuilder.append(noInfo);
+        }
+        JOptionPane.showMessageDialog(activeEditor, stringBuilder, "Інформація про пристрій", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void rebuildToolbarMenu(JMenu toolbarMenu) {

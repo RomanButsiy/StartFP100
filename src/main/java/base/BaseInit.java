@@ -11,6 +11,7 @@ public class BaseInit {
     static UserNotifier notifier = new BasicUserNotifier();
     static String currentDirectory = System.getProperty("user.dir");
     private static DiscoveryManager discoveryManager;
+    public static String nativeException = null;
 
     static public File getDefaultExperimentsFolder() {
         File experimentsFolder = null;

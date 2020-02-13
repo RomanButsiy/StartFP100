@@ -1,5 +1,6 @@
 package base.platforms.windows;
 
+import base.BaseInit;
 import base.legacy.PApplet;
 import com.sun.jna.platform.win32.Shell32;
 
