@@ -58,6 +58,11 @@ public class I7000 {
         return filter(str);
     }
 
+    public static String setAnalogInTechnicalUnitsSynchronized(String idModule) {
+        String str = "$" + idModule + "4";
+        return filter(str);
+    }
+
     public static String getSynchronizedSampling() {
         return filter("#**");
     }

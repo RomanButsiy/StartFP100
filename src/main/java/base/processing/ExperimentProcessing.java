@@ -93,7 +93,7 @@ public class ExperimentProcessing implements Runnable {
                                 result.append("0");
                                 break;
                             }
-                            result.append(I7000.removeCRC(1, serialBuffer));
+                            result.append(I7000.removeCRC(4, serialBuffer));
                             err[sErr] = 0;
                             break;
                         }
@@ -123,7 +123,7 @@ public class ExperimentProcessing implements Runnable {
         String[] IdModules = (PreferencesData.getCollection("runtime.Id.modules")).toArray(new String[0]);
         String[] str = new String[IdModules.length];
         for (int i = 0; i < IdModules.length; i++) {
-            str[i] = I7000.setAnalogInTechnicalUnits(IdModules[i]);
+            str[i] = I7000.setAnalogInTechnicalUnitsSynchronized(IdModules[i]);
         }
         return str;
     }
