@@ -6,6 +6,7 @@ import base.processing.Experiment;
 import base.processing.ExperimentController;
 import base.view.*;
 import base.view.ExperimentSettings.ExperimentSettings;
+import base.view.ModuleSettings.ModuleSettings;
 import base.view.ProgressBar.ProgressBar;
 import base.view.charts.ChartTab;
 import libraries.MenuScroller;
@@ -63,7 +64,7 @@ public class Editor extends JFrame implements RunnerListener {
 
     private static final int SHORTCUT_KEY_MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
     public static final String[] signals = {"Синусоїда", "Трапеція", "Трикутник", "Інший"};
-    private static final String[] rates = {"300", "1200", "2400", "4800", "9600", "19200", "38400", "57600", "74880", "115200", "230400"};
+    public static final String[] rates = {"1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200"};
     private int currentTabIndex;
     private ExperimentSettings experimentSettings;
 
@@ -352,6 +353,10 @@ public class Editor extends JFrame implements RunnerListener {
     }
 
     private void handleSettings() {
+        if (!enableRun) return;
+        ModuleSettings moduleSettings = new ModuleSettings(Editor.this);
+        moduleSettings.setLocationRelativeTo(Editor.this);
+        moduleSettings.setVisible(true);
     }
 
     public void setEnabledItem(boolean param) {
