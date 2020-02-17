@@ -6,10 +6,12 @@ import base.Editor;
 import base.PreferencesData;
 import base.helpers.FileUtils;
 import base.legacy.PApplet;
+import base.view.charts.ChartTab;
 import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static base.helpers.BaseHelper.copyFile;
@@ -23,12 +25,29 @@ public class Experiment {
     private boolean isExperimentRunning = false;
     private boolean isRuntimeRunning = false;
     private final ExperimentProcessing experimentProcessing;
+    private final List<Module> modules = Collections.synchronizedList(new ArrayList<Module>());
 
     public Experiment(Editor editor, File file, String name) throws IOException {
         this.file = file;
         this.name = name;
         this.editor = editor;
         experimentProcessing = new ExperimentProcessing(editor, this);
+    }
+
+    public List<Module> getModules() {
+        return modules;
+    }
+
+    public void clearListModules() {
+        modules.clear();
+    }
+
+    public void setModule(Module module) {
+        modules.add(module);
+    }
+
+    public void removeModule(int index) {
+        modules.remove(index);
     }
 
     public File getFile() {

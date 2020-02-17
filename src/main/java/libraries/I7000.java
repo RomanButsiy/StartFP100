@@ -30,8 +30,12 @@ public class I7000 {
     }
 
     public static String removeCRC(int startIndex, String str) {
+        return removeCRC(startIndex, 1 , str);
+    }
+
+    public static String removeCRC(int startIndex, int endIndex, String str) {
         if (str == null) return null;
-        return str.substring(startIndex, str.length() - (useCRC ? 3 : 1));
+        return str.substring(startIndex, str.length() - (useCRC ? endIndex + 2 : endIndex));
     }
 
     public static String removeCRC(int startIndex, StringBuffer str) {
@@ -60,6 +64,11 @@ public class I7000 {
 
     public static String setAnalogInTechnicalUnitsSynchronized(String idModule) {
         String str = "$" + idModule + "4";
+        return filter(str);
+    }
+
+    public static String readConfiguration(String idModule) {
+        String str = "$" + idModule + "2";
         return filter(str);
     }
 

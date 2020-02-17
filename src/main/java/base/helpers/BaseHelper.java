@@ -4,6 +4,7 @@ import base.BaseInit;
 import base.Editor;
 import base.PreferencesData;
 import base.legacy.PApplet;
+import base.processing.Module;
 import jssc.SerialPortException;
 import org.apache.commons.compress.utils.IOUtils;
 
@@ -163,6 +164,7 @@ public class BaseHelper {
             PreferencesData.setBoolean("runtime.valid.modules", false);
             return;
         }
+
         String dacModule = PreferencesData.get("type.dac.module");
         if (dacModule == null) {
             activeEditor.statusError("Тип цифро-аналогового перетворювача не вказано");
@@ -176,9 +178,13 @@ public class BaseHelper {
             return;
         }
         boolean flag = false;
+        activeEditor.getExperiment().clearListModules();
         for (int i = 0; i < numberOfModules; i++) {
-            String id = PreferencesData.get("module." + i +".id");
-            if (id == null) continue;
+            String id = PreferencesData.get(String.format("module.%s.id", i));
+            String config = PreferencesData.get(String.format("module.%s.config", i));
+            String type = PreferencesData.get(String.format("module.%s.type", i));
+            boolean isActive = PreferencesData.getBoolean(String.format("module.%s.active", i), true);
+            activeEditor.getExperiment().setModule(new Module(i, id, type, config, isActive));
             if (id.equals(IdDacModule)) {
                 flag = true;
                 continue;

@@ -500,7 +500,7 @@ public class Editor extends JFrame implements RunnerListener {
         if (!PreferencesData.getBoolean("runtime.experiment.running", false) || !experiment.isExperimentRunning())
             return;
         int action = JOptionPane.showConfirmDialog(this, "Зупинити експеримент", "Зупинка", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-        if (action == JOptionPane.NO_OPTION) return;
+        if (action != JOptionPane.YES_OPTION) return;
         handleStopAll();
     }
 
@@ -537,12 +537,12 @@ public class Editor extends JFrame implements RunnerListener {
         new CheckModules(this);
         if (!PreferencesData.getBoolean("runtime.dac.module.ready", false)) {
             int action = JOptionPane.showConfirmDialog(this, "Модулі не готові.\nПрдовжити?", "Запуск", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            if (action == JOptionPane.NO_OPTION) return;
+            if (action != JOptionPane.YES_OPTION) return;
         }
         String startQuestion = (PreferencesData.getNonEmpty("last.experiment.path", null) != null || experiment.isRuntimeRunning() ?
                 "Продовжити виконання експерименту: " : "Запустити експеримент: ") + experiment.getName() + "?";
         int action = JOptionPane.showConfirmDialog(this, startQuestion, "Запуск", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-        if (action == JOptionPane.NO_OPTION) return;
+        if (action != JOptionPane.YES_OPTION) return;
         Base.getDiscoveryManager().getSerialDiscoverer().pausePolling(true);
         toolbar.activateRun();
         setEnabledItem(false);

@@ -18,7 +18,6 @@ public class SendOne {
             editor.statusError("Порт не вибрано");
             return;
         }
-        editor.statusNotice("Надсилання команди...");
         SerialDriver serialDriver;
         serialBuffer = new StringBuffer();
         try {
