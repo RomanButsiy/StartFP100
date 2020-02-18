@@ -2,8 +2,10 @@ package base.view.ModuleSettings;
 
 import base.Editor;
 import base.PreferencesData;
+import base.helpers.SendOne;
 import base.processing.Module;
 import base.view.SearchModules.SearchModules;
+import libraries.I7000;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +15,7 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 
 import static base.helpers.BaseHelper.LittleBitPreferencesModuleTest;
+import static base.helpers.BaseHelper.splitToNChar;
 
 public class ModuleSettings extends JDialog implements ItemListener {
 
@@ -45,9 +48,9 @@ public class ModuleSettings extends JDialog implements ItemListener {
         for(String str : typeData) {
             dataType.addItem(str);
         }
-        dataType.setSelectedItem(PreferencesData.getInteger("signal.type"));
         dataType.addItemListener(this);
         rate.addItemListener(this);
+        dataType.setSelectedIndex(PreferencesData.getInteger("signal.type"));
         cancelButton.addActionListener(actionEvent -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
         okButton.addActionListener(actionEvent -> {
             if (enabledApplyButton()) apply();
@@ -121,11 +124,57 @@ public class ModuleSettings extends JDialog implements ItemListener {
     }
 
     private void apply() {
+        List<Module> modules = editor.getExperiment().getModules();
+        if (PreferencesData.getBoolean("use.CRC") != useCRC.isSelected() || !PreferencesData.get("serial.port.rate").equals(Editor.rates[rate.getSelectedIndex()])) {
+            JOptionPane.showMessageDialog(editor, "Для того щоб змінити налаштування, потрібно\nзамкнути вивід модуля INIT*\nна землю і натиснути \"OK\"", "Попередження", JOptionPane.ERROR_MESSAGE);
+        }
+        boolean flag = false;
+        for (Module module : modules) {
+            if (!module.isReady()) continue;
+            String[] confBytes = splitToNChar(module.getConfig(), 2);
+            String newRate = String.format("%02X", rate.getSelectedIndex() + 3);
+            byte FF = hexToByte(confBytes[3]);
+            if (useCRC.isSelected())
+                FF |= 0x40;
+            else
+                FF &= 0xBF;
+            FF &= 0xFC;
+            FF |= dataType.getSelectedIndex();
+            SendOne sendOne = new SendOne(editor, I7000.setModuleConfiguration(confBytes[0], confBytes[1], newRate, bytesToHex(FF)));
+            if (sendOne.getResult() == null) {
+                editor.statusError("Модуль: " + confBytes[0] + " -> Не відповідає");
+                continue;
+            }
+            if (sendOne.getResult().startsWith("?")) {
+                editor.statusError("Модуль: " + confBytes[0] + " -> Не вдалося змінити налаштування");
+                continue;
+            }
+            module.setConfig(confBytes[0] + confBytes[1] + newRate + bytesToHex(FF));
+            PreferencesData.set(String.format("module.%s.config", module.getId()), module.getConfig());
+            flag = true;
+        }
+        if (!flag) {
+            JOptionPane.showMessageDialog(editor, "Не вдалося змінити налаштування", "Попередження", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         PreferencesData.set("serial.port.rate", Editor.rates[rate.getSelectedIndex()]);
         PreferencesData.setBoolean("use.CRC", useCRC.isSelected());
         PreferencesData.setInteger("signal.type", dataType.getSelectedIndex());
         PreferencesData.save();
         applyButton.setEnabled(false);
+    }
+
+    public static String bytesToHex(byte bytes) {
+        final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+        char[] hexChars = new char[2];
+            int v = bytes & 0xFF;
+            hexChars[0] = HEX_ARRAY[v >>> 4];
+            hexChars[1] = HEX_ARRAY[v & 0x0F];
+        return new String(hexChars);
+    }
+
+    public byte hexToByte(String hexString) {
+        return (byte) ((Character.digit(hexString.charAt(0), 16) << 4) + Character.digit(hexString.charAt(1), 16));
     }
 
     private boolean enabledApplyButton() {

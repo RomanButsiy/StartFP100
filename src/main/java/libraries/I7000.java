@@ -75,4 +75,13 @@ public class I7000 {
     public static String getSynchronizedSampling() {
         return filter("#**");
     }
+
+    public static String setModuleConfiguration(String id, String newId, String analogType, String newRate, String formatSetting) {
+        String str = "%" + id + newId + analogType + newRate + formatSetting;
+        return filter(str);
+    }
+
+    public static String setModuleConfiguration(String id, String analogType, String newRate, String formatSetting) {
+        return setModuleConfiguration(id, id, analogType, newRate, formatSetting);
+    }
 }

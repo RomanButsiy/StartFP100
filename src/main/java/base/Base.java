@@ -345,27 +345,22 @@ public class Base {
         return BaseInit.getDiscoveryManager();
     }
 
-    public void handleTestModulesConnection(boolean b) {
+    public void handleTestModulesConnection(Editor editor, boolean b) {
         if (PreferencesData.getBoolean("runtime.experiment.running", false)) {
-            JOptionPane.showMessageDialog(activeEditor, "Кесперимент запущено", "Повідомлення", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(editor, "Кесперимент запущено", "Повідомлення", JOptionPane.WARNING_MESSAGE);
             return;
         }
         if (!PreferencesData.getBoolean("runtime.valid.modules", false)) {
-            activeEditor.statusNotice("Перейдіть у Інструменти -> Налаштування і оновіть список модулів");
+            editor.statusNotice("Перейдіть у Інструменти -> Налаштування і оновіть список модулів");
             return;
         }
         if (!(PreferencesData.getBoolean("check.modules", false) || b)) return; // перевірка якщо виставлено прапорець
-        activeEditor.setEnabledItem(false);
-        new Thread(() -> new CheckModules(activeEditor)).start();
+        editor.setEnabledItem(false);
+        new Thread(() -> new CheckModules(editor)).start();
     }
 
-    public void handleTestModulesConnection() {
-        handleTestModulesConnection(false);
-    }
-
-    public void handleTestConnection(Editor editor) {
-        if (activeEditor == null) activeEditor = editor;
-        handleTestModulesConnection();
+    public void handleTestModulesConnection(Editor editor) {
+        handleTestModulesConnection(editor, false);
     }
 
     public void handleDeviceInformation() {

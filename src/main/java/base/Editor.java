@@ -151,7 +151,7 @@ public class Editor extends JFrame implements RunnerListener {
         if (!loaded) experimentController = null;
         EditorConsole.setCurrentEditorConsole(console);
         BaseHelper.LittleBitPreferencesModuleTest(this);
-        if (base.editors.isEmpty()) base.handleTestConnection(this);
+        base.handleTestModulesConnection(this);
         selectSerialPort();
     }
 
@@ -315,7 +315,7 @@ public class Editor extends JFrame implements RunnerListener {
         modulesInfoItem.addActionListener(event -> base.handleDeviceInformation());
         toolsMenu.add(modulesInfoItem);
         testModulesItem = newJMenuItem("Перевірити з'єднання", 'T');
-        testModulesItem.addActionListener(event -> base.handleTestModulesConnection(true));
+        testModulesItem.addActionListener(event -> base.handleTestModulesConnection(Editor.this, true));
         toolsMenu.add(testModulesItem);
         sendSerialItem = new JMenuItem("Надіслати команду");
         sendSerialItem.addActionListener(event -> handleSendSerial());
