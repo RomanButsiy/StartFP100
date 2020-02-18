@@ -9,6 +9,7 @@ import base.view.*;
 import base.view.ExperimentSettings.ExperimentSettings;
 import base.view.ModuleSettings.ModuleSettings;
 import base.view.ProgressBar.ProgressBar;
+import base.view.SendSerialCommand.SendSerialCommand;
 import base.view.charts.ChartTab;
 import libraries.MenuScroller;
 
@@ -54,6 +55,7 @@ public class Editor extends JFrame implements RunnerListener {
     private JMenuItem testModulesItem;
     private JMenuItem experimentStartItem;
     private JMenuItem modulesInfoItem;
+    private JMenuItem sendSerialItem;
 
     final EditorHeader header;
     EditorConsole console;
@@ -315,6 +317,9 @@ public class Editor extends JFrame implements RunnerListener {
         testModulesItem = newJMenuItem("Перевірити з'єднання", 'T');
         testModulesItem.addActionListener(event -> base.handleTestModulesConnection(true));
         toolsMenu.add(testModulesItem);
+        sendSerialItem = new JMenuItem("Надіслати команду");
+        sendSerialItem.addActionListener(event -> handleSendSerial());
+        toolsMenu.add(sendSerialItem);
         settingsItem = newJMenuItem("Налаштування", 'D');
         settingsItem.addActionListener(event -> handleSettings());
         toolsMenu.add(settingsItem);
@@ -353,6 +358,16 @@ public class Editor extends JFrame implements RunnerListener {
         return toolsMenu;
     }
 
+    private void handleSendSerial() {
+        if (PreferencesData.getBoolean("runtime.experiment.running", false)) {
+           JOptionPane.showMessageDialog(this, "Кесперимент запущено", "Повідомлення", JOptionPane.WARNING_MESSAGE);
+           return;
+        }
+        SendSerialCommand sendSerialCommand = new SendSerialCommand(Editor.this);
+        sendSerialCommand.setLocationRelativeTo(Editor.this);
+        sendSerialCommand.setVisible(true);
+    }
+
     private void handleSettings() {
         if (!enableRun) return;
         ModuleSettings moduleSettings = new ModuleSettings(Editor.this);
@@ -367,6 +382,7 @@ public class Editor extends JFrame implements RunnerListener {
         testModulesItem.setEnabled(param);
         experimentStartItem.setEnabled(param);
         modulesInfoItem.setEnabled(param);
+        sendSerialItem.setEnabled(param);
     }
 
     private void populateSignalMenu() {

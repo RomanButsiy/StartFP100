@@ -1,19 +1,16 @@
 package base.processing;
 
 
-import base.BaseInit;
 import base.Editor;
 import base.PreferencesData;
 import base.helpers.FileUtils;
 import base.legacy.PApplet;
-import base.view.charts.ChartTab;
 import org.apache.commons.compress.utils.IOUtils;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static base.helpers.BaseHelper.copyFile;
 

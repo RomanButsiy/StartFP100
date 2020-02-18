@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 import static base.helpers.BaseHelper.LittleBitPreferencesModuleTest;

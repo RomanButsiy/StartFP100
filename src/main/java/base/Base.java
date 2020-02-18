@@ -346,6 +346,10 @@ public class Base {
     }
 
     public void handleTestModulesConnection(boolean b) {
+        if (PreferencesData.getBoolean("runtime.experiment.running", false)) {
+            JOptionPane.showMessageDialog(activeEditor, "Кесперимент запущено", "Повідомлення", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         if (!PreferencesData.getBoolean("runtime.valid.modules", false)) {
             activeEditor.statusNotice("Перейдіть у Інструменти -> Налаштування і оновіть список модулів");
             return;
