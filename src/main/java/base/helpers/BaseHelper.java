@@ -157,7 +157,6 @@ public class BaseHelper {
 
     public static void LittleBitPreferencesModuleTest(Editor activeEditor) {
         int numberOfModules = PreferencesData.getInteger("number.of.modules", 0);
-        List<String> IdModules = new ArrayList<>();
         if (numberOfModules <= 0) {
             activeEditor.statusError("Список модулів пустий");
             activeEditor.statusNotice("Перейдіть у Інструменти -> Налаштування і обновіть його");
@@ -174,10 +173,9 @@ public class BaseHelper {
         String IdDacModule = PreferencesData.get("module." + dacModule + ".id");
         if (IdDacModule == null) {
             activeEditor.statusError("Id цифро-аналогового перетворювача не вказано");
-            PreferencesData.setBoolean("runtime.valid.modules", false);
-            return;
+        } else {
+            PreferencesData.set("runtime.dac.module", IdDacModule);
         }
-        boolean flag = false;
         activeEditor.getExperiment().clearListModules();
         for (int i = 0; i < numberOfModules; i++) {
             String id = PreferencesData.get(String.format("module.%s.id", i));
@@ -185,20 +183,7 @@ public class BaseHelper {
             String type = PreferencesData.get(String.format("module.%s.type", i));
             boolean isActive = PreferencesData.getBoolean(String.format("module.%s.active", i), true);
             activeEditor.getExperiment().setModule(new Module(i, id, type, config, isActive));
-            if (id.equals(IdDacModule)) {
-                flag = true;
-                continue;
-            }
-            IdModules.add(id);
         }
-        if (!flag) {
-            activeEditor.statusError("Id цифро-аналогового перетворювача вказано невірно");
-            PreferencesData.setBoolean("runtime.valid.modules", false);
-            return;
-        }
-        PreferencesData.set("runtime.dac.module", IdDacModule);
-        PreferencesData.setInteger("runtime.count.modules", IdModules.size());
-        PreferencesData.setCollection("runtime.Id.modules", IdModules);
         PreferencesData.setBoolean("runtime.valid.modules", true);
     }
 

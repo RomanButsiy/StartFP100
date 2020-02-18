@@ -3,6 +3,7 @@ package base.helpers;
 import SerialDriver.SerialDriver;
 import base.Editor;
 import base.PreferencesData;
+import base.processing.Module;
 import libraries.I7000;
 
 import java.util.List;
@@ -33,13 +34,11 @@ public class CheckModules {
             editor.setEnabledItem(true);
             return;
         }
-        List<String> modules = (List<String>) PreferencesData.getCollection("runtime.Id.modules");
-        String dacModule = PreferencesData.get("runtime.dac.module");
+        List<Module> modules = editor.getExperiment().getModules();
         int responseTimeout = PreferencesData.getInteger("response.timeout", 200);
-        for (String module : modules) {
-            SearchDevices(module, responseTimeout);
+        for (Module module : modules) {
+            module.setReady(SearchDevices(module.getModuleId(), responseTimeout));
         }
-        PreferencesData.setBoolean("runtime.dac.module.ready", SearchDevices(dacModule, responseTimeout));
         serialDriver.dispose();
         editor.setEnabledItem(true);
     }

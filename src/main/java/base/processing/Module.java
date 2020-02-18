@@ -7,6 +7,7 @@ public class Module {
     private int id;
     private String moduleId;
     private boolean isActive = true;
+    private boolean isReady = false;
 
     public Module(int id, String moduleId, String type, String config, boolean isActive) {
         this.id = id;
@@ -21,6 +22,14 @@ public class Module {
         this.moduleId = strings[0];
         this.type = strings[2];
         this.config = strings[1];
+    }
+
+    public boolean isReady() {
+        return isReady;
+    }
+
+    public void setReady(boolean ready) {
+        isReady = ready;
     }
 
     public boolean isActive() {
@@ -68,8 +77,11 @@ public class Module {
         return "Module{" +
                 "config='" + config + '\'' +
                 ", type='" + type + '\'' +
-                ", id='" + id + '\'' +
+                ", id=" + id +
                 ", moduleId='" + moduleId + '\'' +
+                ", isActive=" + isActive +
+                ", isReady=" + isReady +
                 '}';
     }
+
 }

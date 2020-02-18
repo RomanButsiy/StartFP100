@@ -13,6 +13,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static base.helpers.BaseHelper.copyFile;
 
@@ -99,7 +100,28 @@ public class Experiment {
         PreferencesData.setBoolean("runtime.experiment.running", experimentRunning);
     }
 
-    public void runExperiment() throws Exception{
+    private void checkModulesReady() {
+        int x = 0;
+        String dacId = PreferencesData.get("runtime.dac.module", "");
+        for (Module module : modules) {
+            if (module.isReady() && module.isActive()) {
+                x++;
+                if (module.getModuleId().equals(dacId)) {
+                    PreferencesData.setBoolean("runtime.dac.module.ready", true);
+                }
+            } else {
+                if (module.getModuleId().equals(dacId)) {
+                    x++;
+                    PreferencesData.setBoolean("runtime.dac.module.ready", false);
+                }
+            }
+        }
+        if (PreferencesData.get("runtime.dac.module") == null) x++;
+        PreferencesData.setInteger("runtime.count.modules", x);
+    }
+
+    public void runExperiment() throws Exception {
+        checkModulesReady();
         setExperimentRunning(true);
         if (isUntitledAndNotSaved) {
             setFileHeader(getFile());
@@ -140,7 +162,7 @@ public class Experiment {
         } finally {
             IOUtils.closeQuietly(writer);
         }
-        editor.createTabs(PreferencesData.getInteger("runtime.count.modules", 0));
+        editor.createTabs(PreferencesData.getInteger("runtime.count.modules", 0) - 1);
     }
 
     public float round(double value, int places) {

@@ -1,5 +1,6 @@
 package base;
 
+import base.helpers.BaseHelper;
 import base.helpers.CheckModules;
 import base.platforms.Platform;
 import base.processing.Experiment;
@@ -147,6 +148,7 @@ public class Editor extends JFrame implements RunnerListener {
         boolean loaded = handleOpenInternal(file);
         if (!loaded) experimentController = null;
         EditorConsole.setCurrentEditorConsole(console);
+        BaseHelper.LittleBitPreferencesModuleTest(this);
         if (base.editors.isEmpty()) base.handleTestConnection(this);
         selectSerialPort();
     }
@@ -206,7 +208,6 @@ public class Editor extends JFrame implements RunnerListener {
             return false;
         }
         setTitle("StartFP100 | " + properParent);
-        //if (tabs.size() == 0) createTabs(2);
         return experimentController.isHeader();
     }
 
@@ -535,10 +536,6 @@ public class Editor extends JFrame implements RunnerListener {
         if (!PreferencesData.getBoolean("runtime.valid.modules", false)) return;
         setEnabledItem(false);
         new CheckModules(this);
-        if (!PreferencesData.getBoolean("runtime.dac.module.ready", false)) {
-            int action = JOptionPane.showConfirmDialog(this, "Модулі не готові.\nПрдовжити?", "Запуск", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-            if (action != JOptionPane.YES_OPTION) return;
-        }
         String startQuestion = (PreferencesData.getNonEmpty("last.experiment.path", null) != null || experiment.isRuntimeRunning() ?
                 "Продовжити виконання експерименту: " : "Запустити експеримент: ") + experiment.getName() + "?";
         int action = JOptionPane.showConfirmDialog(this, startQuestion, "Запуск", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);

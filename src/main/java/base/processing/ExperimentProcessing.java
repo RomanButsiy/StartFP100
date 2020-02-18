@@ -59,23 +59,27 @@ public class ExperimentProcessing implements Runnable {
                 serialBuffer.setLength(0);
                 result.setLength(0);
                 time = System.currentTimeMillis();
-                serialDriver.write(commands[i]);
                 sErr = 0;
                 flag = false;
-                while ((System.currentTimeMillis() - time < period)) {
-                    if (serialBuffer.indexOf("\r") != -1) {
-                        flag = true;
-                        if (serialBuffer.indexOf(">") == -1) {
-                            err[sErr]++;
+                if (!commands[i].equals("null")) {
+                    serialDriver.write(commands[i]);
+                    while ((System.currentTimeMillis() - time < period)) {
+                        if (serialBuffer.indexOf("\r") != -1) {
+                            flag = true;
+                            if (serialBuffer.indexOf(">") == -1) {
+                                err[sErr]++;
+                                break;
+                            }
+                            err[sErr] = 0;
                             break;
                         }
-                        err[sErr] = 0;
-                        break;
+                        Thread.sleep(1);
                     }
-                    Thread.sleep(1);
+                    result.append(signal[i]);
+                    if (!flag) err[sErr]++;
+                } else {
+                    result.append(0);
                 }
-                result.append(signal[i]);
-                if (!flag) err[sErr]++;
                 sErr++;
                 if (stopExperiment) return;
                 serialDriver.write(synchronizedSampling);
@@ -120,15 +124,21 @@ public class ExperimentProcessing implements Runnable {
     }
 
     private String[] generateOtherCommands() {
-        String[] IdModules = (PreferencesData.getCollection("runtime.Id.modules")).toArray(new String[0]);
-        String[] str = new String[IdModules.length];
-        for (int i = 0; i < IdModules.length; i++) {
-            str[i] = I7000.setAnalogInTechnicalUnitsSynchronized(IdModules[i]);
+        String dacId = PreferencesData.get("runtime.dac.module", "");
+        List<Module> modules = experiment.getModules();
+        String[] str = new String[PreferencesData.getInteger("runtime.count.modules") - 1];
+        int i = 0;
+        for (Module module : modules) {
+            if (module.getModuleId().equals(dacId)) continue;
+            if (module.isActive() && module.isReady()) {
+                str[i++] = I7000.setAnalogInTechnicalUnitsSynchronized(module.getModuleId());
+            }
         }
         return str;
     }
 
     private String[] generateDacCommands(float[] signal) {
+        if (!PreferencesData.getBoolean("runtime.dac.module.ready", false)) return new String[]{"null"};
         String dacId = PreferencesData.get("runtime.dac.module");
         String[] str = new String[signal.length];
         for (int i = 0; i < signal.length; i++) {
@@ -144,7 +154,7 @@ public class ExperimentProcessing implements Runnable {
         serialBuffer = new StringBuffer();
         checkErrorStatus();
         try {
-            serialDriver = new SerialDriver(port, rate, this::dataReadAction);
+            serialDriver = new SerialDriver(port, rate, s -> serialBuffer.append(s));
         } catch (Exception e) {
             parsePortException(editor, e);
             editor.stopExperimentPortException();
@@ -198,7 +208,7 @@ public class ExperimentProcessing implements Runnable {
     }
 
     private void checkErrorStatus() {
-        err = new Integer[PreferencesData.getInteger("number.of.modules")];
+        err = new Integer[PreferencesData.getInteger("runtime.count.modules")];
         Arrays.fill(err, 0);
         int period = PreferencesData.getInteger("response.timeout", 200) * 3;
         checkErrorStatusTimer = new Timer(ExperimentProcessing.class.getName());
@@ -226,7 +236,4 @@ public class ExperimentProcessing implements Runnable {
         } while(!useFirstBuffer.compareAndSet(temp, !temp));
     }
 
-    private void dataReadAction(String s) {
-        serialBuffer.append(s);
-    }
 }

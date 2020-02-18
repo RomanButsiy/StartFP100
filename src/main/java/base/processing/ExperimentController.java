@@ -1,6 +1,5 @@
 package base.processing;
 
-import base.Base;
 import base.BaseInit;
 import base.Editor;
 import base.PreferencesData;
@@ -73,7 +72,7 @@ public class ExperimentController {
                 parseKey(equals, line);
             }
         }
-        editor.createTabs(PreferencesData.getInteger("runtime.count.modules", 0));
+        editor.createTabs(PreferencesData.getInteger("runtime.count.modules", 0) - 1);
         addDataOnTabs(loadedData);
     }
 
@@ -86,9 +85,9 @@ public class ExperimentController {
     }
 
     public synchronized void addDataOnTabs(List<String> buffer) throws Exception {
-        final int numberOfModules = PreferencesData.getInteger("runtime.count.modules", 0);
+        final int numberOfModules = PreferencesData.getInteger("runtime.count.modules", 0) - 1;
         final int responseTimeout = PreferencesData.getInteger("response.timeout", 200);
-        if (numberOfModules == 0 || buffer.size() == 0) return;
+        if (numberOfModules <= 0 || buffer.size() == 0) return;
         int coefficient = editor.getTabs().get(0).getCoefficient();
         long[] timestamps = new long[buffer.size()];
         long[][][] values = new long[numberOfModules][buffer.size()][1];

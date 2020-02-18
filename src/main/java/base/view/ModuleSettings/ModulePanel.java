@@ -5,7 +5,6 @@ import base.PreferencesData;
 import base.processing.Module;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 import static base.helpers.BaseHelper.LittleBitPreferencesModuleTest;
@@ -26,6 +25,7 @@ public class ModulePanel extends JPanel{
         id.setText(String.format("ID = %s", module.getModuleId()));
         type.setText(String.format("Тип: %s", module.getType()));
         isActiveCheckBox.setSelected(module.isActive());
+        settingsButton.setEnabled(module.isReady());
         deleteButton.addActionListener(e -> {
             int action = JOptionPane.showConfirmDialog(this, "Ви впевнені, що хочете видалити цей модуль",
                     String.format("Видалити модуль ID = %s", module.getModuleId()), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);

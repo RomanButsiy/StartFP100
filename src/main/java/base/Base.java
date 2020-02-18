@@ -346,7 +346,6 @@ public class Base {
     }
 
     public void handleTestModulesConnection(boolean b) {
-        base.helpers.BaseHelper.LittleBitPreferencesModuleTest(activeEditor);
         if (!PreferencesData.getBoolean("runtime.valid.modules", false)) {
             activeEditor.statusNotice("Перейдіть у Інструменти -> Налаштування і оновіть список модулів");
             return;
