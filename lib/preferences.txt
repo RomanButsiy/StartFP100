@@ -83,6 +83,9 @@ analog.input.type=05
 # Chart settings
 chart.values.limit=1296000
 
+# Correct charts time stamp
+#chart.time.start = 75600000
+
 # known modules types
 known.modules.types=7016,7021,7017F
 

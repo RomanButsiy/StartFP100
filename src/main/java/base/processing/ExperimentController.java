@@ -12,13 +12,14 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ExperimentController {
 
-    private long timeStart = Long.parseLong(PreferencesData.get("chart.time.start", "75600000"));
+    private long timeStart = Long.parseLong(PreferencesData.get("chart.time.start", String.valueOf((new SimpleDateFormat("dd-M-yyyy hh:mm:ss")).parse("18-02-2020 00:00:00").getTime())));
     private Editor editor;
     private Experiment experiment;
     private boolean isHeader = true;
