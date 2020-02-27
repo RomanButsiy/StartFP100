@@ -47,7 +47,7 @@ public class ExperimentProcessing implements Runnable {
         float[] signal = experiment.generateSignal();
         String[] commands = generateDacCommands(signal);
         String[] otherCommands = generateOtherCommands();
-        String synchronizedSampling = I7000.getSynchronizedSampling();
+        //String synchronizedSampling = I7000.getSynchronizedSampling();
         int responseTimeout = PreferencesData.getInteger("response.timeout");
         int period = responseTimeout / (otherCommands.length + 1) - 5;
         long timeAll, time;
@@ -82,7 +82,7 @@ public class ExperimentProcessing implements Runnable {
                 }
                 sErr++;
                 if (stopExperiment) return;
-                serialDriver.write(synchronizedSampling);
+                //serialDriver.write(synchronizedSampling);
                 for (String command : otherCommands) {
                     result.append(",");
                     serialBuffer.setLength(0);
@@ -97,7 +97,7 @@ public class ExperimentProcessing implements Runnable {
                                 result.append("0");
                                 break;
                             }
-                            result.append(I7000.removeCRC(4, serialBuffer));
+                            result.append(I7000.removeCRC(1, serialBuffer));
                             err[sErr] = 0;
                             break;
                         }
@@ -131,7 +131,8 @@ public class ExperimentProcessing implements Runnable {
         for (Module module : modules) {
             if (module.getModuleId().equals(dacId)) continue;
             if (module.isActive() && module.isReady()) {
-                str[i++] = I7000.setAnalogInTechnicalUnitsSynchronized(module.getModuleId());
+                //str[i++] = I7000.setAnalogInTechnicalUnitsSynchronized(module.getModuleId());
+                str[i++] = I7000.setAnalogInTechnicalUnits(module.getModuleId());
             }
         }
         return str;
@@ -174,6 +175,9 @@ public class ExperimentProcessing implements Runnable {
 
     private void getNewData() {
         getNewDataTimer = new Timer(ExperimentProcessing.class.getName());
+        int period = PreferencesData.getInteger("response.timeout", 200);
+        int chartTimeUpdate = PreferencesData.getInteger("chart.time.update", 1000);
+        if (chartTimeUpdate < 1 ) chartTimeUpdate = 1;
         getNewDataTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -181,7 +185,7 @@ public class ExperimentProcessing implements Runnable {
                 PrintWriter writer = null;
                 try {
                     writer = PApplet.createWriter(experiment.getFile(), true);
-                    Thread.sleep(200);
+                    Thread.sleep(2 * period / 3);
                     if (useFirstBuffer.get()) {
                         addDataOnTabs(bufferTwo);
                         for (String str : bufferTwo) writer.println(str);
@@ -204,7 +208,7 @@ public class ExperimentProcessing implements Runnable {
                     getNewDataTimer.cancel();
                 }
             }
-        }, 5000, 5000);
+        }, chartTimeUpdate, chartTimeUpdate);
     }
 
     private void checkErrorStatus() {
