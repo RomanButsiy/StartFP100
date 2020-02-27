@@ -5,6 +5,7 @@ import base.Editor;
 import base.PreferencesData;
 import base.helpers.FileUtils;
 import base.legacy.PApplet;
+import base.view.charts.ChartTab;
 import org.apache.commons.compress.utils.IOUtils;
 
 import javax.swing.*;
@@ -73,7 +74,7 @@ public class ExperimentController {
                 parseKey(equals, line);
             }
         }
-        editor.createTabs(PreferencesData.getInteger("runtime.count.modules", 0) - 1);
+        editor.createTabs(PreferencesData.getInteger("runtime.count.modules", 0));
         addDataOnTabs(loadedData);
     }
 
@@ -86,10 +87,13 @@ public class ExperimentController {
     }
 
     public synchronized void addDataOnTabs(List<String> buffer) throws Exception {
-        final int numberOfModules = PreferencesData.getInteger("runtime.count.modules", 0) - 1;
+        final int numberOfModules = PreferencesData.getInteger("runtime.count.modules", 0);
         final int responseTimeout = PreferencesData.getInteger("response.timeout", 200);
         if (numberOfModules <= 0 || buffer.size() == 0) return;
-        int coefficient = editor.getTabs().get(0).getCoefficient();
+        int[] coefficient = new int[numberOfModules];
+        for (int i = 0; i < numberOfModules; i++) {
+            coefficient[i] = editor.getTabs().get(i).getCoefficient();
+        }
         long[] timestamps = new long[buffer.size()];
         long[][][] values = new long[numberOfModules][buffer.size()][1];
         for (int t = 0; t < buffer.size(); t++) {
@@ -97,7 +101,7 @@ public class ExperimentController {
             timeStart += responseTimeout;
             long[] val = getLong(buffer.get(t), coefficient);
             for (int i = 0; i < numberOfModules; i++) {
-                values[i][t][0] = val[i+1];
+                values[i][t][0] = val[i];
             }
         }
         for (int i = 0; i < numberOfModules; i++) {
@@ -111,6 +115,13 @@ public class ExperimentController {
         if (key.equals("title")) {
             setDefaultPreferences(value);
         }
+        if (key.equals("map.of.axes")) {
+            setAxes(value);
+        }
+    }
+
+    private void setAxes(String value) {
+        PreferencesData.set("runtime.map.of.axes", value);
     }
 
     private void setDefaultPreferences(String value) {
@@ -137,12 +148,12 @@ public class ExperimentController {
                 .collect(Collectors.toList());
     }
 
-    private long[] getLong(String str, int coefficient) {
+    private long[] getLong(String str, int[] coefficient) {
         String[] s = str.split(",");
         long[] l = new long[s.length];
         for (int i = 0; i < s.length; i++) {
             try {
-                l[i] = (long) (int) (Double.parseDouble(s[i]) * coefficient);
+                l[i] = (long) (int) (Double.parseDouble(s[i]) * coefficient[i]);
             } catch (NumberFormatException e) {
                 l[i] = 0L;
                 editor.statusError(e);

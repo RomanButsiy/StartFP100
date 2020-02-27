@@ -5,6 +5,7 @@ public class Module {
     private String config;
     private String type;
     private int id;
+    private int axes = 1;
     private String moduleId;
     private boolean isActive = true;
     private boolean isReady = false;
@@ -22,6 +23,10 @@ public class Module {
         this.moduleId = strings[0];
         this.type = strings[2];
         this.config = strings[1];
+    }
+
+    public int getAxes() {
+        return axes;
     }
 
     public boolean isReady() {

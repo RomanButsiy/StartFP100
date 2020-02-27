@@ -2,6 +2,7 @@ package base.view.charts;
 
 import base.Editor;
 import base.PreferencesData;
+import base.processing.Module;
 import base.view.charts.ChartFactory.ChartFactory;
 import base.view.charts.ChartFactory.SimpleXYChartDescriptor;
 import base.view.charts.ChartFactory.SimpleXYChartSupport;
@@ -12,8 +13,8 @@ import java.awt.*;
 
 public class ChartTab extends JPanel {
 
+    private final String countOfAxes;
     private SimpleXYChartSupport support;
-    private Runtime runtime = Runtime.getRuntime();
     private String name;
     private Editor editor;
     private long minValue;
@@ -24,11 +25,12 @@ public class ChartTab extends JPanel {
     private final int VALUES_LIMIT = PreferencesData.getInteger("chart.values.limit", 1000);
     private final int INPUT_TYPE = PreferencesData.getInteger("analog.input.type", 5);
 
-    public ChartTab(Editor editor, String name) {
+    public ChartTab(Editor editor, String name, int number, String countOfAxes) {
         super(new BorderLayout());
         this.editor = editor;
         this.name = name;
-        initChartParam();
+        this.countOfAxes = countOfAxes;
+        initChartParam(number);
         createModels();
         add(support.getChart());
         support.setZoomingEnabled(true);
@@ -36,7 +38,9 @@ public class ChartTab extends JPanel {
 
     private void createModels() {
         SimpleXYChartDescriptor descriptor = SimpleXYChartDescriptor.decimal(minValue, maxValue, 0, chartFactor, false, VALUES_LIMIT);
-        descriptor.addLineItems("Аналоговий сигнал");
+        for (int i = 0, l = Integer.parseInt(countOfAxes); i < l; i++) {
+            descriptor.addLineItems("Сигнал " + (i + 1));
+        }
         descriptor.setChartTitle("<html><font size='+1'><b>" + name + "</b></font></html>");
         descriptor.setYAxisDescription(Y_Axis);
         support = ChartFactory.createSimpleXYChart(descriptor);
@@ -56,7 +60,15 @@ public class ChartTab extends JPanel {
         return coefficient;
     }
 
-    private void initChartParam() {
+    private void initChartParam(int number) {
+        if (number == 0) {
+            coefficient = 1000;
+            minValue = 0;
+            maxValue = 10000;
+            Y_Axis = "Вольт";
+            chartFactor = 1f / coefficient;
+            return;
+        }
         if (PreferencesData.getInteger("signal.type", 0) == 1) {
             coefficient = 100;
             minValue = -10000;

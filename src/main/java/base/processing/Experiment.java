@@ -122,6 +122,7 @@ public class Experiment {
         setExperimentRunning(true);
         if (isUntitledAndNotSaved) {
             setFileHeader(getFile());
+
         }
         setUntitledAndNotSaved(false);
         PreferencesData.set("runtime.last.experiment.running", name);
@@ -137,6 +138,7 @@ public class Experiment {
 
     private void setFileHeader(File file) {
         List<String> title = new ArrayList<>();
+        List<String> axes = new ArrayList<>();
         String description = "# Time, Number of ADC(s), Timeout, Analog input type, Type of range, Signal form, Period, Min, Max, Tau";
         title.add(String.valueOf(java.time.Clock.systemUTC().instant()));
         title.add(PreferencesData.get("runtime.count.modules", "0"));
@@ -148,18 +150,29 @@ public class Experiment {
         title.add(PreferencesData.get("signal.form.min"));
         title.add(PreferencesData.get("signal.form.max"));
         title.add(PreferencesData.get("signal.form.tau"));
+        axes.add("1");
+        String dacId = PreferencesData.get("runtime.dac.module", "");
+        for (Module module : getModules()) {
+            if (module.getModuleId().equals(dacId)) continue;
+            if (module.isReady() && module.isActive()) {
+                axes.add(String.valueOf(module.getAxes()));
+            }
+        }
+        PreferencesData.setCollection("runtime.map.of.axes", axes);
         PrintWriter writer = null;
         try {
             writer = PApplet.createWriter(file, true);
             writer.println(description);
             writer.print("title=");
             writer.println(String.join(",", title));
+            writer.print("map.of.axes=");
+            writer.println(String.join(",", axes));
         } catch (Exception e) {
             editor.statusError("Не вдалося записати дані експерименту у файл: " + e.getMessage());
         } finally {
             IOUtils.closeQuietly(writer);
         }
-        editor.createTabs(PreferencesData.getInteger("runtime.count.modules", 0) - 1);
+        editor.createTabs(PreferencesData.getInteger("runtime.count.modules", 0));
     }
 
     public float round(double value, int places) {

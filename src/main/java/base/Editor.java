@@ -5,6 +5,7 @@ import base.helpers.CheckModules;
 import base.platforms.Platform;
 import base.processing.Experiment;
 import base.processing.ExperimentController;
+import base.processing.Module;
 import base.view.*;
 import base.view.ExperimentSettings.ExperimentSettings;
 import base.view.ModuleSettings.ModuleSettings;
@@ -156,9 +157,6 @@ public class Editor extends JFrame implements RunnerListener {
     }
 
     public void applyPreferences() {
-        for (ChartTab tab : tabs) {
-            //tab.applyPreferences();
-        }
         console.applyPreferences();
     }
 
@@ -220,8 +218,9 @@ public class Editor extends JFrame implements RunnerListener {
     public void createTabs(int integer) {
         tabs.clear();
         currentTabIndex = -1;
+        ArrayList<String> axes = (ArrayList<String>) PreferencesData.getCollection("runtime.map.of.axes");
         for (int i = 0; i < integer; i++) {
-            tabs.add(new ChartTab(this, "Якись_графік_" + i));
+            tabs.add(new ChartTab(this, "Графік " + i, i, axes.get(i)));
         }
         selectTab(0);
     }
