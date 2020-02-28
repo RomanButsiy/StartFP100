@@ -2,11 +2,9 @@ package base.view.charts;
 
 import base.Editor;
 import base.PreferencesData;
-import base.processing.Module;
 import base.view.charts.ChartFactory.ChartFactory;
 import base.view.charts.ChartFactory.SimpleXYChartDescriptor;
 import base.view.charts.ChartFactory.SimpleXYChartSupport;
-import org.apache.commons.lang3.ArrayUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +35,7 @@ public class ChartTab extends JPanel {
     }
 
     private void createModels() {
-        SimpleXYChartDescriptor descriptor = SimpleXYChartDescriptor.decimal(minValue, maxValue, 0, chartFactor, false, VALUES_LIMIT);
+        SimpleXYChartDescriptor descriptor = SimpleXYChartDescriptor.decimal(minValue, maxValue, 0, chartFactor, !countOfAxes.equals("1"), VALUES_LIMIT);
         for (int i = 0, l = Integer.parseInt(countOfAxes); i < l; i++) {
             descriptor.addLineItems("Сигнал " + (i + 1));
         }

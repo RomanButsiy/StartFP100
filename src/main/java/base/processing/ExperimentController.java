@@ -5,7 +5,6 @@ import base.Editor;
 import base.PreferencesData;
 import base.helpers.FileUtils;
 import base.legacy.PApplet;
-import base.view.charts.ChartTab;
 import org.apache.commons.compress.utils.IOUtils;
 
 import javax.swing.*;
@@ -17,6 +16,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static base.helpers.BaseHelper.checkName;
+import static base.helpers.BaseHelper.toCollection;
 
 public class ExperimentController {
 
@@ -142,12 +144,6 @@ public class ExperimentController {
         }
     }
 
-    private Collection<String> toCollection(String value) {
-        return Arrays.stream(value.split(","))
-                .filter((v) -> !v.trim().isEmpty())
-                .collect(Collectors.toList());
-    }
-
     private long[] getLong(String str, int[] coefficient) {
         String[] s = str.split(",");
         long[] l = new long[s.length];
@@ -171,9 +167,9 @@ public class ExperimentController {
         String newParentDir = fd.getDirectory();
         String newName = fd.getFile();
         if (newName == null) return false;
-        newName = checkName(newName);
+        newName = checkName(editor, newName);
         File newFolder;
-        if (newName.endsWith(".fim") && newParentDir.endsWith(newName.substring(0, newName.lastIndexOf('.'))+ File.separator)) {
+        if (newName.endsWith(".fim") && newParentDir.endsWith(newName.substring(0, newName.lastIndexOf('.')) + File.separator)) {
             newFolder = new File(newParentDir);
         } else {
             newFolder = new File(newParentDir, newName);
@@ -201,16 +197,5 @@ public class ExperimentController {
         }
         experiment.setUntitledAndNotSaved(false);
         return true;
-    }
-
-    private String checkName(String origName) {
-        String newName = BaseInit.sanitizeName(origName);
-        if (!newName.equals(origName)) {
-            String msg = "Назва експерименту має бути змінена.\n" +
-                            "Назви експериментів повинні починатися з літери чи цифри, а потім букви,\n" +
-                            "цифри, тире, крапки та підкреслення. Максимальна довжина - 63 символи.";
-            editor.statusError(msg);
-        }
-        return newName;
     }
 }

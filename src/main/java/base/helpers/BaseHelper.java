@@ -5,15 +5,14 @@ import base.Editor;
 import base.PreferencesData;
 import base.legacy.PApplet;
 import base.processing.Module;
-import jssc.SerialPortException;
 import org.apache.commons.compress.utils.IOUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static base.BaseInit.*;
 
@@ -24,6 +23,10 @@ public class BaseHelper {
             "jan", "feb", "mar", "apr", "may", "jun",
             "jul", "aug", "sep", "oct", "nov", "dec"
     };
+    private static final String[][] FILTERS = {{"Файлы Word (*.docx)" , "*.docx"},
+                                               {"Файлы Excel (*.xlsx)", "*.xlsx"},
+                                               {"Файлы Adobe (*.pdf)" , "*.pdf" },
+                                               {"Все файлы (*.*)"     , "*.*"  }};
 
 
     static public void copyFile(File sourceFile, File targetFile) throws IOException {
@@ -194,6 +197,23 @@ public class BaseHelper {
             parts.add(text.substring(i, Math.min(length, i + size)));
         }
         return parts.toArray(new String[0]);
+    }
+
+    public static String checkName(Editor editor, String origName) {
+        String newName = BaseInit.sanitizeName(origName);
+        if (!newName.equals(origName)) {
+            String msg = "Назва експерименту має бути змінена.\n" +
+                    "Назви експериментів повинні починатися з літери чи цифри, а потім букви,\n" +
+                    "цифри, тире, крапки та підкреслення. Максимальна довжина - 63 символи.";
+            editor.statusError(msg);
+        }
+        return newName;
+    }
+
+    public static Collection<String> toCollection(String value) {
+        return Arrays.stream(value.split(","))
+                .filter((v) -> !v.trim().isEmpty())
+                .collect(Collectors.toList());
     }
 
 }

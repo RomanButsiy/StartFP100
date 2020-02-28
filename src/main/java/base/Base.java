@@ -1,5 +1,6 @@
 package base;
 
+import base.ExportExcel.ExportExcel;
 import base.helpers.BaseHelper;
 import base.helpers.CheckModules;
 import base.helpers.FileUtils;
@@ -19,6 +20,7 @@ import java.util.*;
 import java.util.List;
 
 import static base.BaseInit.*;
+import static base.helpers.BaseHelper.checkName;
 
 public class Base {
 
@@ -398,4 +400,28 @@ public class Base {
     public void rebuildToolbarMenu(JMenu toolbarMenu) {
     }
 
+    public void handleExport(Editor editor) {
+        FileDialog fd = new FileDialog(editor, "Експортувати...", FileDialog.SAVE);
+        fd.setDirectory(editor.getExperiment().getFolder().getParentFile().getAbsolutePath());
+        fd.setFile(editor.getExperiment().getName() + ".xlsx");
+        fd.setVisible(true);
+        String newParentDir = fd.getDirectory();
+        String newName = fd.getFile();
+        if (newName == null) return;
+        editor.statusNotice("Експортувати...");
+        newName = checkName(editor, newName);
+        File newFolder;
+        if (newName.endsWith(".xlsx")) {
+            newFolder = new File(newParentDir, newName);
+        } else {
+            newFolder = new File(newParentDir, newName + ".xlsx");
+        }
+        try {
+            new ExportExcel(editor, newFolder);
+        } catch (Exception e) {
+            editor.statusError(e);
+            return;
+        }
+        editor.statusNotice("Експеримент збережено");
+    }
 }

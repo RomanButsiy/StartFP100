@@ -53,6 +53,7 @@ public class Editor extends JFrame implements RunnerListener {
     private static JMenu experimentMenu;
     private JMenuItem experimentSettingsItem;
     private JMenuItem settingsItem;
+    private JMenuItem exportExcelItem;
     private JMenuItem testModulesItem;
     private JMenuItem experimentStartItem;
     private JMenuItem modulesInfoItem;
@@ -610,6 +611,10 @@ public class Editor extends JFrame implements RunnerListener {
         saveAsMenuItem.addActionListener(event -> handleSaveAs());
         fileMenu.add(saveAsMenuItem);
         fileMenu.addSeparator();
+        exportExcelItem = new JMenuItem("Експортувати...");
+        exportExcelItem.addActionListener(event -> base.handleExport(Editor.this));
+        fileMenu.add(exportExcelItem);
+        fileMenu.addSeparator();
         item = newJMenuItem("Налаштування", ',');
         item.addActionListener(event -> base.handlePrefs());
         fileMenu.add(item);
@@ -617,6 +622,16 @@ public class Editor extends JFrame implements RunnerListener {
         item = newJMenuItem("Вихід", 'Q');
         item.addActionListener(event -> base.handleQuit());
         fileMenu.add(item);
+        fileMenu.addMenuListener(new StubMenuListener() {
+            public void menuSelected(MenuEvent e) {
+                saveAsMenuItem.setEnabled(PreferencesData.getInteger("runtime.count.modules", 0) > 0);
+                if (!experimentController.isHeader() || experiment.isUntitledAndNotSaved()) {
+                    exportExcelItem.setEnabled(false);
+                } else {
+                    exportExcelItem.setEnabled(true);
+                }
+            }
+        });
         return fileMenu;
     }
 
