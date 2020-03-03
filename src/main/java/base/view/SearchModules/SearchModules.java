@@ -4,6 +4,7 @@ import SerialDriver.SerialDriver;
 import base.Editor;
 import base.PreferencesData;
 import base.helpers.SendOne;
+import base.view.BaseView.BaseView;
 import libraries.I7000;
 
 import javax.swing.*;
@@ -17,13 +18,10 @@ import java.util.StringTokenizer;
 
 import static base.helpers.BaseHelper.parsePortException;
 
-public class SearchModules extends JDialog implements ItemListener {
+public class SearchModules extends BaseView implements ItemListener {
     private final Editor editor;
     private Boolean isSearching = false;
     private JPanel rootPanel;
-    private JButton cancelButton;
-    private JButton okButton;
-    private JButton searchButton;
     private JProgressBar progressBar1;
     private JComboBox<String> cbStart;
     private JComboBox<String> cbStop;
@@ -33,17 +31,16 @@ public class SearchModules extends JDialog implements ItemListener {
     private List<String[]> list = new ArrayList<>();
     
     public SearchModules(Editor editor) {
-        super(editor);
+        super(editor, "Знайти нові модулі", true, false);
         this.editor = editor;
-        setTitle("Знайти нові модулі");
         cbStart.addItemListener(this);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 windowClose();
             }
         });
-        cancelButton.addActionListener(e -> windowClose());
-        okButton.addActionListener(e -> {
+        buttonRightPRListener(e -> windowClose());
+        buttonLeftPRListener(e -> {
             if (searchThread.isAlive()) {
                 editor.statusNotice("Іде пошук!!!");
                 return;
@@ -54,7 +51,7 @@ public class SearchModules extends JDialog implements ItemListener {
             cbStart.addItem(String.format("%02X", i));
         }
         serialBuffer = new StringBuffer();
-        searchButton.addActionListener(e -> {
+        buttonLeftPLListener(e -> {
             if (searchThread.isAlive()) {
                 searchThread.stop();
                 serialDriver.dispose();
@@ -62,23 +59,21 @@ public class SearchModules extends JDialog implements ItemListener {
                 progressBar1.setValue(0);
                 startSearch();
             } else {
-                searchButton.setText(" Зупинити пошук ");
+                getButtonLeftPL().setText(" Зупинити пошук ");
                 searchThread = new Thread(this::SearchDevices);
                 searchThread.start();
             }
         });
-        add(rootPanel);
-        setModal(true);
-        setResizable(false);
-        pack();
+        initButtons("Розпочати пошук", "Гаразд", "Скасувати");
+        setViewPanel(rootPanel);
     }
 
     private void windowClose() {
         if (searchThread.isAlive()) {
             searchThread.stop();
-            list.clear();
             serialDriver.dispose();
         }
+        list.clear();
         setVisible(false);
     }
 
@@ -159,7 +154,7 @@ public class SearchModules extends JDialog implements ItemListener {
     }
 
     private void startSearch() {
-        searchButton.setText("Розпочати пошук");
+        getButtonLeftPL().setText("Розпочати пошук");
     }
 
     private void resMessage(String str) {

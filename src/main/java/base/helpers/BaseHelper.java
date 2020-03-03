@@ -216,4 +216,17 @@ public class BaseHelper {
                 .collect(Collectors.toList());
     }
 
+    public static String bytesToHex(byte bytes) {
+        final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+        char[] hexChars = new char[2];
+        int v = bytes & 0xFF;
+        hexChars[0] = HEX_ARRAY[v >>> 4];
+        hexChars[1] = HEX_ARRAY[v & 0x0F];
+        return new String(hexChars);
+    }
+
+    public static byte hexToByte(String hexString) {
+        return (byte) ((Character.digit(hexString.charAt(0), 16) << 4) + Character.digit(hexString.charAt(1), 16));
+    }
+
 }

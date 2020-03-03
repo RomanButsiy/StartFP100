@@ -3,6 +3,7 @@ package base.view.ExperimentSettings;
 import base.Editor;
 import base.PreferencesData;
 import base.helpers.SendOne;
+import base.view.BaseView.BaseView;
 import libraries.I7000;
 
 import javax.swing.*;
@@ -15,14 +16,11 @@ import java.util.stream.IntStream;
 
 import static base.PreferencesData.save;
 
-public class ExperimentSettings extends JDialog implements FocusListener, ItemListener{
+public class ExperimentSettings extends BaseView implements FocusListener, ItemListener{
     private JPanel rootPanel;
-    private JButton cancelButton;
-    private JButton okButton;
     private JComboBox<String> signalForm;
     private JTextField signalMin;
     private JTextField signalPeriod;
-    private JButton someButton;
     private JLabel minLabel;
     private JLabel maxLabel;
     private JTextField signalMax;
@@ -34,9 +32,8 @@ public class ExperimentSettings extends JDialog implements FocusListener, ItemLi
     private final String signalMinDef = PreferencesData.get("signal.form.min", getMin());
 
     public ExperimentSettings(Editor editor) {
-        super(editor);
+        super(editor, "Налаштування експерименту", true, false);
         String value = getIndex();
-        setTitle("Налаштування експерименту");
         signalForm.addItemListener(this);
         for (String signal : Editor.signals) {
             signalForm.addItem(signal);
@@ -44,10 +41,8 @@ public class ExperimentSettings extends JDialog implements FocusListener, ItemLi
         signalForm.setSelectedIndex(PreferencesData.getInteger("signal.form"));
         maxLabel.setText(String.format("Максимальне значення (%s):", value));
         minLabel.setText(String.format("Мінімальне значення (%s):", value));
-        add(rootPanel);
-        setModal(true);
-        setResizable(false);
-        pack();
+        initButtons("Додатково", "Гаразд", "Скасувати");
+        setViewPanel(rootPanel);
         ((AbstractDocument) signalMax.getDocument()).setDocumentFilter(new MaxMinDocumentFilter());
         ((AbstractDocument) signalMin.getDocument()).setDocumentFilter(new MaxMinDocumentFilter());
         ((AbstractDocument) signalPeriod.getDocument()).setDocumentFilter(new PeriodDocumentFilter());
@@ -62,8 +57,8 @@ public class ExperimentSettings extends JDialog implements FocusListener, ItemLi
         signalMax.setText(signalMaxDef);
         String tauDef = PreferencesData.get("signal.form.tau", responseTimeout);
         signalTau.setText(tauDef);
-        cancelButton.addActionListener(actionEvent -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
-        okButton.addActionListener(actionEvent -> {
+        buttonRightPRListener(actionEvent -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
+        buttonLeftPRListener(actionEvent -> {
             if (signalMax.getText().equals(signalMin.getText())) {
                 signalMax.setText(signalMaxDef);
                 signalMin.setText(signalMinDef);
@@ -87,7 +82,7 @@ public class ExperimentSettings extends JDialog implements FocusListener, ItemLi
             save();
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         });
-        someButton.addActionListener(actionEvent -> {
+        buttonLeftPLListener(actionEvent -> {
             String[] str = getString();
             if (str == null) return;
             int lastResult = PreferencesData.getInteger("runtime.last.result", 0);

@@ -4,6 +4,7 @@ import base.Editor;
 import base.PreferencesData;
 import base.helpers.SendOne;
 import base.processing.Module;
+import base.view.BaseView.BaseView;
 import base.view.SearchModules.SearchModules;
 import libraries.I7000;
 
@@ -14,32 +15,25 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.util.List;
 
-import static base.helpers.BaseHelper.LittleBitPreferencesModuleTest;
-import static base.helpers.BaseHelper.splitToNChar;
+import static base.helpers.BaseHelper.*;
 
-public class ModuleSettings extends JDialog implements ItemListener {
+public class ModuleSettings extends BaseView implements ItemListener {
 
     private final Editor editor;
     private JPanel rootPanel;
-    private JButton cancelButton;
-    private JButton okButton;
-    private JButton searchButton;
     private JCheckBox useCRC;
     private JComboBox<String> rate;
     private JComboBox<String>  dataType;
     private JScrollPane scrollModules;
-    private JPanel modulesPanel;
     private JLabel someText;
-    private JButton applyButton;
     private JPanel modulePanel;
 
     private String[] typeData = {"Технічні одиниці", "% від повного діапазону", "Дод. шістнадцятковий код"};
 
     public ModuleSettings(Editor editor) {
-        super(editor);
+        super(editor, "Налаштування модулів", true, false);
         this.editor = editor;
-        setTitle("Налаштування модулів");
-        applyButton.setEnabled(false);
+        getButtonRightPR().setEnabled(false);
         useCRC.setSelected(PreferencesData.getBoolean("use.CRC"));
         for(String str : Editor.rates) {
             rate.addItem(str);
@@ -51,28 +45,22 @@ public class ModuleSettings extends JDialog implements ItemListener {
         dataType.addItemListener(this);
         rate.addItemListener(this);
         dataType.setSelectedIndex(PreferencesData.getInteger("signal.type"));
-        cancelButton.addActionListener(actionEvent -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
-        okButton.addActionListener(actionEvent -> {
+        buttonCenterPRListener(actionEvent -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
+        buttonLeftPRListener(actionEvent -> {
             if (enabledApplyButton()) apply();
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         });
-        applyButton.addActionListener(actionEvent -> apply());
-        searchButton.addActionListener(actionEvent -> {
+        buttonRightPRListener(actionEvent -> apply());
+        buttonLeftPLListener(actionEvent -> {
             SearchModules searchModules = new SearchModules(editor);
             searchModules.setLocationRelativeTo(this);
             searchModules.setVisible(true);
             if (searchModules.getList().size() != 0) updateModulesList(searchModules.getList());
         });
-        useCRC.addActionListener(e -> applyButton.setEnabled(enabledApplyButton()));
+        useCRC.addActionListener(e -> getButtonRightPR().setEnabled(enabledApplyButton()));
         if (editor.getExperiment().getModules().size() != 0) createModulesPanel();
-        add(rootPanel);
-        setModal(true);
-        setResizable(false);
-        pack();
-    }
-
-    public Editor getEditor() {
-        return editor;
+        initButtons("Знайти модулі", "Гаразд", "Скасувати", "Застосувати");
+        setViewPanel(rootPanel);
     }
 
     private void createModulesPanel() {
@@ -161,20 +149,7 @@ public class ModuleSettings extends JDialog implements ItemListener {
         PreferencesData.setBoolean("use.CRC", useCRC.isSelected());
         PreferencesData.setInteger("signal.type", dataType.getSelectedIndex());
         PreferencesData.save();
-        applyButton.setEnabled(false);
-    }
-
-    public static String bytesToHex(byte bytes) {
-        final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-        char[] hexChars = new char[2];
-            int v = bytes & 0xFF;
-            hexChars[0] = HEX_ARRAY[v >>> 4];
-            hexChars[1] = HEX_ARRAY[v & 0x0F];
-        return new String(hexChars);
-    }
-
-    public byte hexToByte(String hexString) {
-        return (byte) ((Character.digit(hexString.charAt(0), 16) << 4) + Character.digit(hexString.charAt(1), 16));
+        getButtonRightPR().setEnabled(false);
     }
 
     private boolean enabledApplyButton() {
@@ -186,7 +161,7 @@ public class ModuleSettings extends JDialog implements ItemListener {
     @Override
     public void itemStateChanged(ItemEvent itemEvent) {
         if (itemEvent.getStateChange() == ItemEvent.DESELECTED) return;
-        applyButton.setEnabled(enabledApplyButton());
+        getButtonRightPR().setEnabled(enabledApplyButton());
     }
 
     public void rebuildSettings() {
