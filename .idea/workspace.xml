@@ -8,13 +8,6 @@
   <component name="ChangeListManager">
     <list default="true" id="93b63df6-3c6c-411f-8753-d9cd68fc9762" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/helpers/BaseHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/helpers/BaseHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/view/ExperimentSettings/ExperimentSettings.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/view/ExperimentSettings/ExperimentSettings.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/view/ExperimentSettings/ExperimentSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/view/ExperimentSettings/ExperimentSettings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/view/ModuleSettings/ModuleSettings.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/view/ModuleSettings/ModuleSettings.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/view/ModuleSettings/ModuleSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/view/ModuleSettings/ModuleSettings.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/view/SearchModules/SearchModules.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/view/SearchModules/SearchModules.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/base/view/SearchModules/SearchModules.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/base/view/SearchModules/SearchModules.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +49,7 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/base/serial" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -173,22 +166,22 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="776" y="310" width="424" height="484" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1583240071032" />
-    <state width="1807" height="263" key="GridCell.Tab.0.bottom" timestamp="1583249118150">
+    <state width="1807" height="263" key="GridCell.Tab.0.bottom" timestamp="1583251728831">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="263" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1583249118150" />
-    <state width="1807" height="263" key="GridCell.Tab.0.center" timestamp="1583249118149">
+    <state width="1807" height="263" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1583251728831" />
+    <state width="1807" height="263" key="GridCell.Tab.0.center" timestamp="1583251728831">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="263" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1583249118149" />
-    <state width="1807" height="263" key="GridCell.Tab.0.left" timestamp="1583249118149">
+    <state width="1807" height="263" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1583251728831" />
+    <state width="1807" height="263" key="GridCell.Tab.0.left" timestamp="1583251728830">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="263" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1583249118149" />
-    <state width="1807" height="263" key="GridCell.Tab.0.right" timestamp="1583249118149">
+    <state width="1807" height="263" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1583251728830" />
+    <state width="1807" height="263" key="GridCell.Tab.0.right" timestamp="1583251728831">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="1807" height="263" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1583249118149" />
+    <state width="1807" height="263" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1583251728831" />
     <state width="1807" height="182" key="GridCell.Tab.1.bottom" timestamp="1582060538042">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -229,6 +222,10 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="192" y="139" width="1384" height="667" key="dock-window-1/67.27.1853.1053@67.27.1853.1053" timestamp="1581594211038" />
+    <state x="302" y="153" width="1372" height="799" key="new project wizard" timestamp="1583268204159">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="302" y="153" width="1372" height="799" key="new project wizard/67.27.1853.1053@67.27.1853.1053" timestamp="1583268204159" />
     <state x="689" y="181" width="598" height="743" key="refactoring.ChangeSignatureDialog" timestamp="1583248727475">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>

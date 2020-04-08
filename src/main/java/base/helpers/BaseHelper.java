@@ -23,11 +23,6 @@ public class BaseHelper {
             "jan", "feb", "mar", "apr", "may", "jun",
             "jul", "aug", "sep", "oct", "nov", "dec"
     };
-    private static final String[][] FILTERS = {{"Файлы Word (*.docx)" , "*.docx"},
-                                               {"Файлы Excel (*.xlsx)", "*.xlsx"},
-                                               {"Файлы Adobe (*.pdf)" , "*.pdf" },
-                                               {"Все файлы (*.*)"     , "*.*"  }};
-
 
     static public void copyFile(File sourceFile, File targetFile) throws IOException {
         InputStream from = null;
