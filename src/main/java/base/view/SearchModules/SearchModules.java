@@ -19,8 +19,7 @@ import java.util.StringTokenizer;
 import static base.helpers.BaseHelper.parsePortException;
 
 public class SearchModules extends BaseView implements ItemListener {
-    private final Editor editor;
-    private Boolean isSearching = false;
+
     private JPanel rootPanel;
     private JProgressBar progressBar1;
     private JComboBox<String> cbStart;
@@ -32,38 +31,16 @@ public class SearchModules extends BaseView implements ItemListener {
     
     public SearchModules(Editor editor) {
         super(editor, "Знайти нові модулі", true, false);
-        this.editor = editor;
         cbStart.addItemListener(this);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 windowClose();
             }
         });
-        buttonRightPRListener(e -> windowClose());
-        buttonLeftPRListener(e -> {
-            if (searchThread.isAlive()) {
-                editor.statusNotice("Іде пошук!!!");
-                return;
-            }
-            setVisible(false);
-        });
         for(int i= 0; i < 256; i++) {
             cbStart.addItem(String.format("%02X", i));
         }
         serialBuffer = new StringBuffer();
-        buttonLeftPLListener(e -> {
-            if (searchThread.isAlive()) {
-                searchThread.stop();
-                serialDriver.dispose();
-                list.clear();
-                progressBar1.setValue(0);
-                startSearch();
-            } else {
-                getButtonLeftPL().setText(" Зупинити пошук ");
-                searchThread = new Thread(this::SearchDevices);
-                searchThread.start();
-            }
-        });
         initButtons("Розпочати пошук", "Гаразд", "Скасувати");
         setViewPanel(rootPanel);
     }
@@ -82,14 +59,14 @@ public class SearchModules extends BaseView implements ItemListener {
         String port = PreferencesData.get("serial.port");
         String rate = PreferencesData.get("serial.port.rate", "115200");
         if (port == null) {
-            editor.statusError("Порт не вибрано");
+            getEditor().statusError("Порт не вибрано");
             startSearch();
             return;
         }
         try {
             serialDriver = new SerialDriver(port, rate, s -> serialBuffer.append(s));
         } catch (Exception e) {
-            parsePortException(editor, e);
+            parsePortException(getEditor(), e);
             startSearch();
             return;
         }
@@ -100,7 +77,7 @@ public class SearchModules extends BaseView implements ItemListener {
                 Thread.sleep(wait);
                 progressBar1.setValue(90 * (i - j) / s);
             } catch (Exception ex) {
-                editor.statusError(ex);
+                getEditor().statusError(ex);
                 list.clear();
                 progressBar1.setValue(0);
                 startSearch();
@@ -120,7 +97,7 @@ public class SearchModules extends BaseView implements ItemListener {
             if (token.startsWith("?")) continue;
             String name = token.substring(3);
             String id = token.substring(1, token.length() - name.length());
-            SendOne sendOne = new SendOne(editor, I7000.readConfiguration(id));
+            SendOne sendOne = new SendOne(getEditor(), I7000.readConfiguration(id));
             String config = I7000.removeCRC(1, sendOne.getResult());
             if (config == null) continue;
             String type = null;
@@ -178,5 +155,36 @@ public class SearchModules extends BaseView implements ItemListener {
             }
             cbStop.setSelectedIndex(cbStop.getItemCount() - 1);
         }
+    }
+
+    @Override
+    public void leftButtonAction() {
+        if (searchThread.isAlive()) {
+            searchThread.stop();
+            serialDriver.dispose();
+            list.clear();
+            progressBar1.setValue(0);
+            startSearch();
+        } else {
+            getButtonLeftPL().setText(" Зупинити пошук ");
+            searchThread = new Thread(this::SearchDevices);
+            searchThread.start();
+        }
+    }
+
+    public void closeWindow_() {}
+
+    @Override
+    public void applyAction() {
+        if (searchThread.isAlive()) {
+            getEditor().statusNotice("Іде пошук!!!");
+            return;
+        }
+        setVisible(false);
+    }
+
+    @Override
+    public void closeAction() {
+        windowClose();
     }
 }

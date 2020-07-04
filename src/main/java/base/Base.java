@@ -6,6 +6,8 @@ import base.helpers.CheckModules;
 import base.helpers.FileUtils;
 import base.serial.DiscoveryManager;
 import base.view.EditorConsole;
+import base.view.ExperimentSettings.ExperimentSettings;
+import base.view.Settings.Settings;
 import libraries.I7000;
 import libraries.MenuScroller;
 import libraries.Theme;
@@ -316,6 +318,9 @@ public class Base {
     }
 
     public void handlePrefs() {
+        Settings settings = new Settings(activeEditor);
+        settings.setLocationRelativeTo(activeEditor);
+        settings.setVisible(true);
     }
 
     public void handleQuit() {
