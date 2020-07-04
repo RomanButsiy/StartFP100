@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 
 import static base.PreferencesData.save;
 
-public class ExperimentSettings extends BaseView implements FocusListener, ItemListener{
+public class ExperimentSettings extends BaseView implements FocusListener, ItemListener {
     private JPanel rootPanel;
     private JComboBox<String> signalForm;
     private JTextField signalMin;
@@ -33,14 +33,13 @@ public class ExperimentSettings extends BaseView implements FocusListener, ItemL
 
     public ExperimentSettings(Editor editor) {
         super(editor, "Налаштування експерименту", true, false);
-        String value = getIndex();
         signalForm.addItemListener(this);
         for (String signal : Editor.signals) {
             signalForm.addItem(signal);
         }
         signalForm.setSelectedIndex(PreferencesData.getInteger("signal.form"));
-        maxLabel.setText(String.format("Максимальне значення (%s):", value));
-        minLabel.setText(String.format("Мінімальне значення (%s):", value));
+        maxLabel.setText(String.format("Максимальне значення (%s):", getIndex()));
+        minLabel.setText(String.format("Мінімальне значення (%s):", getIndex()));
         initButtons("Додатково", "Гаразд", "Скасувати");
         setViewPanel(rootPanel);
         ((AbstractDocument) signalMax.getDocument()).setDocumentFilter(new MaxMinDocumentFilter());
@@ -57,62 +56,6 @@ public class ExperimentSettings extends BaseView implements FocusListener, ItemL
         signalMax.setText(signalMaxDef);
         String tauDef = PreferencesData.get("signal.form.tau", responseTimeout);
         signalTau.setText(tauDef);
-        buttonRightPRListener(actionEvent -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
-        buttonLeftPRListener(actionEvent -> {
-            if (signalMax.getText().equals(signalMin.getText())) {
-                signalMax.setText(signalMaxDef);
-                signalMin.setText(signalMinDef);
-                return;
-            }
-            if (Double.parseDouble(signalMin.getText()) > Double.parseDouble(signalMax.getText())) {
-                String str = signalMin.getText();
-                signalMin.setText(signalMax.getText());
-                signalMax.setText(str);
-                return;
-            }
-            if (Integer.parseInt(signalTau.getText()) > (Integer.parseInt(signalPeriod.getText()) / 4)) {
-                signalTau.setText(String.valueOf((Integer.parseInt(signalPeriod.getText()) / 4)));
-                if (signalTau.isEnabled()) return;
-            }
-            PreferencesData.set("signal.form.max", signalMax.getText());
-            PreferencesData.set("signal.form.min", signalMin.getText());
-            PreferencesData.set("signal.form.period", signalPeriod.getText());
-            PreferencesData.set("signal.form.tau", signalTau.getText());
-            PreferencesData.setInteger("signal.form", signalForm.getSelectedIndex());
-            save();
-            dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        });
-        buttonLeftPLListener(actionEvent -> {
-            String[] str = getString();
-            if (str == null) return;
-            int lastResult = PreferencesData.getInteger("runtime.last.result", 0);
-            if (lastResult >= str.length) lastResult = 0;
-            String result = (String) JOptionPane.showInputDialog(this, "Надіслати одне значення\nдля перевірки модуля",
-                    String.format("Виберіть значення (%s)", value), JOptionPane.QUESTION_MESSAGE, null, str, str[lastResult]);
-            if (result == null) return;
-            PreferencesData.setInteger("runtime.last.result", IntStream.range(0, str.length).filter(i -> str[i].equals(result)).findFirst().orElse(0));
-            if (PreferencesData.get("runtime.dac.module") == null) {
-                editor.statusError("Id цифро-аналогового перетворювача не вказано");
-                return;
-            }
-
-            String command = I7000.setAnalogOutTechnicalUnits(PreferencesData.get("runtime.dac.module"), (float) Integer.parseInt(result));
-            SendOne sendOne = new SendOne(editor, command);
-            String response = I7000.removeCRC(0, sendOne.getResult());
-            if (response == null) {
-                editor.statusError("Цифро-аналогового перетворювач не відповідає");
-                return;
-            }
-            if (response.contains(">")) {
-                editor.statusNotice(String.format("На виході цифро-аналогового перетворювача %s %s", I7000.formatTypeTechnicalUnits(result), value));
-                return;
-            }
-            if (response.contains("?")) {
-                editor.statusError("Вихід за межі дозволеного діапазоеу");
-                return;
-            }
-            editor.statusError("Недопучтима команда");
-        });
     }
 
     @Override
@@ -181,6 +124,67 @@ public class ExperimentSettings extends BaseView implements FocusListener, ItemL
         }
         signalTau.setEnabled(false);
     }
+
+    @Override
+    public void leftButtonAction() {
+        String[] str = getString();
+        if (str == null) return;
+        int lastResult = PreferencesData.getInteger("runtime.last.result", 0);
+        if (lastResult >= str.length) lastResult = 0;
+        String result = (String) JOptionPane.showInputDialog(this, "Надіслати одне значення\nдля перевірки модуля",
+                String.format("Виберіть значення (%s)", getIndex()), JOptionPane.QUESTION_MESSAGE, null, str, str[lastResult]);
+        if (result == null) return;
+        PreferencesData.setInteger("runtime.last.result", IntStream.range(0, str.length).filter(i -> str[i].equals(result)).findFirst().orElse(0));
+        if (PreferencesData.get("runtime.dac.module") == null) {
+            getEditor().statusError("Id цифро-аналогового перетворювача не вказано");
+            return;
+        }
+
+        String command = I7000.setAnalogOutTechnicalUnits(PreferencesData.get("runtime.dac.module"), (float) Integer.parseInt(result));
+        SendOne sendOne = new SendOne(getEditor(), command);
+        String response = I7000.removeCRC(0, sendOne.getResult());
+        if (response == null) {
+            getEditor().statusError("Цифро-аналогового перетворювач не відповідає");
+            return;
+        }
+        if (response.contains(">")) {
+            getEditor().statusNotice(String.format("На виході цифро-аналогового перетворювача %s %s", I7000.formatTypeTechnicalUnits(result), getIndex()));
+            return;
+        }
+        if (response.contains("?")) {
+            getEditor().statusError("Вихід за межі дозволеного діапазоеу");
+            return;
+        }
+        getEditor().statusError("Недопучтима команда");
+    }
+
+    @Override
+    public void applyAction() {
+        if (signalMax.getText().equals(signalMin.getText())) {
+            signalMax.setText(signalMaxDef);
+            signalMin.setText(signalMinDef);
+            return;
+        }
+        if (Double.parseDouble(signalMin.getText()) > Double.parseDouble(signalMax.getText())) {
+            String str = signalMin.getText();
+            signalMin.setText(signalMax.getText());
+            signalMax.setText(str);
+            return;
+        }
+        if (Integer.parseInt(signalTau.getText()) > (Integer.parseInt(signalPeriod.getText()) / 4)) {
+            signalTau.setText(String.valueOf((Integer.parseInt(signalPeriod.getText()) / 4)));
+            if (signalTau.isEnabled()) return;
+        }
+        PreferencesData.set("signal.form.max", signalMax.getText());
+        PreferencesData.set("signal.form.min", signalMin.getText());
+        PreferencesData.set("signal.form.period", signalPeriod.getText());
+        PreferencesData.set("signal.form.tau", signalTau.getText());
+        PreferencesData.setInteger("signal.form", signalForm.getSelectedIndex());
+        save();
+    }
+
+    @Override
+    public void closeAction() {}
 
     private static class MaxMinDocumentFilter extends DocumentFilter {
         @Override

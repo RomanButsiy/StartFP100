@@ -45,18 +45,6 @@ public class ModuleSettings extends BaseView implements ItemListener {
         dataType.addItemListener(this);
         rate.addItemListener(this);
         dataType.setSelectedIndex(PreferencesData.getInteger("signal.type"));
-        buttonCenterPRListener(actionEvent -> dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING)));
-        buttonLeftPRListener(actionEvent -> {
-            if (enabledApplyButton()) apply();
-            dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-        });
-        buttonRightPRListener(actionEvent -> apply());
-        buttonLeftPLListener(actionEvent -> {
-            SearchModules searchModules = new SearchModules(editor);
-            searchModules.setLocationRelativeTo(this);
-            searchModules.setVisible(true);
-            if (searchModules.getList().size() != 0) updateModulesList(searchModules.getList());
-        });
         useCRC.addActionListener(e -> getButtonRightPR().setEnabled(enabledApplyButton()));
         if (editor.getExperiment().getModules().size() != 0) createModulesPanel();
         initButtons("Знайти модулі", "Гаразд", "Скасувати", "Застосувати");
@@ -111,7 +99,41 @@ public class ModuleSettings extends BaseView implements ItemListener {
         rebuildSettings();
     }
 
-    private void apply() {
+    private boolean enabledApplyButton() {
+        return (PreferencesData.getInteger("signal.type") != dataType.getSelectedIndex() ||
+                PreferencesData.getBoolean("use.CRC") != useCRC.isSelected() ||
+                !PreferencesData.get("serial.port.rate").equals(Editor.rates[rate.getSelectedIndex()]));
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent itemEvent) {
+        if (itemEvent.getStateChange() == ItemEvent.DESELECTED) return;
+        getButtonRightPR().setEnabled(enabledApplyButton());
+    }
+
+    public void rebuildSettings() {
+        modulePanel.removeAll();
+        createModulesPanel();
+        pack();
+        repaint();
+        revalidate();
+    }
+
+    @Override
+    public void leftButtonAction() {
+        SearchModules searchModules = new SearchModules(editor);
+        searchModules.setLocationRelativeTo(this);
+        searchModules.setVisible(true);
+        if (searchModules.getList().size() != 0) updateModulesList(searchModules.getList());
+        searchModules.dispose();
+    }
+
+    public void applyAction_() {
+        if (enabledApplyButton()) applyAction();
+    }
+
+    @Override
+    public void applyAction() {
         List<Module> modules = editor.getExperiment().getModules();
         if (PreferencesData.getBoolean("use.CRC") != useCRC.isSelected() || !PreferencesData.get("serial.port.rate").equals(Editor.rates[rate.getSelectedIndex()])) {
             JOptionPane.showMessageDialog(editor, "Для того щоб змінити налаштування, потрібно\nзамкнути вивід модуля INIT*\nна землю і натиснути \"OK\"", "Попередження", JOptionPane.ERROR_MESSAGE);
@@ -152,23 +174,6 @@ public class ModuleSettings extends BaseView implements ItemListener {
         getButtonRightPR().setEnabled(false);
     }
 
-    private boolean enabledApplyButton() {
-        return (PreferencesData.getInteger("signal.type") != dataType.getSelectedIndex() ||
-                PreferencesData.getBoolean("use.CRC") != useCRC.isSelected() ||
-                !PreferencesData.get("serial.port.rate").equals(Editor.rates[rate.getSelectedIndex()]));
-    }
-
     @Override
-    public void itemStateChanged(ItemEvent itemEvent) {
-        if (itemEvent.getStateChange() == ItemEvent.DESELECTED) return;
-        getButtonRightPR().setEnabled(enabledApplyButton());
-    }
-
-    public void rebuildSettings() {
-        modulePanel.removeAll();
-        createModulesPanel();
-        pack();
-        repaint();
-        revalidate();
-    }
+    public void closeAction() {}
 }

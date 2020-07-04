@@ -4,8 +4,9 @@ import base.Editor;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 
-public class BaseView extends JDialog {
+public abstract class BaseView extends JDialog {
     private final Editor editor;
     private JPanel rootPanel;
     private JPanel viewPanel;
@@ -21,7 +22,35 @@ public class BaseView extends JDialog {
         add(rootPanel);
         setModal(modal);
         setResizable(resizable);
+        buttonLeftPRListener(actionEvent -> okAction());
+        buttonCenterPRListener(actionEvent -> closeAction_());
+        buttonRightPRListener(actionEvent -> applyAction());
+        buttonLeftPLListener(actionEvent -> leftButtonAction());
     }
+
+    public abstract void leftButtonAction();
+
+    public void okAction() {
+        applyAction_();
+        closeWindow_();
+    }
+
+    public void closeWindow_() {
+        dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+    }
+
+    public void applyAction_() {
+        applyAction();
+    }
+
+    public abstract void applyAction();
+
+    public void closeAction_() {
+        closeAction();
+        closeWindow_();
+    }
+
+    public abstract void closeAction();
 
     protected void initButtons(String button1, String button2, String button3, String button4) {
         buttonLeftPL.setText(button1);
@@ -30,9 +59,9 @@ public class BaseView extends JDialog {
         buttonRightPR.setText(button4);
     }
 
-    protected void initButtons(String button1, String button2, String button4) {
-        buttonCenterPR.setVisible(false);
-        initButtons(button1, button2, "", button4);
+    protected void initButtons(String button1, String button2, String button3) {
+        buttonRightPR.setVisible(false);
+        initButtons(button1, button2, button3, "");
     }
 
     public void buttonLeftPLListener(ActionListener listener) {
@@ -51,7 +80,7 @@ public class BaseView extends JDialog {
         buttonLeftPR.addActionListener(listener);
     }
 
-    public void setViewPanel(JPanel viewPanel) {
+    protected void setViewPanel(JPanel viewPanel) {
         this.viewPanel.add(viewPanel);
         pack();
     }
