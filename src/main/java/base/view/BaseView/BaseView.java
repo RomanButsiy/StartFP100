@@ -80,7 +80,7 @@ public abstract class BaseView extends JDialog {
         buttonLeftPR.addActionListener(listener);
     }
 
-    public void setViewPanel(JPanel viewPanel) {
+    protected void setViewPanel(JPanel viewPanel) {
         this.viewPanel.add(viewPanel);
         pack();
     }
