@@ -67,6 +67,9 @@ signal.form.period=10000
 signal.form.period.max=100000000
 signal.form.tau=200
 
+# settings
+general.use.native.list.serial = false
+
 # Technical units - 0, % of full range - 1, hexadecimal code - 2
 signal.type=0
 

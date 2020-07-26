@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Platform {
@@ -77,10 +78,22 @@ public class Platform {
         } catch (UnsatisfiedLinkError e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
+
             BaseInit.nativeException = e.getMessage();
         }
     }
+
     public native String resolveDeviceAttachedToNative(String serial);
+
+    public native String[] listSerialsNative();
+
+    public List<String> listSerialsNames() {
+        List<String> list = new LinkedList<>();
+        for (String port : listSerialsNative()) {
+            list.add(port.split("_")[0]);
+        }
+        return list;
+    }
 
     public File getSettingsFolder() throws Exception {
         File home = new File(System.getProperty("user.home"));

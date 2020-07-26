@@ -1,6 +1,8 @@
 package base.view.Settings;
 
 import base.Editor;
+import base.PreferencesData;
+
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 
@@ -11,13 +13,18 @@ public class Settings extends MainForm {
     private JButton button2Button;
     private JPanel settings;
     private JPanel db;
-    private JCheckBox checkBoxddddddddddddddddddddddddddddddddddddddCheckBox;
+    private JCheckBox useListSerialPorts;
+
+    private final boolean useListSerialPortsDef = PreferencesData.getBoolean("general.use.native.list.serial", true);
+    private final boolean nativeException = PreferencesData.getBoolean("runtime.native.exception", true);
 
     public Settings(Editor editor) {
         super(editor, "Налаштування", true, true);
-        initButtons("Гаразд", "Скасувати");
+        initButtons("Скасувати", "Гаразд");
         setTabTitle(db, "База даних");
         setTabTitle(settings, "Налаштування");
+        useListSerialPorts.setSelected(useListSerialPortsDef);
+        useListSerialPorts.setEnabled(!nativeException);
         setViewPanel(rootPanel);
     }
 
@@ -28,6 +35,13 @@ public class Settings extends MainForm {
 
     @Override
     public void okAction() {
+        if (useListSerialPortsDef != useListSerialPorts.isSelected()) {
+            PreferencesData.setBoolean("general.use.native.list.serial", useListSerialPorts.isSelected());
+            if (!nativeException) {
+                PreferencesData.setBoolean("runtime.general.use.native.list.serial", useListSerialPorts.isSelected());
+            }
+            PreferencesData.save();
+        }
         windowClose();
     }
 

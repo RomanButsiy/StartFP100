@@ -6,7 +6,6 @@ import base.helpers.CheckModules;
 import base.helpers.FileUtils;
 import base.serial.DiscoveryManager;
 import base.view.EditorConsole;
-import base.view.ExperimentSettings.ExperimentSettings;
 import base.view.Settings.Settings;
 import libraries.I7000;
 import libraries.MenuScroller;
@@ -46,6 +45,10 @@ public class Base {
         } catch (Exception ignored) { }
         JPopupMenu.setDefaultLightWeightPopupEnabled(false);
         I7000.useCRC = PreferencesData.getBoolean("use.CRC", false);
+        if (nativeException == null) {
+            PreferencesData.setBoolean("runtime.general.use.native.list.serial", PreferencesData.getBoolean("general.use.native.list.serial", false));
+        }
+        PreferencesData.setBoolean("runtime.native.exception", nativeException != null);
         restoreExperiment();
         if (editors.isEmpty()) handleNew();
     }
@@ -371,7 +374,7 @@ public class Base {
     }
 
     public void handleDeviceInformation() {
-        if (nativeException != null) {
+        if (!PreferencesData.getBoolean("runtime.general.use.native.list.serial", false)) {
             activeEditor.statusError(nativeException);
             return;
         }
