@@ -1,6 +1,7 @@
 package base.serial;
 
-import jssc.SerialPortList;
+import base.BaseInit;
+import base.PreferencesData;
 
 import java.util.*;
 
@@ -44,13 +45,20 @@ public class SerialDiscovery implements Runnable, Discovery {
     }
 
     public synchronized void forceRefresh() {
-        List<String> ports = Arrays.asList(SerialPortList.getPortNames());
+        List<String> ports = getPortNames();
         if (ports.equals(oldPorts)) {
             return;
         }
         oldPorts.clear();
         oldPorts.addAll(ports);
         setSerialPorts(ports);
+    }
+
+    private List<String> getPortNames() {
+        if (PreferencesData.getBoolean("runtime.general.use.native.list.serial", false)) {
+            return BaseInit.getPlatform().listSerialsNames();
+        }
+        return Arrays.asList(jssc.SerialPortList.getPortNames());
     }
 
     public void setSerialPorts(List<String> newSerialPorts) {
