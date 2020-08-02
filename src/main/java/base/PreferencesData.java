@@ -87,6 +87,10 @@ public class PreferencesData {
 
     // .................................................................
 
+    public static File getPreferencesFile() {
+        return preferencesFile;
+    }
+
     static public String get(String attribute) {
         return prefs.get(attribute);
     }
