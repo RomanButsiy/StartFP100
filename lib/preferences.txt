@@ -70,6 +70,10 @@ signal.form.tau=200
 # settings
 general.use.native.list.serial = false
 
+# I18 Preferences
+# default chosen language (none for none)
+editor.languages.current =
+
 # Technical units - 0, % of full range - 1, hexadecimal code - 2
 signal.type=0
 

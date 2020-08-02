@@ -3,10 +3,11 @@ package base.view.Settings;
 import base.Base;
 import base.Editor;
 import base.PreferencesData;
+import localization.languages.Language;
+import localization.languages.Languages;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
 import java.awt.event.WindowEvent;
 
 public class Settings extends MainForm {
@@ -19,7 +20,7 @@ public class Settings extends MainForm {
     private JCheckBox useListSerialPorts;
     private JTextField experimentsFolder;
     private JButton setExperimentsFolder;
-    private JComboBox comboBoxLanguages;
+    private JComboBox<Language> comboBoxLanguages;
     private JLabel labelPreferences1;
     private JLabel labelPreferences3;
     private JLabel labelPreferences2;
@@ -35,6 +36,18 @@ public class Settings extends MainForm {
         initButtons("Скасувати", "Гаразд");
         setTabTitle(db, "База даних");
         setTabTitle(settings, "Налаштування");
+        initComponents();
+        showPreferencesData();
+        setViewPanel(rootPanel);
+    }
+
+    private void savePreferencesData() {
+        Language newLanguage = (Language) comboBoxLanguages.getSelectedItem();
+        PreferencesData.set("editor.languages.current", newLanguage != null ? newLanguage.getIsoCode() : "");
+        PreferencesData.save();
+    }
+
+    private void initComponents() {
         labelPreferences1.setForeground(Color.GRAY);
         labelPreferences2.setText(PreferencesData.getPreferencesFile().getAbsolutePath());
         labelPreferences2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -51,10 +64,19 @@ public class Settings extends MainForm {
         });
         labelPreferences2.setFocusable(true);
         labelPreferences3.setForeground(Color.GRAY);
+    }
+
+    private void showPreferencesData() {
+        String currentLanguageISOCode = PreferencesData.get("editor.languages.current");
+        for (Language language : Languages.languages) {
+            if (language.getIsoCode().equals(currentLanguageISOCode)) {
+                comboBoxLanguages.setSelectedItem(language);
+            }
+        }
         useListSerialPorts.setSelected(useListSerialPortsDef);
         useListSerialPorts.setEnabled(!nativeException);
-        setViewPanel(rootPanel);
     }
+
 
     @Override
     public void cancelAction() {
@@ -68,8 +90,8 @@ public class Settings extends MainForm {
             if (!nativeException) {
                 PreferencesData.setBoolean("runtime.general.use.native.list.serial", useListSerialPorts.isSelected());
             }
-            PreferencesData.save();
         }
+        savePreferencesData();
         windowClose();
     }
 
@@ -98,4 +120,7 @@ public class Settings extends MainForm {
         Base.openFolder(PreferencesData.getPreferencesFile().getParentFile());
     }
 
+    private void createUIComponents() {
+        comboBoxLanguages = new JComboBox<>(Languages.languages);
+    }
 }

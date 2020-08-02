@@ -26,7 +26,7 @@ import static base.helpers.BaseHelper.checkName;
 public class Base {
 
     final List<Editor> editors = Collections.synchronizedList(new ArrayList<Editor>());
-    Editor activeEditor;
+    private Editor activeEditor;
     private final List<JMenuItem> recentExperimentsMenuItems = new LinkedList<>();
 
     public Base(String[] args) throws Exception {
@@ -176,6 +176,10 @@ public class Base {
         }
         editors.add(editor);
         SwingUtilities.invokeLater(() -> editor.setVisible(true));
+    }
+
+    public Editor getActiveEditor() {
+        return activeEditor;
     }
 
     public void handleOpenPrompt() throws Exception  {

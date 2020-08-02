@@ -27,6 +27,7 @@ import java.util.List;
 import static base.helpers.BaseHelper.LittleBitPreferencesModuleTest;
 import static base.helpers.BaseHelper.copyFile;
 import static libraries.Theme.scale;
+import static localization.Translate.tr;
 
 public class Editor extends JFrame implements RunnerListener {
 
@@ -574,7 +575,7 @@ public class Editor extends JFrame implements RunnerListener {
 
     private JMenu buildFileMenu() {
         JMenuItem item;
-        fileMenu = new JMenu("Файл");
+        fileMenu = new JMenu(tr("File"));
         fileMenu.setMnemonic(KeyEvent.VK_F);
         item = newJMenuItem("Новий експеримент", 'N');
         item.addActionListener(event -> {
