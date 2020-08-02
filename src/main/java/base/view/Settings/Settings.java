@@ -14,6 +14,15 @@ public class Settings extends MainForm {
     private JPanel settings;
     private JPanel db;
     private JCheckBox useListSerialPorts;
+    private JTextField experimentsFolder;
+    private JButton setExperimentsFolder;
+    private JComboBox comboBoxLanguages;
+    private JLabel labelPreferences1;
+    private JLabel labelPreferences3;
+    private JLabel labelPreferences2;
+    private JLabel labelLanguages;
+    private JLabel labelReload;
+    private JLabel labelExperimentsFolder;
 
     private final boolean useListSerialPortsDef = PreferencesData.getBoolean("general.use.native.list.serial", true);
     private final boolean nativeException = PreferencesData.getBoolean("runtime.native.exception", true);
