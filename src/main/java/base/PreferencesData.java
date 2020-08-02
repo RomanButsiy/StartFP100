@@ -4,6 +4,8 @@ import base.helpers.PreferencesHelper;
 import base.helpers.PreferencesMap;
 import base.legacy.PApplet;
 import base.legacy.PConstants;
+import localization.Translate;
+import localization.languages.Languages;
 import org.apache.commons.compress.utils.IOUtils;
 
 import java.awt.*;
@@ -12,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.MissingResourceException;
 import java.util.stream.Collectors;
 
 public class PreferencesData {
@@ -50,6 +53,17 @@ public class PreferencesData {
                                         + preferencesFile.getAbsolutePath() + "і перезапустіть StartFP100.", ex);
             }
         }
+        String lang = get("editor.languages.current");
+        if (lang == null || !Languages.have(lang)) {
+            lang = "";
+            set("editor.languages.current", "");
+        }
+        try {
+            Translate.init(lang);
+        } catch (MissingResourceException e) {
+            Translate.init("uk");
+            set("editor.languages.current", "uk");
+        }
         set("runtime.os", PConstants.platformNames[PApplet.platform]);
 
     }
@@ -86,6 +100,10 @@ public class PreferencesData {
     }
 
     // .................................................................
+
+    public static File getPreferencesFile() {
+        return preferencesFile;
+    }
 
     static public String get(String attribute) {
         return prefs.get(attribute);
